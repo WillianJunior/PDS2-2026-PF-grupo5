@@ -6,7 +6,8 @@
 ├── bin/                # Executáveis gerados após a compilação (executável final).
 ├── build/              # Arquivos objeto (.o) e temporários do compilador.
 ├── data/               # Arquivos de texto (.txt) para persistência de dados e mapas.
-├── docs/               # Documentação gerada pelo Doxygen, diagramas CRC e user stories.
+├── docs/               # Documentação do projeto
+├── design/             # Diagramas CRC e user stories.
 ├── include/            # Arquivos de cabeçalho (.hpp) -> Definição dos contratos.
 │   ├── core/           # Lógica do jogo.
 │   ├── entities/       # Classes de personagens e inimigos.
