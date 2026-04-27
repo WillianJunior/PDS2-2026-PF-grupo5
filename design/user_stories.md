@@ -1,6 +1,6 @@
-Parte 1 - Configurações e Início do Jogo
+**Parte 1 - Configurações e Início do Jogo**
 
-Início 
+**Início** 
 Descrição:
 Como jogador, eu quero escolher uma classe no início do jogo para definir meu estilo de combate.
 
@@ -9,7 +9,7 @@ Critérios de aceitação:
 - Apresentar a forma de ataque de cada classe com seu item definido;
 - Mostrar vantagens e desvantagens de cada classe baseado em seus atributos iniciais.
 
-Vasculhar
+**Vasculhar**
 Descrição:
 Como jogador, eu quero vasculhar o ambiente para encontrar itens e inimigos.
 
@@ -19,7 +19,7 @@ Critérios de aceitação:
 - Caso um item seja encontrado, o jogador pode decidir pegar o item ou não;
 - Caso um inimigo seja encontrado, o jogador pode decidir engajar em uma batalha ou não.
 
-Inventário
+**Inventário**
 Descrição:
 Como jogador, eu quero ter acesso ao meu inventário para usar e administrar meus itens.
 
@@ -30,9 +30,9 @@ Critérios de aceitação:
 - O inventário tem espaços limitados, permitindo ao jogador também excluir itens para pegar outros.
 
 
-Parte 2 - Batalha
+**Parte 2 - Batalha**
 
-Ataque
+**Ataque**
 Descrição:
 Como jogador, eu quero atacar o inimigo para derrotá-lo.
 
@@ -42,7 +42,7 @@ Critérios de aceitação:
 - Existem 3 tipos de ataque: ataque simples (depende apenas dos pontos de ataque), ataque rápido (depende dos pontos de ataque, dos de agilidade e consome mana; reduz a agilidade do oponente) e ataque forte (depende dos pontos de ataque e consome mana; reduz consideravelmente a defesa do oponente, reduz a esquiva do oponente);
 - O ataque causará dano.
 
-Defesa
+**Defesa**
 Descrição:
 Como jogador, eu quero me defender em turno para diminuir o dano em meu personagem.
 
@@ -52,7 +52,7 @@ Critérios de aceitação:
 - Para que o dano seja anulado, os pontos de defesa do personagem deverão ser maiores que os pontos de ataque do oponente;
 - Para que o dano seja reduzido a defesa dos jogador deverá corresponder ao nível e à classe de seu personagem.
 
-Esquiva
+**Esquiva**
 Descrição:
 Como jogador, eu quero tentar esquivar em um turno para não tomar dano.
 
@@ -63,9 +63,9 @@ Critérios de aceitação:
 - A agilidade do jogador deve corresponder ao nível e à classe de seu personagem.
 
 
-Parte 3 - Itens 
+**Parte 3 - Itens**
 
-Comidas
+**Comidas**
 Descrição:
 Como jogador, eu quero usar um item de vida (comida) para recuperar minha vida.
 
@@ -75,7 +75,7 @@ Critérios de aceitação:
 - O jogador precisa ter a comida correspondente no inventário, e após o uso, ela é retirada do inventário;
 - Se em batalha o uso da comida é considerado a ação do turno.
 
-Poções
+**Poções**
 Descrição:
 Como jogador, eu quero usar uma poção para melhorar minhas habilidades.
 
@@ -85,7 +85,7 @@ Critérios de aceitação:
 - A poção pode durar de 1 a 4 turnos de batalha, dependendo de seu valor definido na inicialização do item;
 - Se em batalha o uso da poção é considerado a ação do turno.
 
-Cristais
+**Cristais**
 Descrição:
 Como jogador, eu quero usar um cristal para ganhar vantagens.
 
@@ -95,9 +95,9 @@ Critérios de aceitação:
 - Os cristais são apagados do inventário quando a cena muda.
 
 
-Parte 4 - Progressão da história
+**Parte 4 - Progressão da história**
 
-Subir de nível
+**Subir de nível**
 Descrição:
 Como jogador, eu quero subir de nível após alcançar determinado valor de xp para aumentar meus atributos.
 
