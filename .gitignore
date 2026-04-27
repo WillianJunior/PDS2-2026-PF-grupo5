@@ -1,0 +1,21 @@
+# Arquivos de build e binários
+build/*
+bin/*
+*.o
+*.a
+*.so
+
+# Permite exibir a estrutura de diretórios corretamente
+!.gitkeep
+
+# Arquivos de configuração de sistemas operationais e IDEs
+.DS_Store
+*.swp
+*.swo
+*~
+.vscode/
+.idea/
+
+# Saídas do Doxygen
+docs/html/
+docs/latex/
