@@ -55,8 +55,8 @@ Realizações:
 
 Responsabilidades:
 
-Conhecimentos
-- Vetor para os itens
+Conhecimentos:
+- Itens e suas características
 - Capacidade maxima do inventário
 - Quantidade atual de itens armazenados
 
@@ -75,3 +75,30 @@ Colaborações:
 - ClassePersonagem
 - Batalha
 - Cena
+
+
+**Classe Cena**
+
+Responsabilidades:
+
+Conhecimentos:
+- Nível da cena
+- Carcterísticas dos personagens (Player e NPCs) que fazem parte da cena
+- Itens e Inventário
+
+Realizações:
+- Inicializar cena (inicia os NPCs, os itens, configura o nível de dificuldade) e finalizar cena
+- Verificar continuidade (fazer com que o player progrida no jogo, barrando ações quando se tornam repetitivas na cena)
+- Ações:
+    - Andar: engatilha ações aleatórias (conversar com NPC, batalhar com NPC, descobrir cenário)
+    - Vasculhar para encontrar itens
+    - Interagir com NPCs
+    - Abrir inventário
+    - Iniciar batalha
+
+Colaborações:
+- Itens
+- Personagem
+- ClassePersonagem
+- Batalha
+- Inventário
