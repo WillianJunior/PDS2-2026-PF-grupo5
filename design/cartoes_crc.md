@@ -1,5 +1,7 @@
 **Classe Personagem**
+
 Responsabilidades:
+
 Conhecimentos(Atributos):
 - Nome
 - Ataque
@@ -30,7 +32,9 @@ Colaborações:
 
 
 **Classe ClassePersonagem**
+
 Responsabilidades:
+
 Conhecimentos:
 - NomeDeClasse
 - DescriçãoDeClasse
@@ -45,3 +49,29 @@ Conhecimentos:
 Realizações:
 - Definir ataques disponíveis para a classe.
 - Fornecer dados dos ataques para outras classes.
+
+
+**Classe Invantário**
+
+Responsabilidades:
+
+Conhecimentos
+- Vetor para os itens
+- Capacidade maxima do inventário
+- Quantidade atual de itens armazenados
+
+Realizações:
+- Interagir com os itens:
+    - Salvar itens no inventário
+    - Utilizar um item
+    - Excluir um item do inventário
+- Listar os itens no inventário
+- Verificar espaços (slots) disponíveis/usados
+- Fechar inventário
+
+Colaborações:
+- Itens
+- Personagem
+- ClassePersonagem
+- Batalha
+- Cena
