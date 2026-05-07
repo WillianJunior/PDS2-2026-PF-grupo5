@@ -10,8 +10,7 @@
 ├── design/             # Diagramas CRC e user stories.
 ├── include/            # Arquivos de cabeçalho (.hpp) -> Definição dos contratos.
 │   ├── core/           # Lógica do jogo.
-│   ├── entities/       # Classes de personagens e inimigos.
-│   └── items/          # Gestão de inventário e equipamentos.
+│   ├── entities/       # Classes de itens, personagens e inimigos.
 ├── src/                # Arquivos de implementação (.cpp).
 │   ├── core/
 │   ├── entities/
