@@ -17,5 +17,5 @@ bin/*
 .idea/
 
 # Saídas do Doxygen
-docs/html/
-docs/latex/
+docs/doxygen/html/
+docs/doxygen/latex/
