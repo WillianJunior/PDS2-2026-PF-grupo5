@@ -1,66 +1,131 @@
+/**
+ * @file Personagem.hpp
+ * @brief Definição da classe Personagem, responsável por gerenciar estados e atributos de indivíduos no jogo.
+ */
+
 #ifndef PERSONAGEM_HPP
 #define PERSONAGEM_HPP
+
 #include <string>
 #include "ClassePersonagem.hpp"
 
-    //Define os tipos de personagens possiveis
-    enum class TipoPersonagem { 
-        Jogador,
-        Inimigo,
-        NPC,
-        BOSS,
-    };
+/**
+ * @enum TipoPersonagem
+ * @brief Define as categorias dos personagens do jogo.
+ */
+enum class TipoPersonagem { 
+    Jogador, ///< Personagem controlado pelo usuário.
+    Inimigo, ///< Oponentes comuns encontrados em cenas.
+    NPC,     ///< Personagens aliados encontrados em cena.
+    BOSS     ///< Inimigos especiais específicos das Cenas.
+};
 
-    //Representar um indivíduo do jogo, mantém seu estado (vida, mana, ataque).
-    //Responde a eventos como dano, cura e progressão, alterando seu estado.
-    class Personagem {
-        private:
-        //Atributos que todo personagem possui.
-            std::string nome;
-            double ataque;
-            double defesa;
-            double vidaAtual;
-            double vidaTotal;
-            double ppAtual;
-            double ppTotal; 
-            double agilidade;
-            int nivel;
-            double xp;
+/**
+ * @class Personagem
+ * @brief Representa um indivíduo único no mundo do jogo.
+ * Mantém os atributos (vida, mana, agilidade, ataque, defesa)
+ * e a lógica de progressão (nível, experiência) de cada personagem.
+ */
+class Personagem {
+    private:
+        std::string _nome;          ///< Nome único do indivíduo.
+        double _ataque;             ///< Pontuação de ataque.
+        double _defesa;             ///< Pontuação de defesa.
+        double _vidaAtual;          ///< Pontos de vida remanescentes.
+        double _vidaTotal;          ///< Limite máximo de pontos de vida.
+        double _ppAtual;            ///< Pontos de Poder (Mana) disponíveis.
+        double _ppTotal;            ///< Capacidade máxima de mana.
+        double _agilidade;          ///< Pontuação de agilidade. Influencia a esquiva e velocidade.
+        int _nivel;                 ///< Nível atual de progressão.
+        double _xp;                 ///< Pontos de experiência acumulados.
 
-            TipoPersonagem tipo;
-            ClassePersonagem classe; //Define quais ataques o Personagem possui.
+        TipoPersonagem _tipo;       ///< Categoria da entidade.
+        ClassePersonagem _classe;   ///< Arquétipo que define as habilidades disponíveis.
 
-        public:
-            //Todas as ações possiveis que um personagem pode ser afetado.
-            void receberDano(double dano);
-            void recuperarVida(double cura); 
-            void recuperarMana(double quantidadeMana);
-            void gastarMana(double custoMana); 
-            void ganharExperiencia(double quantidadeXp);
-            void subirNivel();
-            bool estaVivo() const; //Facilita saber se o Personagem esta vivo ou não.
+    public:
+    /**
+         * @brief Construtor para inicialização de um personagem individualizado.
+         * @param nome Nome do personagem.
+         * @param ataque Pontos de ataque iniciais.
+         * @param defesa Pontos de defesa iniciais.
+         * @param vidaTotal Limite máximo de vida.
+         * @param ppTotal Limite máximo de mana.
+         * @param agilidade Pontos de agilidade iniciais.
+         * @param tipoClasse Enum que define o arquétipo.
+         * @param tipo Categoria (Jogador, Boss, etc).
+         * @param nivel Nível inicial (default = 1).
+         */
+        Personagem(
+            std::string nome, 
+            double ataque, 
+            double defesa, 
+            double vidaTotal, 
+            double ppTotal, 
+            double agilidade, 
+            TipoClasse tipoClasse,
+            TipoPersonagem tipo,
+            int nivel = 1);
 
-            //Getters
-            double getVidaAtual() const;
-            double getAtaque() const;
-            double getDefesa() const;
-            double getAgilidade() const;
-            int getNivel() const;
-            double getXp() const;
-            TipoPersonagem getTipo() const;
-            const ClassePersonagem& getClasse() const;   
+        /**
+         * @brief Reduz a vida atual do personagem com base em um ataque.
+         * @param dano Quantidade de dano a ser subtraída.
+         */
+        void receberDano(double dano);
 
-            //Construtor que mantêm o conceito que todo personagem é individual 
-            //e precisa ter seus atributos deifnidos
-            Personagem(
-                std::string nome, 
-                double ataque, 
-                double defesa, 
-                double vidaTotal, 
-                double ppTotal, 
-                double agilidade, 
-                TipoClasse tipoClasse,
-                TipoPersonagem tipo,
-                int nivel = 1); //Nível inicia 1 mas pode ser escolhido com outro valor inicial. 
-    };
+        /**
+         * @brief Incrementa a vida atual, respeitando o limite máximo.
+         * @param cura Quantidade de pontos de vida recuperados.
+         */
+        void recuperarVida(double cura); 
+
+        /**
+         * @brief Recupera pontos de mana.
+         * @param quantidadeMana Valor a ser recuperado.
+         */
+        void recuperarMana(double quantidadeMana);
+
+        /**
+         * @brief Deduz pontos de mana para a execução de ataques.
+         * @param custoMana Valor de mana consumido.
+         */
+        void gastarMana(double custoMana); 
+
+        /**
+         * @brief Adiciona experiência e verifica condições para subir de nível.
+         * @param quantidadeXp Valor de experiência recebido.
+         */
+        void ganharExperiencia(double quantidadeXp);
+
+        /**
+         * @brief Incrementa o nível e melhora os atributos base do personagem.
+         */
+        void subirNivel();
+
+        /**
+         * @brief Verifica se a vida atual é superior a zero.
+         * @return true se o personagem estiver vivo, false caso não esteja.
+         */
+        bool estaVivo() const;
+
+        // Getters
+        /** @return Vida atual do personagem. */
+        double getVidaAtual() const;
+        /** @return Valor do atributo de ataque. */
+        double getAtaque() const;
+        /** @return Valor do atributo de defesa. */
+        double getDefesa() const;
+        /** @return Valor do atributo de agilidade. */
+        double getAgilidade() const;
+        /** @return Nível atual do personagem. */
+        int getNivel() const;
+        /** @return Experiência acumulada. */
+        double getXp() const;
+        /** @return Tipo (Jogador, Inimigo, etc). */
+        TipoPersonagem getTipo() const;
+        /** @return Referência constante à classe/arquétipo. */
+        const ClassePersonagem& getClasse() const;   
+
+        
+};
+
 #endif
