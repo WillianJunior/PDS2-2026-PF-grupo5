@@ -119,6 +119,8 @@
 |                  | Acoes (lista de ações disponíveis por turno)   | -                                                       |
 | **Realização**   | iniciarBatalha()                               | Cena, Item, Personagem, ClassePersonagem                |
 |                  | realizarAcao()                                 | Personagem                                              |
+|                  | processarEsquiva()                             | Personagem                                              |
+|                  | processarDefesa()                              | Personagem                                              |
 |                  | finalizarBatalha()                             | Cena, Personagem                                        |
 |                  | definirRecompensa()                            | Cena, Personagem                                        |
 
