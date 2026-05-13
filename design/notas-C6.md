@@ -1,0 +1,7 @@
+ - Gostei que vocês já estão modelando alguns comportamentos. E.g., Batalha::processarDefesa().
+ - Não vimos exceções ainda, mas já etão modelando exceções. Legal :)
+ - Cuidado com documentação óbvia. ClassePersonagem::ClassePersonagem(): "Construtor que inicializa a classe com seus atributos básicos.", sim, construtores inicializam classes com atributos básicos. Todo construtor é assim. Isso só deixa a sua documentação maior e mais chata de ler sem adicionar muita coisa...
+ - Um ótimo exemplo de documentação em Inventario::adicionarItem(): "Tenta adicionar um item ao primeiro slot disponível. ". Aqui vocês especificam o que vai acontecer com o item. Notem que isso independe da implementação,
+ - Vi o uso de métodos const, boa :)
+ - Também vi muitos ponteiros. Prestem bem atenção quando chegamos aos smart pointers. Isso não vai mudar a arquitetura de vocês, mas pode ajudar a limitar erros lógicos.
+ - Gostei muito do README, bem detalhado. Nota-se o cuidado que vocês tiveram na modelagem da solução.
