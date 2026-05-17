@@ -46,7 +46,7 @@ Desenvolver um motor de RPG em turnos capaz de representar personagens, classes,
 | Guerreiro | Espada | Alta resistência física |
 | Mago | Magia | Uso ampliado de habilidades mágicas |
 | Arqueiro | Arco | Alta agilidade e ataques à distância |
-| Escudeiro | Escudo | Bloqueio e redução de dano |
+| Tank | Escudo | Bloqueio e redução de dano |
 
 ### Atributos
 Cada personagem possui: **vida**, **PP/mana**, **ataque**, **defesa**, **agilidade**, **XP** e **nível**.
