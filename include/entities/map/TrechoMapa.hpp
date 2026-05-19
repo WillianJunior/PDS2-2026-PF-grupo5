@@ -37,6 +37,11 @@ private:
      */
     std::vector<Personagem*> _npcs; 
 
+     /**
+     * @brief Indica se o trecho está aberto.
+     */
+    bool _aberto;
+
 public:
     /**
      * @brief Construtor da classe TrechoMapa.
@@ -73,6 +78,12 @@ public:
      * @return Vetor de ponteiros para os NPCs.
      */
     std::vector<Personagem*> pegarNPCs() const;
+
+     /**
+     * @brief Verifica se o trecho já foi aberto/explorado.
+     * @return true se o trecho está aberto, false caso contrário.
+     */
+    bool estaAberto() const;
 
 };
 

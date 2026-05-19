@@ -27,6 +27,21 @@ private:
      */
     TrechoMapa* _trechoAtual;
 
+     /** 
+     * @brief Indica se o inventário está aberto.
+     */
+    bool _inventarioAberto;
+
+    /** 
+     * @brief Indica se o jogador está em batalha.
+     */
+    bool _emBatalha;
+
+    /** 
+     * @brief Indica se o jogador está explorando o mapa.
+     */
+    bool _explorando;
+
 public:
     /**
      * @brief Construtor da classe Cena.
@@ -77,6 +92,21 @@ public:
      * @brief Migra o fluxo de jogo para o combate em turnos.
      */
     void iniciarBatalha();
+
+    /**
+     * @brief Retorna se o inventário está aberto.
+     */
+    bool inventarioAberto() const;
+
+    /**
+     * @brief Retorna se o jogador está em batalha.
+     */
+    bool emBatalha() const;
+
+    /**
+     * @brief Retorna se o jogador está explorando.
+     */
+    bool explorando() const;
 
 };
 
