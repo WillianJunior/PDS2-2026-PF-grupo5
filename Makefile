@@ -9,7 +9,7 @@ BUILD   := build
 BIN     := bin
 
 # Nome do executável
-TARGET  := $(BIN)/jogo_rpg # TODO: alterar quando já tivermos um nome definido para o jogo.
+TARGET  := $(BIN)/he Dark Age - The Arcanum Quest # TODO: alterar quando já tivermos um nome definido para o jogo.
 
 # Listagem de arquivos fonte e objetos
 SOURCES := $(wildcard $(SRC)/*.cpp) $(wildcard $(SRC)/**/*.cpp)
