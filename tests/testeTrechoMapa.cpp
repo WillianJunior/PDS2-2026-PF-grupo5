@@ -22,7 +22,7 @@ TEST_CASE("Funcao abrirTrecho ") {
 TEST_CASE("Adicionar item") {
     TrechoMapa trecho(1, "Floresta");
 
-    Item* item = new Item("Poção", "cura", TipoItem::Pocao, "cura", 10, 0);
+    Item* item = new Item("Poção", "Essa pocao melhora sua esquiva", TipoItem::Pocao, "esquiva", 10, 0);
 
     trecho.adicionarItem(item);
 
@@ -78,7 +78,7 @@ TEST_CASE("Varios NPCs") {
     CHECK(npcs[2] == npc3);
 }
 
-TEST_CASE("Coeistencia de Itens e NPCs") {
+TEST_CASE("Coexistencia de Itens e NPCs") {
     TrechoMapa trecho(1, "Floresta");
 
     Item* item = new Item("Poção", "Essa pocao melhora seu ataque.", TipoItem::Pocao, "Ataque", 10, 0);

@@ -42,7 +42,7 @@ TEST_CASE("Vasculhar") {
     CHECK(cena.explorando() == true);
 }
 
-TEST_CASE("Cena - interagirNPCs mantém estado da cena") {
+TEST_CASE("Interacao com NPCs") {
     TrechoMapa trecho(1, "Inicio");
     Cena cena(1, &trecho);
 
