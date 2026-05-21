@@ -38,7 +38,7 @@ enum class TipoClasse {
     Arqueiro,
     Guerreiro,
     Mago,
-    Escudeiro
+    Tanque
 };
 
 /**
@@ -49,7 +49,7 @@ enum class TipoClasse {
  */
 class ClassePersonagem {
 private:
-    TipoClasse _tipo;               ///< Tipo da classe (ex: "Mago").
+    TipoClasse _tipo;                ///< Tipo da classe (ex: "Mago").
     std::string _descricao;          ///< Breve história (flavor) da classe.
     std::string _arma;               ///< Tipo de arma utilizada (flavor).
     std::array<Ataque, 3> _ataques;  ///< Lista fixa de 3 ataques por classe.
@@ -70,11 +70,16 @@ public:
     /** @return Nome da arma padrão da classe. */
     std::string getArma() const;
 
+    /** @return Nome da arma padrão da classe. */
+    TipoClasse getTipo() const;
+
     /**
      * @brief Retorna a lista de ataques disponíveis.
      * @return Referência constante para o array de ataques.
      */
     const std::array<Ataque, 3>& getAtaques() const;
+
+    const Ataque& getAtaque(TipoAtaque tipo) const;
 };
 
 #endif

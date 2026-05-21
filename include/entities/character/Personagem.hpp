@@ -29,6 +29,8 @@ enum class TipoPersonagem {
 class Personagem {
     private:
         std::string _nome;          ///< Nome único do indivíduo.
+        std::string _descricao;     ///< Breve história (flavor) do personagem.
+        std::string _fala;          ///< Fala do personagem em batalhas ou na cena.
         double _ataque;             ///< Pontuação de ataque.
         double _defesa;             ///< Pontuação de defesa.
         double _vidaAtual;          ///< Pontos de vida remanescentes.
@@ -56,7 +58,9 @@ class Personagem {
          * @param nivel Nível inicial (default = 1).
          */
         Personagem(
-            std::string nome, 
+            std::string nome,
+            std::string descricao,
+            std::string fala,
             double ataque, 
             double defesa, 
             double vidaTotal, 
@@ -94,7 +98,7 @@ class Personagem {
          * @brief Adiciona experiência e verifica condições para subir de nível.
          * @param quantidadeXp Valor de experiência recebido.
          */
-        void ganharExperiencia(double quantidadeXp);
+        void ganharXp(double quantidadeXp);
 
         /**
          * @brief Incrementa o nível e melhora os atributos base do personagem.
@@ -107,7 +111,18 @@ class Personagem {
          */
         bool estaVivo() const;
 
+        /**
+         * @brief Verifica qual cena o personagem faz parte.
+         */
+        void cenaAtual();
+
         // Getters
+        /** @return Nome do personagem */
+        std::string getNome() const;
+        /** @return Descricao do personagem */
+        std::string getDescricao() const;
+        /** @return Fala do personagem */
+        std::string getFala() const;
         /** @return Vida atual do personagem. */
         double getVidaAtual() const;
         /** @return Valor do atributo de ataque. */
@@ -116,6 +131,8 @@ class Personagem {
         double getDefesa() const;
         /** @return Valor do atributo de agilidade. */
         double getAgilidade() const;
+        /** @return Mana Atual */
+        double getManaAtual() const;
         /** @return Nível atual do personagem. */
         int getNivel() const;
         /** @return Experiência acumulada. */
@@ -123,9 +140,7 @@ class Personagem {
         /** @return Tipo (Jogador, Inimigo, etc). */
         TipoPersonagem getTipo() const;
         /** @return Referência constante à classe/arquétipo. */
-        const ClassePersonagem& getClasse() const;   
-
-        
+        const ClassePersonagem& getClasse() const;
 };
 
 #endif
