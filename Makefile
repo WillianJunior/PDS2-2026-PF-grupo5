@@ -1,6 +1,6 @@
 # Compilador e flags
 CXX      := g++
-CXX_FLAGS := -std=c++11 -Wall -Iinclude
+CXXFLAGS := -std=c++17 -Wall -Wextra -Iinclude
 
 # Diretórios do projeto
 SRC     := src
@@ -9,31 +9,51 @@ BUILD   := build
 BIN     := bin
 
 # Nome do executável
-TARGET  := $(BIN)/he Dark Age - The Arcanum Quest # TODO: alterar quando já tivermos um nome definido para o jogo.
+TARGET  := $(BIN)/The_Dark_Age_-_The_Arcanum_Quest
 
-# Listagem de arquivos fonte e objetos
-SOURCES := $(wildcard $(SRC)/*.cpp) $(wildcard $(SRC)/**/*.cpp)
-OBJECTS := $(SOURCES:$(SRC)/%.cpp=$(BUILD)/%.o)
+# Arquivos fonte e objetos (busca recursiva real via find)
+SOURCES      := $(shell find $(SRC) -name '*.cpp')
+OBJECTS      := $(patsubst $(SRC)/%.cpp, $(BUILD)/%.o, $(SOURCES))
 
-# Comando padrão para compilar o projeto 
+# Para testes: fontes sem main.cpp + arquivos de teste
+SRCS_NO_MAIN := $(filter-out $(SRC)/main.cpp, $(SOURCES))
+TEST_SRCS    := $(wildcard tests/*.cpp)
+
+# Comando padrão para compilar o projeto
 all: $(TARGET)
 
 # Linkagem do executável
 $(TARGET): $(OBJECTS)
 	@mkdir -p $(BIN)
-	$(CXX) $(CXX_FLAGS) $^ -o $@
+	$(CXX) $(CXXFLAGS) $^ -o $@
 
 # Compilação dos objetos
 $(BUILD)/%.o: $(SRC)/%.cpp
 	@mkdir -p $(dir $@)
-	$(CXX) $(CXX_FLAGS) -c $< -o $@
+	$(CXX) $(CXXFLAGS) -c $< -o $@
 
-# Comando para executar o programa 
+# Comando para executar o programa
 run: all
 	@./$(TARGET)
 
-# Limpeza dos arquivos gerados
-clean:
-	rm -rf $(BUILD) $(BIN)
+# Compilação dos testes com flags de cobertura
+compile_tests:
+	$(CXX) $(CXXFLAGS) -Itests --coverage $(SRCS_NO_MAIN) $(TEST_SRCS) -o exec_tests
 
-.PHONY: all run clean
+# Execução dos testes
+test: compile_tests
+	./exec_tests
+
+# Relatório de cobertura de testes
+coverage: test
+	@echo "=== Cobertura de Testes ==="
+	gcovr -r . --filter src/
+	@mkdir -p docs/coverage
+	gcovr -r . --filter src/ --html-details -o docs/coverage/index.html
+	@echo "Relatório HTML gerado em docs/coverage/index.html"
+
+# Limpeza dos executáveis e arquivos de mapeamento (.gcda, .gcno)
+clean:
+	rm -rf $(BUILD) $(BIN) exec_tests *.gcda *.gcno docs/coverage
+
+.PHONY: all run compile_tests test coverage clean

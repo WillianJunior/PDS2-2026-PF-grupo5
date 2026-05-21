@@ -19,3 +19,9 @@ bin/*
 # Saídas do Doxygen
 docs/doxygen/html/
 docs/doxygen/latex/
+
+# Testes 
+*.gcda
+*.gcno
+exec_tests
+docs/coverage/
