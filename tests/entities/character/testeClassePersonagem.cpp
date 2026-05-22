@@ -1,5 +1,6 @@
-#include "doctest.h"
-#include "ClassePersonagem.hpp"
+#include "../../doctest.h"
+
+#include "entities/character/ClassePersonagem.hpp"
 
 /*
 Ordem dos ataques:

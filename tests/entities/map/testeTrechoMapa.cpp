@@ -1,7 +1,8 @@
-#include "doctest.h"
-#include "TrechoMapa.hpp"
-#include "Item.hpp"
-#include "Personagem.hpp"
+#include "../../doctest.h"
+
+#include "entities/map/TrechoMapa.hpp"
+#include "entities/items/Item.hpp"
+#include "entities/character/Personagem.hpp"
 
 TEST_CASE("Construtor de TrechoMapa"){
     TrechoMapa trecho(1, "Floresta");

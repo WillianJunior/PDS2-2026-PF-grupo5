@@ -1,5 +1,6 @@
-#include "doctest.h"
-#include "Personagem.hpp"
+#include "../../doctest.h"
+
+#include "entities/character/Personagem.hpp"
 
 /*
     ANOTAÇÕES IMPORTANTES

@@ -1,6 +1,7 @@
-#include "doctest.h"
-#include "Cena.hpp"
-#include "TrechoMapa.hpp"
+#include "../../doctest.h"
+
+#include "entities/map/Cena.hpp"
+#include "entities/map/TrechoMapa.hpp"
 
 TEST_CASE("Estado inicial de Cena") {
     TrechoMapa trecho(1, "Inicio");
