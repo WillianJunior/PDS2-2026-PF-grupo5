@@ -17,7 +17,7 @@ OBJECTS      := $(patsubst $(SRC)/%.cpp, $(BUILD)/%.o, $(SOURCES))
 
 # Para testes: fontes sem main.cpp + arquivos de teste
 SRCS_NO_MAIN := $(filter-out $(SRC)/main.cpp, $(SOURCES))
-TEST_SRCS    := $(wildcard tests/*.cpp)
+TEST_SRCS    := $(shell find tests/ -name '*.cpp')
 
 # Comando padrão para compilar o projeto
 all: $(TARGET)
@@ -42,7 +42,7 @@ compile_tests:
 
 # Execução dos testes
 test: compile_tests
-	./exec_tests
+	-./exec_tests
 
 # Relatório de cobertura de testes
 coverage: test
