@@ -1,4 +1,4 @@
-#include "ClassePersonagem.hpp"
+#include "entities/character/ClassePersonagem.hpp"
 
 ClassePersonagem::ClassePersonagem(TipoClasse tipo) : _tipo(tipo) {
     _descricao = "";

@@ -1,4 +1,4 @@
-#include "Personagem.hpp"
+#include "entities/character/Personagem.hpp"
 
 Personagem::Personagem(
     std::string nome,

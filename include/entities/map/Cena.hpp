@@ -6,8 +6,8 @@
 #ifndef CENA_HPP
 #define CENA_HPP
 
-#include "TrechoMapa.hpp"
-#include "Batalha.hpp"
+#include "../map/TrechoMapa.hpp"
+#include "../battle/Batalha.hpp"
 
 /**
  * @class Cena

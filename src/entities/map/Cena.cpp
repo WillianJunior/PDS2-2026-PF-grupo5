@@ -2,7 +2,7 @@
  * @file Cena.cpp
  * @brief Implementação da classe Cena
  */
-#include "Cena.hpp"
+#include "entities/map/Cena.hpp"
 
 /**
  * @brief Construtor da classe Cena.

@@ -9,8 +9,8 @@
 #include <vector>
 #include <string>
 
-#include "Personagem.hpp"
-#include "Item.hpp"
+#include "../character/Personagem.hpp"
+#include "../items/Item.hpp"
 
 // Evita a dependência circular com Cena (Forward Declaration).
 class Cena;

@@ -7,7 +7,7 @@
 #define INVENTARIO_HPP
 
 #include "Item.hpp"
-#include "Personagem.hpp"
+#include "../character/Personagem.hpp"
 
 /**
  * @class Inventario

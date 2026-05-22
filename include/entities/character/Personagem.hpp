@@ -7,7 +7,7 @@
 #define PERSONAGEM_HPP
 
 #include <string>
-#include "ClassePersonagem.hpp"
+#include "../character/ClassePersonagem.hpp"
 
 /**
  * @enum TipoPersonagem
