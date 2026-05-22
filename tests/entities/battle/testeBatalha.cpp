@@ -1,8 +1,11 @@
-#include "doctest.h"
-#include "Batalha.hpp"
-#include "Personagem.hpp"
-#include "Cena.hpp"
-#include "TrechoMapa.hpp"
+#include "../../doctest.h"
+
+#include <stdexcept>
+
+#include "entities/battle/Batalha.hpp"
+#include "entities/character/Personagem.hpp"
+#include "entities/map/Cena.hpp"
+#include "entities/map/TrechoMapa.hpp"
 
 TEST_CASE("Estado inicial de Batalha") {
     Personagem player("Heroi", "Heroi corajoso", "Vou te vencer!", 20, 15, 100, 50, 10, TipoClasse::Guerreiro, TipoPersonagem::Jogador);
