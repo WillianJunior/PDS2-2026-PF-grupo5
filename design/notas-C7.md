@@ -1,0 +1,2 @@
+ - compilação com warnings muito boa
+ - ótima quantidade de testes
