@@ -21,10 +21,11 @@
    - [2.2 Ataque Simples](#22-ataque-simples)
    - [2.3 Ataque Rápido](#23-ataque-rápido)
    - [2.4 Ataque Forte](#24-ataque-forte)
-   - [2.5 Defender](#25-defender)
-   - [2.6 Esquivar](#26-esquivar)
-   - [2.7 Usar Item](#27-usar-item)
-   - [2.8 Fugir](#28-fugir)
+   - [2.5 Condições](#25-condições)
+   - [2.6 Defender](#26-defender)
+   - [2.7 Esquivar](#27-esquivar)
+   - [2.8 Usar Item](#28-usar-item)
+   - [2.9 Fugir](#29-fugir)
 3. [Progressão](#3-progressão)
    - [3.1 Níveis e XP](#31-níveis-e-xp)
    - [3.2 Bônus de Proficiência](#32-bônus-de-proficiência)
@@ -355,7 +356,98 @@ Ataque de alta potência com custo em PP e um efeito especial único. Cada class
 
 ---
 
-### 2.5 Defender
+### 2.5 Condições
+
+Condições são efeitos aplicados a um personagem durante o combate — pelo jogador,
+por um inimigo, ou como efeito colateral de um ataque. Toda condição altera ao menos
+um dos campos mecânicos do personagem afetado e possui uma **duração em turnos**
+definida por quem a aplicou.
+
+Algumas condições são **genéricas**, ou seja, possuem um parâmetro de nome livre.
+Mecanicamente são idênticas, mas podem aparecer na lore com nomes diferentes —
+*Amaldiçoado*, *Corroído*, *Enfraquecido* são todos a mesma condição "Reduz Atributo"
+com nomes distintos.
+
+---
+
+#### Descrição das Condições
+
+**Berserk**
+O personagem afetado entra em fúria descontrolada. A cada turno, sofre `1d4` de dano
+fixo, independentemente de qualquer ação. Em compensação, todas as suas rolagens de
+acerto passam a ter **vantagem** — rola 2d20 e usa o maior. Representa perda de
+controle: bate melhor, mas se consome no processo.
+
+---
+
+**Reduz Atributo** *(condição genérica — nome personalizável)*
+Um atributo específico do personagem afetado é reduzido em X pontos pelo período da
+condição. Como todos os coeficientes derivam diretamente dos atributos, reduzir um
+atributo afeta em cascata tudo que depende dele: reduzir AGI baixa a CD, reduzir DEF
+diminui a eficiência do dado de vida, e assim por diante. Qual atributo e quanto reduz
+são definidos pelo ataque que aplicou a condição.
+
+> *Exemplos de uso com nome personalizado: "Amaldiçoado" (reduz ATQ), "Corroído"
+> (reduz DEF), "Lentidão" (reduz AGI).*
+
+---
+
+**100% de Acerto** *(condição genérica — nome personalizável)*
+O atributo de AGI do personagem afetado é forçado a −10, tornando sua CD efetivamente
+`10 + (0,5 × (−10) − 5) = 0`. O próximo ataque recebido conecta automaticamente — não
+há como esquivar ou defender contra o acerto. O dano ainda é rolado normalmente.
+
+> *Exemplos de uso com nome personalizado: "Vulnerável", "Exposto", "Marcado".*
+
+---
+
+**Paralisado**
+O personagem afetado perde completamente a capacidade de agir. Durante X turnos,
+nenhuma ação está disponível — sem ataque, defesa, esquiva, item ou fuga. O turno
+simplesmente passa.
+
+---
+
+**Atordoado**
+O personagem afetado tem sua capacidade de reação comprometida. No turno seguinte,
+não pode usar **Ataque Rápido** nem **Ataque Forte**. Ações básicas — Ataque Simples,
+Defender, Esquivar e Usar Item — continuam disponíveis.
+
+---
+
+**Envenenado** *(condição genérica — nome personalizável)*
+O personagem afetado sofre `2d6` de dano no início de cada turno enquanto a condição
+durar. Diferente de Berserk, não altera rolagens nem ações — apenas corrói
+gradualmente. Pode ser usado para representar veneno, fogo, sangramento ou qualquer
+efeito de dano contínuo.
+
+> *Exemplos de uso com nome personalizado: "Sangrando", "Em Chamas", "Amaldiçoado".*
+
+---
+
+**Sem Condição**
+O ataque não aplica nenhum efeito adicional além do dano. Nenhum campo do personagem
+é alterado.
+
+---
+
+#### Tabela Resumo
+
+| Condição | PV atual | PP atual | ATQ | DEF | AGI | Poder | Rolagem de acerto | Ações disponíveis |
+|---|---|---|---|---|---|---|---|---|
+| Berserk | −1d4/turno | — | — | — | — | — | Vantagem (2d20, melhor) | Todas |
+| Reduz Atributo* | — | — | −X ou — | −X ou — | −X ou — | −X ou — | — | Todas |
+| 100% de Acerto* | — | — | — | — | Força AGI = −10 | — | — | Todas |
+| Paralisado | — | — | — | — | — | — | — | Nenhuma |
+| Atordoado | — | — | — | — | — | — | — | Sem Atq. Rápido/Forte |
+| Envenenado* | −2d6/turno | — | — | — | — | — | — | Todas |
+| Sem Condição | — | — | — | — | — | — | — | Todas |
+
+*\* Condição genérica com nome personalizável.*
+
+---
+
+### 2.6 Defender
 
 O jogador opta por se proteger em vez de atacar. O dano recebido neste turno é **reduzido pelo coeficiente de Defesa**.
 
@@ -364,7 +456,7 @@ O jogador opta por se proteger em vez de atacar. O dano recebido neste turno é 
 
 ---
 
-### 2.6 Esquivar
+### 2.7 Esquivar
 
 O jogador tenta desviar do ataque inimigo. Neste turno, o **Bônus de Proficiência é somado à sua CD**.
 
@@ -373,13 +465,13 @@ O jogador tenta desviar do ataque inimigo. Neste turno, o **Bônus de Proficiên
 
 ---
 
-### 2.7 Usar Item
+### 2.8 Usar Item
 
 O jogador utiliza um item do inventário. O efeito depende do tipo do item.
 
 ---
 
-### 2.8 Fugir
+### 2.9 Fugir
 
 O jogador tenta abandonar o combate.
 
