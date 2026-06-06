@@ -1,4 +1,4 @@
-# Regras do Jogo — *Dark Age — The Dark Age - The Arcanum Quest*
+# Regras do Jogo - *Dark Age — The Arcanum Quest*
 
 > Este documento descreve todas as regras, mecânicas e sistemas do jogo.
 > Serve como referência central para o grupo de desenvolvimento e como
