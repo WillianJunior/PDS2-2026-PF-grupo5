@@ -8,10 +8,10 @@ InfoTrechoMapa BancoTrechoMapa::obterTrechoMapa(int id){
         return{
             101, //id
             "", //descrição
-            {}, //vetor de id dos NPCs de interação
+            1, //id do NPC de interação
             3, //quantidade de itens no trecho
             2, //quantidade de inimigosno trecho
-            {}, //vetor de id dos proximos trechos
+            102, //id do proximo trecho
             101, //id do trecho anterior
         };
         break;
@@ -20,10 +20,10 @@ InfoTrechoMapa BancoTrechoMapa::obterTrechoMapa(int id){
         return{
             102, //id
             "", //descrição
-            {}, //vetor de id dos NPCs de interação
+            2, //id dos NPC de interação
             3, //quantidade de itens no trecho
             2, //quantidade de inimigosno trecho
-            {}, //vetor de id dos proximos trechos
+            103, //id do proximo trecho
             101, //id do trecho anterior
         };
         break;
@@ -32,10 +32,10 @@ InfoTrechoMapa BancoTrechoMapa::obterTrechoMapa(int id){
         return{
             103, //id
             "", //descrição
-            {}, //vetor de id dos NPCs de interação
+            3, // id do NPC de interação
             3, //quantidade de itens no trecho
             2, //quantidade de inimigosno trecho
-            {}, //vetor de id dos proximos trechos
+            104, //id do proximo trecho
             102, //id do trecho anterior
         };
         break;

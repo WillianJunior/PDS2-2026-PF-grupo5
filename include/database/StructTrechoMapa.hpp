@@ -8,12 +8,12 @@ struct InfoTrechoMapa{
 
     std::string descricao;
 
-    std::vector<int> NPCsInteracao; //vetor de id dos npcs de interação do trecho
+    int npcInteracao; //id do npc de interação
 
     int quantidadeItens; //numero de itens presente no trecho
     int quantidadeInimigos; //numero de inimigos presente no trecho;
 
-    std::vector<int> proximosTrechos; //trechos que este trecho libera
+    int proximoTrecho; //id do proximo trecho
 
     int trechoAnterior; //id do trecho anterior
 };
