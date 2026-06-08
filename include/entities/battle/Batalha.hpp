@@ -1,6 +1,14 @@
 /**
  * @file Batalha.hpp
  * @brief Gerenciador do motor de combate por turnos do RPG.
+ *
+ * A classe Batalha é responsável pelo fluxo completo de um encontro:
+ * iniciativa, turnos, execução de ações, aplicação de condições,
+ * cálculo de recompensas e finalização. Toda a lógica de *regras*
+ * (fórmulas, tabelas, limiares) é delegada às classes de Regras
+ * correspondentes — Batalha apenas orquestra o fluxo.
+ *
+ * @see Regras.md — Seção 2 (Sistema de Combate) e Seção 4 (Dificuldade de Encontros)
  */
 
 #ifndef BATALHA_HPP
@@ -11,22 +19,27 @@
 
 #include "../character/Personagem.hpp"
 #include "../items/Item.hpp"
+#include "Condicao.hpp"
+#include "core/Dados.hpp"
 
 // Evita a dependência circular com Cena (Forward Declaration).
 class Cena;
+class RegrasBatalha;
+class IView;
+class IController;
 
 /**
  * @enum AcaoBatalha
  * @brief Define as ações possíveis que o jogador ou NPC podem tomar.
  */
 enum class AcaoBatalha {
-    AtaqueSimples, ///< Baseado apenas nos pontos de ataque.
-    AtaqueRapido,  ///< Usa agilidade e consome mana.
-    AtaqueForte,   ///< Dano massivo, alto consumo de mana, reduz defesa inimiga.
-    Defesa,        ///< Tenta reduzir o dano recebido.
-    Esquiva,       ///< Tenta anular o dano baseado em agilidade.
-    UsarItem,      ///< Abre o inventário para consumir um item.
-    Fugir          ///< Tenta encerrar a batalha prematuramente.
+    AtaqueSimples, ///< Dado de dano + coef. ATQ. Sem custo de PP. Escala em quantidade por nível.
+    AtaqueRapido,  ///< Age antes do inimigo. Usa coef. AGI. Consome PP. Efeito por classe.
+    AtaqueForte,   ///< Alta potência. Consome PP. Escolhido/trocado nos LVs 3, 5 e 7.
+    Defesa,        ///< Reduz dano recebido pelo coef. de DEF. Sem custo.
+    Esquiva,       ///< Soma Bônus de Proficiência à CD neste turno. Sem custo.
+    UsarItem,      ///< Utiliza um item do inventário.
+    Fugir          ///< Abandona o combate. Bloqueado em confrontos Boss/Impossível.
 };
 
 /**
@@ -41,74 +54,125 @@ private:
     Personagem* _inimigo;          ///< Ponteiro para o oponente (NPC ou Boss).
     int _turnoAtual;               ///< Indicador de turno atual da batalha.
     std::vector<AcaoBatalha> _acoesDisponiveis; ///< Lista de ações (Ataque, Defesa, Esquiva).
-    float _fatorDificuldade;       ///< Indicador de dificuldade da batalha.
+    double _fatorDificuldade;       ///< Indicador de dificuldade da batalha.
     int _progressoBatalha;         ///< Indicador de progresso da batalha.
-
+    Dados& _dados;                           // ← novo: injetado via construtor
+    IView* _view;                            // ← novo: interface de exibição
+    IController* _controller;               // ← novo: interface de input
+    RegrasBatalha* _regras;                  // ← novo: regras de combate
+    std::vector<Condicao> _condicoesPlayer;  // ← novo: condições ativas no player
+    std::vector<Condicao> _condicoesInimigo; // ← novo: condições ativas no inimigo
     /**
      * @brief Calcula a variabilidade de uma ação baseada em sorte.
      * @details A fórmula base é $$Atributo \times [0.8, 1.2]$$.
      * @param valorBase O valor do atributo original.
      * @return O valor modificado pela sorte.
      */
-    float calcularVariabilidade(int valorBase);
+    double CalcularVariabilidade(double valorBase);
+    /**
+     * @brief Verifica se uma rolagem de acerto supera a CD do alvo.
+     * @param coefAtaque Coeficiente de ATQ (ou AGI para AtaqueRapido).
+     * @param nivel      Nível do atacante (para Bônus de Proficiência).
+     * @param gastaPP    Se true, soma Bônus de Proficiência à rolagem.
+     * @param vantagem   Se true, rola 2d20 e usa o maior.
+     * @param cdAlvo     CD do alvo a ser superada.
+     * @return true se a rolagem superar (não apenas igualar) a CD.
+     */
+    bool VerificarAcerto(double coefAtaque, int nivel,
+                        bool gastaPP, bool vantagem, double cdAlvo); // ← novo
 
+    /**
+     * @brief Atualiza _acoesDisponiveis com base nas condições ativas do player.
+     * Ex: Atordoado remove AtaqueRapido e AtaqueForte; Paralisado remove tudo.
+     */
+    void AtualizarAcoesDisponiveis(); // ← novo    
 public:
     /**
-     * @brief Construtor da batalha.
-     * @param player Ponteiro para o herói.
-     * @param inimigo Ponteiro para o inimigo (boss ou NPC).
+     * @brief Construtor completo com todas as dependências.
+     * @param player     Ponteiro para o herói.
+     * @param inimigo    Ponteiro para o inimigo.
+     * @param dados      Referência ao gerador de dados (use semente fixa em testes).
+     * @param view       Ponteiro para a interface de exibição (opcional por enquanto).
+     * @param controller Ponteiro para a interface de input (opcional por enquanto).
+     * @param regras     Ponteiro para as regras de combate (opcional por enquanto).
      */
-    Batalha(Personagem* player, Personagem* inimigo);
+    Batalha(Personagem* player, Personagem* inimigo,
+            Dados& dados,
+            IView* view = nullptr,
+            IController* controller = nullptr,
+            RegrasBatalha* regras = nullptr);
 
     /**
-     * @brief Configura o cenário de combate e inicializa os turnos.
-     * @note Chamado quando a Cena identifica um encontro.
+     * @brief Configura o encontro: calcula _fatorDificuldade, define iniciativa
+     *        e avança o turno para 1.
+     * @note A iniciativa é definida pela Agilidade — maior age primeiro.
+     *       Em empate, o player age primeiro.
+     * @see Regras.md — Seção 2.1
      */
-    void iniciarBatalha();
-
-
-     /**
-     * @brief Executa a lógica de uma ação específica.
-     * @param acao Valor do enum AcaoBatalha selecionado.
-     * @details Em se tratando de ataques:
-     * - **Simples**: Apenas pontos de ataque.
-     * - **Rápido**: Ataque + Agilidade + consumo de Mana (Reduz agilidade inimiga).
-     * - **Forte**: Ataque + Alto consumo de Mana (Reduz defesa e esquiva inimiga).
-     * @throw std::invalid_argument Se uma ação inválida for processada.
-     */
-    void realizarAcao(AcaoBatalha acao);   
+    void IniciarBatalha();
 
     /**
-     * @brief Lógica de defesa baseada na proporção $\frac{Defesa}{Ataque}$.
-     * @details 
-     * - Se $\frac{Defesa}{Ataque} < 0.8 \rightarrow 100\%$ de dano.
-     * - Se $0.8 \le \frac{Defesa}{Ataque} < 1.0 \rightarrow 75\%$ de dano.
-     * - Se $Ataque < Defesa \rightarrow 0\%$ de dano.
+     * @brief Executa a ação escolhida pelo jogador no turno atual.
+     * @param acao Ação selecionada (do enum AcaoBatalha).
+     * @throw std::invalid_argument Se a ação não estiver em _acoesDisponiveis.
+     * Delega dano para ClassePersonagem::calcularDano() via RegrasAtaque.
+     * @see Regras.md — Seção 2.2, 2.3, 2.4
      */
-    void processarDefesa();
+    void RealizarAcao(AcaoBatalha acao);   
 
     /**
-     * @brief Lógica de esquiva baseada em agilidade.
-     * @details 
-     * - $Agilidade > Ataque \rightarrow 0\%$ de dano.
-     * - $Agilidade < Ataque \rightarrow 100\%$ de dano.
-     * - $Agilidade = Ataque \rightarrow 50\%$ de dano.
+     * @brief Processa a ação de Defesa: reduz dano pelo coef. DEF.
+     * Delega o cálculo a RegrasBatalha::processarDefesa().
+     * @see Regras.md — Seção 2.6
      */
-    void processarEsquiva();
+    void ProcessarDefesa();
 
     /**
-     * @brief Define e entrega os itens/experiência após a vitória.
-     * @param cenaAtual Referência para atualizar o estado do mapa.
+     * @brief Processa a ação de Esquiva: soma Bônus de Proficiência à CD.
+     * Delega o cálculo a RegrasBatalha::processarEsquiva().
+     * @see Regras.md — Seção 2.7
      */
-    void definirRecompensa(Cena& cenaAtual);
+    void ProcessarEsquiva();
+
+    /**
+     * @brief Define e entrega recompensas após vitória (XP e itens).
+     * @param cenaAtual Referência para atualizar o estado da Cena.
+     * XP calculado por RegrasBatalha::calcularXPGanho() (com redução para Trivial).
+     * @see Regras.md — Seção 4.5 e 4.6
+     */
+    void DefinirRecompensa(Cena& cenaAtual);
 
     /**
      * @brief Finaliza o combate, limpa buffers e retorna ao estado de exploração.
      */
-    void finalizarBatalha();
+    void FinalizarBatalha();
+
+    /**
+     * @brief Aplica uma condição a um dos combatentes.
+     * @param condicao  Struct com tipo, duração e parâmetros da condição.
+     * @param noPlayer  true → aplica ao player; false → aplica ao inimigo.
+     * @see Regras.md — Seção 2.5 (Condições de Combate)
+     */
+    void AplicarCondicao(const Condicao& condicao, bool noPlayer); // ← novo
+
+    /**
+     * @brief Processa todas as condições ativas no início de cada turno.
+     * Aplica efeito de turno, decrementa duração e remove condições expiradas.
+     */
+    void ProcessarCondicoesAtivas(); // ← novo
+
+    /**
+     * @brief Verifica se a fuga está disponível (delega a RegrasBatalha).
+     * @return true se o jogador pode fugir.
+     * @see Regras.md — Seção 4.6
+     */
+    bool VerificarFuga(); // ← novo
+
 
     // Getter de turno
     int getTurno() const { return _turnoAtual; }
+    double getFatorDificuldade() const { return _fatorDificuldade; } // ← novo
+    const std::vector<AcaoBatalha>& getAcoesDisponiveis() const { return _acoesDisponiveis; } // ← novo
 };
 
 #endif
