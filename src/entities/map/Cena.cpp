@@ -3,7 +3,7 @@
  * @brief Implementação da classe Cena
  */
 #include "entities/map/Cena.hpp"
-#include "include/database/BancoTrechoMapa.hpp"
+#include "database/BancoTrechoMapa.hpp"
 #include <memory>
 
 /**
@@ -118,7 +118,7 @@ const TrechoMapa& Cena::pegarTrechoAtual() const{
 }
 
 bool Cena::inventarioAberto() const{
-    return inventarioAberto;
+    return _inventarioAberto;
 }
 
 bool Cena::emBatalha() const{

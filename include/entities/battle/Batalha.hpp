@@ -62,13 +62,15 @@ private:
     RegrasBatalha* _regras;                  // ← novo: regras de combate
     std::vector<Condicao> _condicoesPlayer;  // ← novo: condições ativas no player
     std::vector<Condicao> _condicoesInimigo; // ← novo: condições ativas no inimigo
+    
     /**
      * @brief Calcula a variabilidade de uma ação baseada em sorte.
      * @details A fórmula base é $$Atributo \times [0.8, 1.2]$$.
      * @param valorBase O valor do atributo original.
      * @return O valor modificado pela sorte.
      */
-    double CalcularVariabilidade(double valorBase);
+    double calcularVariabilidade(double valorBase);
+    
     /**
      * @brief Verifica se uma rolagem de acerto supera a CD do alvo.
      * @param coefAtaque Coeficiente de ATQ (ou AGI para AtaqueRapido).
@@ -78,14 +80,15 @@ private:
      * @param cdAlvo     CD do alvo a ser superada.
      * @return true se a rolagem superar (não apenas igualar) a CD.
      */
-    bool VerificarAcerto(double coefAtaque, int nivel,
-                        bool gastaPP, bool vantagem, double cdAlvo); // ← novo
+    bool verificarAcerto(double coefAtaque, int nivel,
+                        bool gastaPP, bool vantagem, double cdAlvo);
 
     /**
      * @brief Atualiza _acoesDisponiveis com base nas condições ativas do player.
-     * Ex: Atordoado remove AtaqueRapido e AtaqueForte; Paralisado remove tudo.
+     * @example Atordoado remove AtaqueRapido e AtaqueForte; Paralisado remove tudo.
      */
-    void AtualizarAcoesDisponiveis(); // ← novo    
+    void atualizarAcoesDisponiveis();  
+
 public:
     /**
      * @brief Construtor completo com todas as dependências.
@@ -103,13 +106,18 @@ public:
             RegrasBatalha* regras = nullptr);
 
     /**
+     * @brief Destrutor da classe Batalha.
+     */
+    ~Batalha();
+
+    /**
      * @brief Configura o encontro: calcula _fatorDificuldade, define iniciativa
      *        e avança o turno para 1.
      * @note A iniciativa é definida pela Agilidade — maior age primeiro.
      *       Em empate, o player age primeiro.
      * @see Regras.md — Seção 2.1
      */
-    void IniciarBatalha();
+    void iniciarBatalha();
 
     /**
      * @brief Executa a ação escolhida pelo jogador no turno atual.
@@ -118,21 +126,21 @@ public:
      * Delega dano para ClassePersonagem::calcularDano() via RegrasAtaque.
      * @see Regras.md — Seção 2.2, 2.3, 2.4
      */
-    void RealizarAcao(AcaoBatalha acao);   
+    void realizarAcao(AcaoBatalha acao);   
 
     /**
      * @brief Processa a ação de Defesa: reduz dano pelo coef. DEF.
      * Delega o cálculo a RegrasBatalha::processarDefesa().
      * @see Regras.md — Seção 2.6
      */
-    void ProcessarDefesa();
+    void processarDefesa();
 
     /**
      * @brief Processa a ação de Esquiva: soma Bônus de Proficiência à CD.
      * Delega o cálculo a RegrasBatalha::processarEsquiva().
      * @see Regras.md — Seção 2.7
      */
-    void ProcessarEsquiva();
+    void processarEsquiva();
 
     /**
      * @brief Define e entrega recompensas após vitória (XP e itens).
@@ -140,12 +148,12 @@ public:
      * XP calculado por RegrasBatalha::calcularXPGanho() (com redução para Trivial).
      * @see Regras.md — Seção 4.5 e 4.6
      */
-    void DefinirRecompensa(Cena& cenaAtual);
+    void definirRecompensa(Cena& cenaAtual);
 
     /**
      * @brief Finaliza o combate, limpa buffers e retorna ao estado de exploração.
      */
-    void FinalizarBatalha();
+    void finalizarBatalha();
 
     /**
      * @brief Aplica uma condição a um dos combatentes.
@@ -153,26 +161,26 @@ public:
      * @param noPlayer  true → aplica ao player; false → aplica ao inimigo.
      * @see Regras.md — Seção 2.5 (Condições de Combate)
      */
-    void AplicarCondicao(const Condicao& condicao, bool noPlayer); // ← novo
+    void aplicarCondicao(const Condicao& condicao, bool noPlayer);
 
     /**
      * @brief Processa todas as condições ativas no início de cada turno.
      * Aplica efeito de turno, decrementa duração e remove condições expiradas.
      */
-    void ProcessarCondicoesAtivas(); // ← novo
+    void processarCondicoesAtivas();
 
     /**
      * @brief Verifica se a fuga está disponível (delega a RegrasBatalha).
      * @return true se o jogador pode fugir.
      * @see Regras.md — Seção 4.6
      */
-    bool VerificarFuga(); // ← novo
+    bool verificarFuga();
 
 
-    // Getter de turno
+    // Getters
     int getTurno() const { return _turnoAtual; }
-    double getFatorDificuldade() const { return _fatorDificuldade; } // ← novo
-    const std::vector<AcaoBatalha>& getAcoesDisponiveis() const { return _acoesDisponiveis; } // ← novo
+    double getFatorDificuldade() const { return _fatorDificuldade; }
+    const std::vector<AcaoBatalha>& getAcoesDisponiveis() const { return _acoesDisponiveis; }
 };
 
 #endif

@@ -1,4 +1,4 @@
-#include "include/database/BancoTrechoMapa.hpp"
+#include "database/BancoTrechoMapa.hpp"
 
 InfoTrechoMapa BancoTrechoMapa::obterTrechoMapa(int id){
 

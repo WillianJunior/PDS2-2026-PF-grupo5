@@ -3,14 +3,30 @@
 #include "entities/items/Item.hpp"
 #include "entities/map/Cena.hpp"
 
-// Construtor
-Batalha::Batalha(Personagem *player, Personagem *inimigo) {}
+// Construtor e destrutor
+Batalha::Batalha(
+    Personagem *player,
+    Personagem *inimigo,
+    Dados &dados,
+    IView *view,
+    IController *controller,
+    RegrasBatalha *regras) : _player(player), _inimigo(inimigo), _dados(dados), _view(view), _controller(controller), _regras(regras) {}
+
+Batalha::~Batalha() {}
+
+// Verificações e atualização de status
+double Batalha::calcularVariabilidade(double valorBase) {}
+bool Batalha::verificarAcerto(double coefAtaque, int nivel, bool gastaPP, bool vantagem, double cdAlvo) {}
+void Batalha::atualizarAcoesDisponiveis() {}
 
 // Mecânica de batalha
-float Batalha::calcularVariabilidade(int valorBase) { return 0.0f; }
 void Batalha::iniciarBatalha() {}
 void Batalha::realizarAcao(AcaoBatalha acao) {}
 void Batalha::processarDefesa() {}
 void Batalha::processarEsquiva() {}
 void Batalha::definirRecompensa(Cena &cenaAtual) {}
 void Batalha::finalizarBatalha() {}
+void Batalha::aplicarCondicao(const Condicao& condicao, bool noPlayer) {}
+void Batalha::processarCondicoesAtivas() {}
+bool Batalha::verificarFuga() {}
+
