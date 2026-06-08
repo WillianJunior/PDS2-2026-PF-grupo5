@@ -27,6 +27,12 @@ bool TrechoMapa::possuiItensRestantes() const{
     return _itensEncontrados < _dados.quantidadeItens;
 }
 
+void TrechoMapa::registrarItemEncontrado()
+{
+    if(possuiItensRestantes())
+        _itensEncontrados++;
+}
+
 bool TrechoMapa::possuiInimigosRestantes() const{
     return _inimigosDerrotados < _dados.quantidadeInimigos;
 }
@@ -59,6 +65,11 @@ std::string TrechoMapa::pegarDescricao() const
 int TrechoMapa::pegarTrechoAnterior() const
 {
     return _dados.trechoAnterior;
+}
+
+int TrechoMapa::pegarProximoTrecho() const
+{
+    return _dados.proximoTrecho;
 }
 
 int TrechoMapa::pegarNPCInteracao() const
