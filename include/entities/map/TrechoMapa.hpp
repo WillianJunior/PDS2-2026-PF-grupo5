@@ -9,8 +9,7 @@
 #include <string>
 #include <vector>
 
-#include "../items/Item.hpp"
-#include "../character/Personagem.hpp"
+#include "../database/StructTrechoMapa.hpp"
 
 // Evita a dependência circular com Cena (Forward Declaration).
 class Cena;
@@ -23,67 +22,83 @@ class Cena;
  */
 class TrechoMapa {
 private:
-    int _id;                 ///< Identificador único do trecho do mapa.
-    Cena* _cena;             ///< Ponteiro para a Cena à qual este trecho pertence.
-    std::string _descricao;  ///< Descrição da área, contendo detalhes do cenário.
 
     /**
-     * @brief Lista de ponteiros para itens presentes no chão deste trecho.
+     * @brief Dados fixos do trecho carregados do banco.
      */
-    std::vector<Item*> _itens; 
-
-    /**
-     * @brief Lista de ponteiros para NPCs (inimigos ou aliados) localizados nesse trecho.
-     */
-    std::vector<Personagem*> _npcs; 
+    InfoTrechoMapa _dados;
 
      /**
      * @brief Indica se o trecho está aberto.
      */
     bool _aberto;
 
-public:
-    /**
-     * @brief Construtor da classe TrechoMapa.
-     * @param id Identificador numérico.
-     * @param descricao Descrição da área.
+     /**
+     * @brief Indica se o trecho já foi vasculhado.
      */
-    TrechoMapa(int id, std::string descricao);
+    bool _vasculhado;
+
+public:
+     /**
+     * @brief Construtor.
+     * @param dados Informações do trecho.
+     */
+    TrechoMapa(const InfoTrechoMapa& dados);
 
     /**
-     * @brief Ativa o trecho, exibindo a descrição e tornando NPCs e itens acessíveis ao jogador.
+     * @brief Marca o trecho como aberto.
      */
     void abrirTrecho();
 
     /**
-     * @brief Adiciona um novo item à lista de objetos espalhados pelo trecho.
-     * @param item Ponteiro para o item a ser depositado.
+     * @brief Marca o trecho como vasculhado.
      */
-    void adicionarItem(Item* item);
+    void vasculhar();
 
     /**
-     * @brief Insere um NPC na lista de personagens presentes na área.
-     * @param npc Ponteiro para o personagem (NPC ou Boss).
+     * @brief Retorna o ID do trecho.
      */
-    void adicionarNPC(Personagem* npc);
+    int pegarId() const;
 
     /**
-     * @brief Recupera a lista de itens disponíveis para coleta.
-     * @return Vetor de ponteiros para os itens.
+     * @brief Retorna a descrição.
      */
-    std::vector<Item*> pegarItens() const;
+    std::string pegarDescricao() const;
 
     /**
-     * @brief Recupera a lista de NPCs presentes para interação ou batalha.
-     * @return Vetor de ponteiros para os NPCs.
+     * @brief Retorna os NPCs de interação.
      */
-    std::vector<Personagem*> pegarNPCs() const;
+    std::vector<int> pegarNPCsInteracao() const;
 
-     /**
-     * @brief Verifica se o trecho já foi aberto/explorado.
-     * @return true se o trecho está aberto, false caso contrário.
+    /**
+     * @brief Retorna os próximos trechos.
+     */
+    std::vector<int> pegarProximosTrechos() const;
+
+    /**
+     * @brief Retorna o trecho anterior.
+     */
+    int pegarTrechoAnterior() const;
+
+    /**
+     * @brief Retorna quantidade de inimigos.
+     */
+    int pegarQuantidadeInimigos() const;
+
+    /**
+     * @brief Retorna quantidade de itens.
+     */
+    int pegarQuantidadeItens() const;
+
+    /**
+     * @brief Verifica se está aberto.
      */
     bool estaAberto() const;
+
+    /**
+     * @brief Verifica se foi vasculhado.
+     */
+    bool foiVasculhado() const;
 
 };
 

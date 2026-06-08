@@ -8,6 +8,9 @@
 
 #include "../map/TrechoMapa.hpp"
 #include "../battle/Batalha.hpp"
+#include "../../database/StructCena.hpp"
+
+#include <memory>
 
 /**
  * @class Cena
@@ -16,16 +19,15 @@
  */
 class Cena {
 private:
-    /** 
-     * @brief Nível da cena atual.
+    /**
+     * @brief Dados permanentes da cena.
      */
-    int _nivel;
+    InfoCena _dadosCena;
 
-    /** 
-     * @brief Ponteiro para o trecho do mapa que está sendo explorado.
-     * @note A Cena colabora com TrechoMapa para gerenciar o cenário atual.
+    /**
+     * @brief Trecho atualmente explorado pelo jogador.
      */
-    TrechoMapa* _trechoAtual;
+    std::unique_ptr<TrechoMapa> _trechoAtual;
 
      /** 
      * @brief Indica se o inventário está aberto.
@@ -43,12 +45,11 @@ private:
     bool _explorando;
 
 public:
-    /**
-     * @brief Construtor da classe Cena.
-     * @param nivel O nível inicial da cena.
-     * @param trecho Ponteiro para o trecho do mapa que será explorado.
+     /**
+     * @brief Construtor da cena.
+     * @param dados Estrutura contendo as informações da cena.
      */
-    Cena(int nivel, TrechoMapa* trecho);
+    Cena(const InfoCena& dados);
 
     /**
      * @brief Inicializa os recursos da cena (mapa, NPCs e eventos).
@@ -92,6 +93,27 @@ public:
      * @brief Migra o fluxo de jogo para o combate em turnos.
      */
     void iniciarBatalha();
+
+     /**
+     * @brief Troca o trecho atual.
+     * @param idTrecho ID do novo trecho.
+     */
+    void mudarTrecho(int idTrecho);
+
+    /**
+     * @brief Retorna o ID da cena.
+     */
+    int pegarId() const;
+
+    /**
+     * @brief Retorna o arcano associado à cena.
+     */
+    std::string pegarArcano() const;
+
+    /**
+     * @brief Retorna o trecho atual.
+     */
+    const TrechoMapa& pegarTrechoAtual() const;
 
     /**
      * @brief Retorna se o inventário está aberto.
