@@ -9,7 +9,7 @@
 #include <string>
 #include <vector>
 
-#include "../database/StructTrechoMapa.hpp"
+#include "database/StructTrechoMapa.hpp"
 
 // Evita a dependência circular com Cena (Forward Declaration).
 class Cena;

@@ -214,8 +214,6 @@
 
 ### Classe RegrasAtaque *(filha de Regras)*
 
-> Responsável por: Matheus
-
 | Tipo | Responsabilidades | Colaboradores |
 | --- | --- | --- |
 | **Conhecimento** | Definições dos ataques simples por classe (dado, escala por nível) | - |

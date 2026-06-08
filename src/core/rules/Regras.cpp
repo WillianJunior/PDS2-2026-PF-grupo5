@@ -3,7 +3,7 @@
  * @brief Implementação da classe base Regras.
  */
 
-#include "Regras.hpp"
+#include "core/rules/Regras.hpp"
 
 double Regras::calcularCoeficiente(double valorAtributo) {
     return (0.5 * valorAtributo) - 5.0;

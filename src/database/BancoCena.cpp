@@ -1,4 +1,4 @@
-#include "include/database/BancoCena.hpp"
+#include "database/BancoCena.hpp"
 
 InfoCena BancoCena::obterCena(int id){
 

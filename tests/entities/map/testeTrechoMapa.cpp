@@ -107,15 +107,6 @@ TEST_CASE("Nao possui itens restantes apos encontrar todos")
         -1,
         2,
         0,
-        -1
-    };
-
-    InfoTrechoMapa dados{
-        1,
-        "Floresta",
-        -1,
-        2,
-        0,
         -1,
         -1
     };
