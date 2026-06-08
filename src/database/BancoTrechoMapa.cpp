@@ -1,4 +1,5 @@
 #include "database/BancoTrechoMapa.hpp"
+#include <stdexcept>
 
 InfoTrechoMapa BancoTrechoMapa::obterTrechoMapa(int id){
 
@@ -41,7 +42,7 @@ InfoTrechoMapa BancoTrechoMapa::obterTrechoMapa(int id){
         break;
 
     default:
-        break;
+        throw std::invalid_argument("TrechoMapa com id desconhecido: " + std::to_string(id));
     }
 
 
