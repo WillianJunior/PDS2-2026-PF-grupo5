@@ -10,11 +10,14 @@ struct InfoCena {
 
     std::string arcano;
 
+    std::string recompensa;
+
     std::string descricao;
 
     int trechoInicial;
 
     std::vector<int> trechos;
+
 };
 
 

@@ -33,10 +33,9 @@ private:
      */
     bool _aberto;
 
-     /**
-     * @brief Indica se o trecho já foi vasculhado.
-     */
-    bool _vasculhado;
+    int _itensEncontrados;
+
+    int _inimigosDerrotados;
 
 public:
      /**
@@ -50,10 +49,19 @@ public:
      */
     void abrirTrecho();
 
-    /**
-     * @brief Marca o trecho como vasculhado.
-     */
-    void vasculhar();
+    bool estaAberto() const;
+
+    bool possuiItensRestantes() const;
+
+    bool possuiInimigosRestantes() const;
+
+    void registrarItemEncontrado();
+
+    void registrarInimigoDerrotado();
+
+    int pegarItensRestantes() const;
+
+    int pegarInimigosRestantes() const;
 
     /**
      * @brief Retorna o ID do trecho.
@@ -68,38 +76,17 @@ public:
     /**
      * @brief Retorna os NPCs de interação.
      */
-    std::vector<int> pegarNPCsInteracao() const;
+    int pegarNPCInteracao() const;
 
     /**
      * @brief Retorna os próximos trechos.
      */
-    std::vector<int> pegarProximosTrechos() const;
+    int pegarProximoTrecho() const;
 
     /**
      * @brief Retorna o trecho anterior.
      */
     int pegarTrechoAnterior() const;
-
-    /**
-     * @brief Retorna quantidade de inimigos.
-     */
-    int pegarQuantidadeInimigos() const;
-
-    /**
-     * @brief Retorna quantidade de itens.
-     */
-    int pegarQuantidadeItens() const;
-
-    /**
-     * @brief Verifica se está aberto.
-     */
-    bool estaAberto() const;
-
-    /**
-     * @brief Verifica se foi vasculhado.
-     */
-    bool foiVasculhado() const;
-
 };
 
 #endif
