@@ -1,12 +1,10 @@
-## Gupo 5: RPG Turn-Based Game
-## The Dark Age — The Dark Age - The Arcanum Quest
-
-**Disciplina:** Programação e Desenvolvimento de Software II — UFMG  
+# Dark Age - The Arcanum Quest
+**Grupo 5**: RPG Turn-Based Game  
+**Disciplina:** Programação e Desenvolvimento de Software II - UFMG  
 **Semestre:** 2026/1 
 **Turma:**  TF
----
-##Integrantes do Grupo
-
+>---
+## Integrantes do Grupo
 | Nome | Matrícula |
 |------|-----------|
 | Matheus Mariano Euzébio | 2023066543 |

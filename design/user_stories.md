@@ -1,3 +1,19 @@
+# User Stories
+*Dark Age - The Arcanum Quest*  
+**Grupo 5**: RPG Turn-Based Game  
+**Disciplina:** Programação e Desenvolvimento de Software II - UFMG  
+**Semestre:** 2026/1  
+**Turma:**  TF
+
+>---
+>## Controle de Revisões 
+>| Rev. | Descrição | Elab. | Data |
+>|:----:|:---------|:-----:|:---:|
+>| 0 | Emissão Inicial | LSBP | 27/04/26 |
+>| 1 | Atualização na formatação | MFC | 28/04/26 |
+>| 2 | Adiciona Controle de Revisões | HVLO | 07/06/26 |
+>| | | | |
+
 ## **Parte 1 - Configurações e Início do Jogo**
 
 ### Início 

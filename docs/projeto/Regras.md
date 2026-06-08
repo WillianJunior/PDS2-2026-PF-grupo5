@@ -1,5 +1,20 @@
-# Regras do Jogo - *Dark Age — The Arcanum Quest*
+# Regras
+*Dark Age - The Arcanum Quest*  
+**Grupo 5**: RPG Turn-Based Game  
+**Disciplina:** Programação e Desenvolvimento de Software II - UFMG  
+**Semestre:** 2026/1  
+**Turma:**  TF
 
+>---
+>## Controle de Revisões 
+>| Rev. | Descrição | Elab. | Data |
+>|:----:|:---------|:-----:|:---:|
+>| 0 | Emissão Inicial | HVLO | 03/06/26 |
+>| 1 | Adiciona trecho 2.5 Condições | HVLO | 03/06/26 |
+>| 2 | Adiciona Controle de Revisões | HVLO | 07/06/26 |
+>| | | | |
+
+## Sobre
 > Este documento descreve todas as regras, mecânicas e sistemas do jogo.
 > Serve como referência central para o grupo de desenvolvimento e como
 > base para a implementação da classe `Regras`.
