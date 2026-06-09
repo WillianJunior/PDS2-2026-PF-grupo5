@@ -1,4 +1,5 @@
 #include "database/BancoCena.hpp"
+#include <stdexcept>
 
 InfoCena BancoCena::obterCena(int id){
 
@@ -89,10 +90,6 @@ InfoCena BancoCena::obterCena(int id){
         break;
 
     default:
-        break; //Colocar um exception referentes a cenas inexistentes depois
+        throw std::invalid_argument("Cena com id desconhecido: " + std::to_string(id));
     }
-
-
-
-
 }
