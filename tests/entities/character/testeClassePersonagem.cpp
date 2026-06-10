@@ -15,7 +15,7 @@ TEST_CASE("Construtor de ClassePersonagem para Arqueiro") {
 
         CHECK(p.getNome() == "Arqueiro");
         CHECK(p.getTipo() == TipoClasse::Arqueiro);
-        CHECK(p.getDescricao() == "Alta agilidade e ataques à distância");
+        CHECK(p.getDescricao() == "Velocidade e precisão, ataques múltiplos");
         CHECK(p.getArma() == "Arco");
 }
 
@@ -24,7 +24,7 @@ TEST_CASE("Construtor de ClassePersonagem para Guerreiro") {
 
         CHECK(p.getNome() == "Guerreiro");
         CHECK(p.getTipo() == TipoClasse::Guerreiro);
-        CHECK(p.getDescricao() == "Alta resistência física");
+        CHECK(p.getDescricao() == "Alto dano, resistente, combate direto");
         CHECK(p.getArma() == "Espada");
 }
 
@@ -33,7 +33,7 @@ TEST_CASE("Construtor de ClassePersonagem para Mago") {
 
         CHECK(p.getNome() == "Mago");
         CHECK(p.getTipo() == TipoClasse::Mago);
-        CHECK(p.getDescricao() == "Uso ampliado de habilidades mágicas");
+        CHECK(p.getDescricao() == "Dano mágico elevado, baixa defesa");
         CHECK(p.getArma() == "Magia");
 }
 
@@ -43,7 +43,7 @@ TEST_CASE("Construtor de ClassePersonagem para Tanque") {
 
         CHECK(p.getNome() == "Tanque");
         CHECK(p.getTipo() == TipoClasse::Tanque);
-        CHECK(p.getDescricao() == "Bloqueio e redução de dano");
+        CHECK(p.getDescricao() == "Máxima resistência, dano baseado em Defesa");
         CHECK(p.getArma() == "Escudo");
 }
 
@@ -70,8 +70,8 @@ TEST_CASE("Todas as classes possuem ataques ordenados corretamente") {
 TEST_CASE("Detalhes de ataques definidos corretamente") {
         ClassePersonagem p(TipoClasse::Arqueiro);
 
-        CHECK(p.getAtaque(TipoAtaque::Simples).nome == "Ataque Simples");
-        CHECK(p.getAtaque(TipoAtaque::Simples).descricao == "-");
+        CHECK(p.getAtaque(TipoAtaque::Simples).nome == "Flecha");
+        CHECK(p.getAtaque(TipoAtaque::Simples).descricao == "Fraco porém não gasta mana.");
         CHECK(p.getAtaque(TipoAtaque::Simples).custoPP == 0);
 
         CHECK(p.getAtaque(TipoAtaque::Rapido).nome == "Tiro Rápido");
@@ -79,6 +79,6 @@ TEST_CASE("Detalhes de ataques definidos corretamente") {
         CHECK(p.getAtaque(TipoAtaque::Rapido).custoPP == 10);
 
         CHECK(p.getAtaque(TipoAtaque::Forte).nome == "Flecha Explosiva");
-        CHECK(p.getAtaque(TipoAtaque::Forte).descricao == "A flecha detona no alvo.");
+        CHECK(p.getAtaque(TipoAtaque::Forte).descricao == "A flecha detona ao impactar, espalhando fogo nos pés do inimigo.");
         CHECK(p.getAtaque(TipoAtaque::Forte).custoPP == 30);
 }
