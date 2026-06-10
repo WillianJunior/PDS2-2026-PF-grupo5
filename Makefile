@@ -38,11 +38,22 @@ run: all
 
 # Compilação dos testes com flags de cobertura
 compile_tests:
+	rm -f *.gcda *.gcno
 	$(CXX) $(CXXFLAGS) -Itests --coverage $(SRCS_NO_MAIN) $(TEST_SRCS) -o exec_tests
 
 # Execução dos testes
 test: compile_tests
-	-./exec_tests
+	@echo "=== Executando testes ==="
+	@./exec_tests 2>&1 | tee exec_tests.log || true
+	@summary_line=$$(grep 'test cases:' exec_tests.log | tail -n1); \
+	total=$$(printf '%s' "$$summary_line" | sed -E 's/.*test cases: *([0-9]+).*/\1/'); \
+	passed=$$(printf '%s' "$$summary_line" | sed -E 's/.*\| *([0-9]+) passed.*/\1/'); \
+	if [ -n "$$total" ] && [ "$$total" -ne 0 ]; then \
+		percent=$$(awk "BEGIN {printf \"%.2f\", ($$passed/$$total)*100}"); \
+		echo "Testes passando: $$percent%"; \
+	else \
+		echo "Não foi possível calcular a porcentagem de testes passados."; \
+	fi
 
 # Relatório de cobertura de testes
 coverage: test
@@ -52,8 +63,12 @@ coverage: test
 	gcovr -r . --filter src/ --html-details -o docs/coverage/index.html
 	@echo "Relatório HTML gerado em docs/coverage/index.html"
 
+# Combina testes e cobertura em um único comando
+test_coverage: coverage
+	@echo "Teste e cobertura concluídos. Relatório em docs/coverage/index.html"
+
 # Limpeza dos executáveis e arquivos de mapeamento (.gcda, .gcno)
 clean:
 	rm -rf $(BUILD) $(BIN) exec_tests *.gcda *.gcno docs/coverage
 
-.PHONY: all run compile_tests test coverage clean
+.PHONY: all run compile_tests test coverage test_coverage clean
