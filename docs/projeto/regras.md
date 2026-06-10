@@ -5,14 +5,15 @@
 **Semestre:** 2026/1  
 **Turma:**  TF
 
->---
->## Controle de Revisões 
+---
+## Controle de Revisões 
+
 >| Rev. | Descrição | Elab. | Data |
 >|:----:|:---------|:-----:|:---:|
 >| 0 | Emissão Inicial | HVLO | 03/06/26 |
 >| 1 | Adiciona trecho 2.5 Condições | HVLO | 03/06/26 |
 >| 2 | Adiciona Controle de Revisões | HVLO | 07/06/26 |
->| | | | |
+>| 3 | Adiciona Seção 5 — Itens e Inventário | MFC | 09/06/26 |
 
 ## Sobre
 > Este documento descreve todas as regras, mecânicas e sistemas do jogo.
@@ -52,6 +53,11 @@
    - [4.5 Casos Extremos](#45-casos-extremos)
    - [4.6 Efeitos Mecânicos da Classificação](#46-efeitos-mecânicos-da-classificação)
    - [4.7 Referência de ND por Inimigo](#47-referência-de-nd-por-inimigo)
+5. [Itens e Inventário](#5-itens-e-inventário)
+   - [5.1 Inventário](#51-inventário)
+   - [5.2 Comidas](#52-comidas)
+   - [5.3 Poções](#53-poções)
+   - [5.4 Cristais](#54-cristais)
 
 ---
 
@@ -482,7 +488,14 @@ O jogador tenta desviar do ataque inimigo. Neste turno, o **Bônus de Proficiên
 
 ### 2.8 Usar Item
 
-O jogador utiliza um item do inventário. O efeito depende do tipo do item.
+O jogador gasta sua **ação do turno** para utilizar um item do inventário.
+O efeito e as restrições dependem do tipo:
+
+- **Comida** — efeito imediato em PV (positivo ou negativo). Pode ser usada a qualquer momento em batalha.
+- **Poção** — bônus temporário a um atributo; a contagem de turnos começa imediatamente no turno do uso.
+- **Cristal** — *não pode ser utilizado durante o combate.* Deve ser equipado fora de batalha.
+
+Ver [Seção 5](#5-itens-e-inventário) para as regras completas de cada tipo.
 
 ---
 
@@ -677,6 +690,185 @@ Sugestão de ND para os inimigos do jogo, compatíveis com o sistema LV 1–10 s
 | 7 | 2.900 | Mini-boss de dungeon |
 | 8 | 3.900 | Boss intermediário |
 | 9–10 | 5.000–5.900 | Boss final / Sonath |
+
+---
+
+## 5. Itens e Inventário
+
+Durante o jogo, o player terá à sua disposição um inventário limitado para armazenar itens encontrados nas cenas. As regras de uso e armazenamento desses itens, bem como suas categorias e efeitos, serão detalhados a seguir.
+
+---
+
+### 5.1 Inventário
+
+O inventário representa um espaço onde o jogador pode armazenar consigo determinada quantidade de itens. Ele possui **8 slots de armazenamento** e **1 ou 2 slots de equipamento**, reservados exclusivamente para Cristais (seção 5.4).
+
+**Slots de armazenamento**: Compreendem os itens ainda não utilizados, incluindo cristais ainda não eqiupados. Qualquer item pode ser **descartado manualmente** a qualquer momento fora de batalha. Cada item ocupa exatamente 1 slot no inventário, ou seja, itens iguais não são empilháveis. Ao usar um item, ele é automaticamente removido do inventário.
+
+**Slots de equipamento**: Esses slots permitem equipar determinado número de cristais. Até o nível 5, o jogador poderá equipar apenas 1 cristal por vez. A partir do nível 6, poderá equipar até 2 cristais simultaneamente. 
+
+Os cristais equipados saem do armazenamento e ocupam um slot de equipamento dedicado,
+ficando ativos a partir do próximo combate. Um cristal desequipado é automaticamente transferido de volta para o armazenamento, liberando o slot de equipamento. Se não houver slot de armazenamento disponível, o cristal desequipado é descartado.
+
+O personagem só pode **equipar ou desequipar um cristal fora de batalha**.
+Ao fim de cada cena, todos os cristais (equipados ou não) são automaticamente removidos do slot de equipamento, independentemente de terem sido usados.
+
+Em resumo: 
+
+| Nível | Slots de armazenamento | Slots de equipamento (Cristal) |
+|---|---|---|
+| LV 1 – LV 5 | 8 | 1 |
+| LV 6 – LV 10 | 8 | 2 |
+
+
+> **Exemplo:** Um personagem LV 3 encontra dois cristais durante a exploração. 
+> Ambos ocupam slots normais. Ele equipa um deles — o cristal sai do armazenamento e vai
+> para o slot dedicado, liberando um slot normal. O segundo cristal permanece na
+> bolsa. Ao fim da cena, o Cristal equipado é removido automaticamente; o Cristal na bolsa permanece até ser usado, equipado ou descartado.
+
+---
+
+### 5.2 Comidas
+
+Comidas têm **efeito imediato sobre os PV** do personagem:
+- Positivo (cura), ou
+- Negativo (dano). 
+
+Podem ser usadas em batalha, consumindo a ação do turno, ou fora dela, sem custo de ação.
+
+A cura nunca ultrapassa o limite máximo de PV do personagem. O dano de uma comida
+negativa, entretanto, é aplicado integralmente e pode levar o personagem a 0 PV. O resultado final do uso de uma comida é calculado pela fórmula:
+
+$$PV\,resultante = clamp(PV\,atual + efeito,\;0,\;PV\,máximo)$$
+
+As comidas, no geral, seguem a mesma estrutura, mas são **temáticas de cada cena**. É possível diferenciar uma comida boa de uma ruim a partir de sua descrição. As predefinições abaixo descrevem as categorias existentes:
+
+---
+
+#### Frutas
+Alimento abundante nas cenas. Frutas benignas oferecem uma **cura leve**, enquanto frutas deterioradas ou venenosas causam dano equivalente. São o tipo de comida mais comum nas cenas iniciais.
+
+| Variação | Efeito base |
+|---|---|
+| Fruta fresca | +1d6 PV |
+| Fruta podre / venenosa | −1d6 PV |
+
+
+#### Carnes
+Alimento substancial de alto valor nutritivo. Carnes bem preparadas oferecem **cura elevada**, enquanto carnes cruas ou estragadas causam mal-estar severo. São menos comuns e aparecem sobretudo em cenas de combate mais avançadas.
+
+| Variação | Efeito base |
+|---|---|
+| Carne preparada | +2d6 PV |
+| Carne crua / estragada | −2d6 PV |
+
+
+#### Cogumelos e ervas
+Categoria de maior diversidade. Cogumelos e ervas medicinais oferecem **cura alta e confiável**, mas seus equivalentes tóxicos são os alimentos mais perigosos do jogo, causando danos substanciais ao jogador.Identificar a diferença faz parte da progressão temática de certas cenas.
+
+| Variação | Efeito base |
+|---|---|
+| Cogumelo medicinal | +2d8 PV |
+| Cogumelo tóxico | −2d8 PV |
+
+
+---
+
+### 5.3 Poções
+
+Poções concedem um **bônus temporário a um único atributo** durante um número fixo
+de turnos de batalha. Podem ser usadas a qualquer momento, isto é, em batalha,consumindo a ação do turno, ou fora dela,sem custo de ação. Caso uma poção seja usada fora de batalha, o bônus entra em vigor no próximo combate, e a duração começa a contar a partir do primeiro turno desse combate.
+
+Ao expirar, o atributo retorna ao valor original, sem nenhuma penalidade adicional.
+
+**Regra de reaplicação:** usar a mesma poção enquanto o efeito ainda estiver ativo
+**não acumula o bônus**, apenas **reinicia a contagem** de turnos para a duração
+normal. Não é possível empilhar duas instâncias do mesmo bônus.
+
+---
+
+#### Predefinições de Poção
+
+Há exatamente uma poção por atributo. Cada poção define um bônus fixo e uma duração
+fixa, sem variações por nível.
+
+| Poção | Atributo | Bônus | Duração |
+|---|---|---|---|
+| Poção de Força | Ataque | +4 | 3 turnos |
+| Poção de Resistência | Defesa | +4 | 4 turnos |
+| Poção de Velocidade | Agilidade | +4 | 3 turnos |
+| Poção de Mana | Poder | +4 | 4 turnos |
+
+**Efeito derivado do bônus de atributo:**
+Como os coeficientes derivam diretamente dos atributos (Coef. = 0,5 × atributo − 5),
+um bônus de +4 no atributo representa um ganho de **+2 no coeficiente** durante a
+duração da poção. Isso afeta em cascata tudo que depende daquele atributo:
+
+- **Força** → +2 em todas as rolagens de acerto e dano do personagem
+- **Resistência** → +2 no cálculo de PV ganho por nível *(sem efeito retroativo
+  no PV atual; apenas nos ganhos futuros durante o combate onde o nível é atingido, se aplicável)*
+- **Velocidade** → +2 na CD do personagem, tornando-o mais difícil de acertar, e
+  +2 na iniciativa
+- **Mana** → +2 PP por ponto de Poder (equivalente a +20 PP) durante os turnos
+  ativos; os PP são revertidos ao expirar a poção
+
+> **Exemplo — Poção de Velocidade (Coef. AGI = +2,5):**
+> Com a poção ativa: Coef. AGI temporário = +4,5 → CD temporária = 10 + 4,5 = **14,5**
+> O inimigo precisa superar 14,5 para acertar, em vez dos 12,5 normais.
+
+---
+
+### 5.4 Cristais
+
+Cristais são itens de equipamento que ativam efeitos especiais de combate, muitas
+vezes ligados à lore de cada cena. Ao contrário de comidas e poções, **não são
+consumidos ao usar** — permanecem equipados durante toda a cena e são removidos
+automaticamente ao fim dela. Os cristais são itens raros, podendo ser encontrados nas cenas ou recebidos como recompensa ao vencer uma batalha. 
+
+**Regras de uso:**
+- Cristais só podem ser **equipados ou desequipados fora de batalha**
+- O efeito entra em vigor **a partir do próximo combate** após o equipamento
+- Ao fim de cada cena, todos os Cristais equipados são removidos automaticamente
+  (ver 5.1)
+- Cristais não equipados permanecem no inventário normalmente
+
+**Limite de cristais equipados:**
+
+| Nível | Cristais simultâneos |
+|---|---|
+| LV 1 – LV 5 | 1 |
+| LV 6 – LV 10 | 2 |
+
+A partir do LV 6, o personagem pode equipar **dois Cristais simultaneamente**. Se os efeitos dos dois Cristais afetarem os mesmos atributos ou condições, ambos se aplicam normalmente, exceto nos casos em que a regra de reaplicação de condição impeça duplicação (ver Seção 5.3 e Seção 2.5).
+
+---
+
+Assim como as comidas, os cristais seguem predefinições gerais e são **temáticos por cena**. As definições abaixo definem as categorias canônicas de efeito. Cada cena pode instanciar variações com nomes e flavour próprios, desde que o efeito mecânico pertença a uma dessas categorias.
+
+
+#### Cristal de Agressão
+Ao iniciar a batalha, o portador entra no estado **Berserk** por 3 turnos — rolagens de acerto com vantagem (2d20, melhor), ao custo de 1d4 de dano sofrido por turno. Ideal para personagens com alto Ataque que priorizam encerrar combates rapidamente. Evoca poderes destrutivos e caóticos.
+
+
+#### Cristal de Proteção
+Enquanto equipado, o personagem ganha **+5 na Classe de Dificuldade** durante todos os combates da cena. Nenhuma rolagem adicional é necessária — o bônus é permanente enquanto o Cristal estiver ativo. Favorece Tanks e personagens com Defesa priorizada. Evoca poderes de resistência e vida.
+
+
+#### Cristal de Veneno
+O primeiro ataque bem-sucedido do portador em cada combate aplica a condição
+**Envenenado** no alvo por 3 turnos (−2d6 por turno, no início do turno do inimigo). O efeito se reinicia a cada novo combate da cena. Evoca poderes da natureza e decadência.
+
+---
+
+#### Cristal de Velocidade
+Ao iniciar cada combate da cena, o portador recebe **+3 na iniciativa** e **+2 na CD** durante os 2 primeiros turnos. Representa um surto de agilidade sobrenatural na abertura do confronto. Evoca poderes do vento e do tempo.
+
+---
+
+#### Cristal de Drenagem
+Ao fim de cada turno em que o portador acertar pelo menos um ataque, ele recupera
+**1d4 PV**. A cura não ultrapassa o limite máximo de PV. Evoca poderes obscuros de
+absorção vital — frequente em cenas ligadas à morte e ao submundo.
 
 ---
 
