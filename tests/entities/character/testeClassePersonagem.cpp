@@ -82,3 +82,33 @@ TEST_CASE("Detalhes de ataques definidos corretamente") {
         CHECK(p.getAtaque(TipoAtaque::Forte).descricao == "A flecha detona ao impactar, espalhando fogo nos pés do inimigo.");
         CHECK(p.getAtaque(TipoAtaque::Forte).custoPP == 30);
 }
+
+TEST_CASE("alteraAtaqueForte - ataque forte inicial do Guerreiro") {
+    ClassePersonagem g(TipoClasse::Guerreiro);
+    CHECK(g.getAtaque(TipoAtaque::Forte).nome == "Fúria Berserker");
+}
+
+TEST_CASE("alteraAtaqueForte - nivel 3 muda ataque forte do Guerreiro") {
+    ClassePersonagem g(TipoClasse::Guerreiro);
+    g.alteraAtaqueForte(3);
+    CHECK(g.getAtaque(TipoAtaque::Forte).nome == "Golpe Devastador");
+}
+
+TEST_CASE("alteraAtaqueForte - nivel 5 muda ataque forte do Guerreiro") {
+    ClassePersonagem g(TipoClasse::Guerreiro);
+    g.alteraAtaqueForte(5);
+    CHECK(g.getAtaque(TipoAtaque::Forte).nome == "Perfuração");
+}
+
+TEST_CASE("alteraAtaqueForte - nivel 7 muda ataque forte do Guerreiro") {
+    ClassePersonagem g(TipoClasse::Guerreiro);
+    g.alteraAtaqueForte(7);
+    CHECK(g.getAtaque(TipoAtaque::Forte).nome == "Golpe do Abismo");
+}
+
+TEST_CASE("alteraAtaqueForte - nivel nao reconhecido nao altera ataque forte") {
+    ClassePersonagem g(TipoClasse::Guerreiro);
+    std::string nomeOriginal = g.getAtaque(TipoAtaque::Forte).nome;
+    g.alteraAtaqueForte(2);
+    CHECK(g.getAtaque(TipoAtaque::Forte).nome == nomeOriginal);
+}

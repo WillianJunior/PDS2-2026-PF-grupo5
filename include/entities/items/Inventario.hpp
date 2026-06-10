@@ -6,8 +6,19 @@
 #ifndef INVENTARIO_HPP
 #define INVENTARIO_HPP
 
+#include <stdexcept>
+
 #include "Item.hpp"
 #include "../character/Personagem.hpp"
+
+/**
+ * @class InventarioCheioException
+ * @brief Lançada quando uma tentativa de adição de um item excede a capacidade máxima do inventário.
+ */
+class InventarioCheioException : public std::overflow_error {
+public:
+    InventarioCheioException() : std::overflow_error("Inventario cheio") {}
+};
 
 /**
  * @class Inventario

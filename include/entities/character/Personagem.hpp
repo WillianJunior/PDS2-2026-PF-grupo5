@@ -7,7 +7,9 @@
 #define PERSONAGEM_HPP
 
 #include <string>
+#include <vector>
 #include "../character/ClassePersonagem.hpp"
+#include "../battle/Condicao.hpp"
 #include <cassert>
 #include <array>
 
@@ -59,8 +61,9 @@ class Personagem {
         int _nivel;                 ///< Nível atual de progressão.
         double _xp;                 ///< Pontos de experiência acumulados.
 
-        TipoPersonagem _tipo;       ///< Categoria da entidade.
-        ClassePersonagem _classe;   ///< Arquétipo que define as habilidades disponíveis.
+        TipoPersonagem _tipo;                    ///< Categoria da entidade.
+        ClassePersonagem _classe;               ///< Arquétipo que define as habilidades disponíveis.
+        std::vector<Condicao> _condicoesAtivas; ///< Condições ativas aplicadas ao personagem.
 
     public:
     /**
@@ -154,6 +157,22 @@ class Personagem {
         TipoPersonagem getTipo() const;
         /** @return Referência constante à classe/arquétipo. */
         const ClassePersonagem& getClasse() const;
+
+        /**
+         * @brief Aplica uma condição ao personagem.
+         * Para ModAtributo, modifica o atributo imediatamente e armazena para reverter depois.
+         * Para outros tipos, apenas armazena (batalha processa por turno).
+         */
+        void aplicarCondicao(const Condicao& condicao);
+
+        /**
+         * @brief Remove e reverte a condição na posição indicada.
+         * @param posicao Índice em _condicoesAtivas.
+         */
+        void removerCondicao(int posicao);
+
+        /** @return Referência constante às condições ativas. */
+        const std::vector<Condicao>& getCondicoesAtivas() const;
 };
 
 #endif

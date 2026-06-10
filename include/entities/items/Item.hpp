@@ -32,6 +32,7 @@ private:
     std::string _efeito;    ///< Descrição do efeito aplicado (ex: "Cura", "Dano").
     int _valor;             ///< Intensidade do efeito (ex: +20 de HP).
     int _duracao;           ///< Tempo de duração do efeito em turnos (0 para imediato).
+    int _cenaId;            ///< ID da cena à qual o item pertence (0 = genérico).
 
 public:
     /**
@@ -43,7 +44,7 @@ public:
      * @param valor Valor numérico da alteração no atributo.
      * @param duracao Quantidade de turnos que o efeito persiste.
      */
-    Item(std::string nome, std::string descricao, TipoItem tipo, std::string efeito, int valor, int duracao);
+    Item(std::string nome, std::string descricao, TipoItem tipo, std::string efeito, int valor, int duracao, int cenaId = 0);
 
     /** @return O nome do item. */
     std::string pegarNome() const;
@@ -62,6 +63,18 @@ public:
 
     /** @return A duração do efeito em turnos. */
     int pegarDuracao() const;
+
+    /** @return O ID da cena à qual o item pertence (0 = genérico). */
+    int getCenaId() const;
+
+    /**
+     * @brief Gera um item consultando o BancoItem.
+     * @param cenaId ID da cena solicitante.
+     * @param itemId Identificador global do item.
+     * @return Item correspondente.
+     * @throw std::invalid_argument se itemId não for reconhecido.
+     */
+    static Item gerarItem(int cenaId, int itemId);
 };
 
 #endif

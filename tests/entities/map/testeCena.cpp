@@ -2,40 +2,29 @@
 
 #include "entities/map/Cena.hpp"
 #include "entities/map/TrechoMapa.hpp"
+#include "entities/character/Jogador.hpp"
+
+static Jogador criarJogadorTeste() {
+    return Jogador("Heroi", "", "", 10.0, 5.0, 100.0, 50.0, 8.0,
+                   TipoClasse::Guerreiro, TipoPersonagem::Jogador);
+}
 
 TEST_CASE("Estado inicial de Cena") {
-    InfoCena dados{
-        1,
-        "Primeiro arcano", 
-        "recompensa", 
-        "descricao", 
-        1, 
-        {1,2,3}
-    };
-
-    Cena cena(dados);
+    InfoCena dados{ 1, "Primeiro arcano", "recompensa", "descricao", 1, {1,2,3} };
+    Jogador jogador = criarJogadorTeste();
+    Cena cena(dados, jogador);
 
     CHECK(cena.pegarId() == 1);
     CHECK(cena.pegarArcano() == "Primeiro arcano");
-
     CHECK(cena.inventarioAberto() == false);
     CHECK(cena.emBatalha() == false);
     CHECK(cena.explorando() == false);
-
-
 }
 
 TEST_CASE("Iniciar Cena") {
-    InfoCena dados{
-        1,
-        "Primeiro arcano",
-        "recompensa",
-        "descricao",
-        101,
-        {101,102,103}
-    };
-
-    Cena cena(dados);
+    InfoCena dados{ 1, "Primeiro arcano", "recompensa", "descricao", 101, {101,102,103} };
+    Jogador jogador = criarJogadorTeste();
+    Cena cena(dados, jogador);
 
     cena.iniciarCena();
 
@@ -45,16 +34,9 @@ TEST_CASE("Iniciar Cena") {
 }
 
 TEST_CASE("Abrir Inventario") {
-    InfoCena dados{
-        1,
-        "Primeiro arcano", 
-        "recompensa", 
-        "descricao", 
-        1, 
-        {1,2,3}
-    };
-
-    Cena cena(dados);
+    InfoCena dados{ 1, "Primeiro arcano", "recompensa", "descricao", 1, {1,2,3} };
+    Jogador jogador = criarJogadorTeste();
+    Cena cena(dados, jogador);
 
     cena.abrirInventario();
 
@@ -62,16 +44,9 @@ TEST_CASE("Abrir Inventario") {
 }
 
 TEST_CASE("Iniciar Batalha") {
-    InfoCena dados{
-        1,
-        "Primeiro arcano", 
-        "recompensa", 
-        "descricao", 
-        1, 
-        {1,2,3}
-    };
-
-    Cena cena(dados);
+    InfoCena dados{ 1, "Primeiro arcano", "recompensa", "descricao", 1, {1,2,3} };
+    Jogador jogador = criarJogadorTeste();
+    Cena cena(dados, jogador);
 
     cena.iniciarBatalha();
 
@@ -80,19 +55,11 @@ TEST_CASE("Iniciar Batalha") {
 }
 
 TEST_CASE("Finalizar Cena") {
-    InfoCena dados{
-        1,
-        "Primeiro arcano",
-        "recompensa",
-        "descricao",
-        101,
-        {101,102,103}
-    };
-
-    Cena cena(dados);
+    InfoCena dados{ 1, "Primeiro arcano", "recompensa", "descricao", 101, {101,102,103} };
+    Jogador jogador = criarJogadorTeste();
+    Cena cena(dados, jogador);
 
     cena.iniciarCena();
-
     cena.finalizarCena();
 
     CHECK(cena.emBatalha() == false);
@@ -100,33 +67,20 @@ TEST_CASE("Finalizar Cena") {
     CHECK(cena.explorando() == false);
 }
 
-TEST_CASE("Mudar trecho"){
-    InfoCena dados{
-        1,
-        "Primeiro arcano",
-        "recompensa",
-        "descricao",
-        101,
-        {101,102}
-    };
+TEST_CASE("Mudar trecho") {
+    InfoCena dados{ 1, "Primeiro arcano", "recompensa", "descricao", 101, {101,102} };
+    Jogador jogador = criarJogadorTeste();
+    Cena cena(dados, jogador);
 
-    Cena cena(dados);
     cena.mudarTrecho(102);
 
-    CHECK(cena.pegarTrechoAtual().pegarId()==102);
+    CHECK(cena.pegarTrechoAtual().pegarId() == 102);
 }
 
-TEST_CASE("Andar para o proximo trecho"){
-    InfoCena dados{
-        1,
-        "Primeiro arcano",
-        "recompensa",
-        "descricao",
-        101,
-        {101,102}
-    };
-
-    Cena cena(dados);
+TEST_CASE("Andar para o proximo trecho") {
+    InfoCena dados{ 1, "Primeiro arcano", "recompensa", "descricao", 101, {101,102} };
+    Jogador jogador = criarJogadorTeste();
+    Cena cena(dados, jogador);
 
     cena.iniciarCena();
     int trechoInicial = cena.pegarTrechoAtual().pegarId();
@@ -134,40 +88,44 @@ TEST_CASE("Andar para o proximo trecho"){
     cena.andar();
 
     CHECK(cena.pegarTrechoAtual().pegarId() != trechoInicial);
-
 }
 
-TEST_CASE("Pegar trecho atual"){
-    InfoCena dados{
-        1,
-        "Primeiro arcano",
-        "recompensa",
-        "descricao",
-        101,
-        {101}
-    };
+TEST_CASE("Pegar trecho atual") {
+    InfoCena dados{ 1, "Primeiro arcano", "recompensa", "descricao", 101, {101} };
+    Jogador jogador = criarJogadorTeste();
+    Cena cena(dados, jogador);
 
-    Cena cena(dados);
     cena.iniciarCena();
 
     CHECK(cena.pegarTrechoAtual().pegarId() == 101);
 }
 
-TEST_CASE("Vasculhar reduz itens restantes no trecho") {
-    InfoCena dados{
-        1,
-        "Primeiro arcano",
-        "recompensa",
-        "descricao",
-        101,
-        {101}
-    };
+TEST_CASE("Vasculhar adiciona item ao inventario do jogador") {
+    InfoCena dados{ 1, "Primeiro arcano", "recompensa", "descricao", 101, {101} };
+    Jogador jogador = criarJogadorTeste();
+    Cena cena(dados, jogador);
 
-    Cena cena(dados);
     cena.iniciarCena();
 
-    int antes = cena.pegarTrechoAtual().pegarItensRestantes();
+    int itensTrecho = cena.pegarTrechoAtual().pegarItensRestantes();
     cena.vasculhar();
 
-    CHECK(cena.pegarTrechoAtual().pegarItensRestantes() == antes - 1);
+    CHECK(cena.pegarTrechoAtual().pegarItensRestantes() == itensTrecho - 1);
+    CHECK(jogador.getInventario().quantidadeItens() == 1);
+}
+
+TEST_CASE("Vasculhar nao adiciona item se inventario cheio") {
+    InfoCena dados{ 1, "Primeiro arcano", "recompensa", "descricao", 101, {101} };
+    Jogador jogador = criarJogadorTeste();
+    Cena cena(dados, jogador);
+
+    cena.iniciarCena();
+    for (int i = 0; i < 8; i++)
+        jogador.adicionarItem(new Item("Item", "", Pocao, "", 0, 0));
+
+    int itensTrecho = cena.pegarTrechoAtual().pegarItensRestantes();
+    cena.vasculhar();
+
+    CHECK(cena.pegarTrechoAtual().pegarItensRestantes() == itensTrecho);
+    CHECK(jogador.getInventario().quantidadeItens() == 8);
 }

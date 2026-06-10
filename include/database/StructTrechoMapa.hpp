@@ -3,20 +3,19 @@
 #include <string>
 #include <vector>
 
-struct InfoTrechoMapa{
-    int id; //id do trecho
-
-    std::string descricao;
-
-    int npcInteracao; //id do npc de interação
-
-    int quantidadeItens; //numero de itens presente no trecho
-    int quantidadeInimigos; //numero de inimigos presente no trecho;
-
-    int proximoTrecho; //id do proximo trecho
-
-    int trechoAnterior; //id do trecho anterior
+/**
+ * @struct InfoTrechoMapa
+ * @brief Representa os dados de um trecho do mapa.
+ */
+struct InfoTrechoMapa {
+    int id;                      ///< Identificador único do trecho.
+    std::string descricao;       ///< Descrição narrativa do trecho.
+    int npcInteracao;            ///< ID do NPC com o qual o jogador pode interagir.
+    std::vector<int> idsItens;   ///< IDs dos itens disponíveis no trecho (BancoItem).
+    int quantidadeInimigos;      ///< Quantidade de inimigos presentes no trecho.
+    int proximoTrecho;           ///< ID do próximo trecho.
+    int trechoAnterior;          ///< ID do trecho anterior.
+    int cenaId;                  ///< ID da cena à qual este trecho pertence.
 };
-
 
 #endif

@@ -10,6 +10,7 @@
  *     ├── RegrasProgresso
  *     ├── RegrasPersonagem
  *     ├── RegrasAtaque           
+ *     ├── RegrasItem         
  *     └── RegrasClassePersonagem 
  * @endcode
  *
@@ -40,8 +41,6 @@
  */
 class Regras {
 public:
-
-    // Tabelas internas (constexpr — zero custo em runtime)
 
     /**
      * @brief Bônus de proficiência por nível (índice 0 = LV 1).
@@ -174,4 +173,4 @@ public:
     virtual ~Regras() = default;
 };
 
-#endif // REGRAS_HPP
+#endif
