@@ -3,7 +3,7 @@
  * @brief Implementação da classe RegrasBatalha.
  */;
 
-#include "core\rules\RegrasBatalha.hpp"
+#include "core/rules/RegrasBatalha.hpp"
 #include <array>
 #include <map>
 #include <string>
