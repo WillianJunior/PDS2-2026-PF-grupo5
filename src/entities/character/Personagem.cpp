@@ -129,3 +129,34 @@ TipoPersonagem Personagem::getTipo() const {
 const ClassePersonagem& Personagem::getClasse() const {
     return _classe;
 }
+
+void Personagem::aplicarCondicao(const Condicao& condicao) {
+    if (condicao.tipo == TipoCondicao::ModAtributo) {
+        switch (condicao.atributoAlvo) {
+            case Atributo::Ataque:    _ataque    -= condicao.valorParametro; break;
+            case Atributo::Defesa:    _defesa    -= condicao.valorParametro; break;
+            case Atributo::Agilidade: _agilidade -= condicao.valorParametro; break;
+            case Atributo::Poder:     _ppAtual   -= condicao.valorParametro; break;
+            default: break;
+        }
+    }
+    _condicoesAtivas.push_back(condicao);
+}
+
+void Personagem::removerCondicao(int posicao) {
+    const Condicao& c = _condicoesAtivas[posicao];
+    if (c.tipo == TipoCondicao::ModAtributo) {
+        switch (c.atributoAlvo) {
+            case Atributo::Ataque:    _ataque    += c.valorParametro; break;
+            case Atributo::Defesa:    _defesa    += c.valorParametro; break;
+            case Atributo::Agilidade: _agilidade += c.valorParametro; break;
+            case Atributo::Poder:     _ppAtual   += c.valorParametro; break;
+            default: break;
+        }
+    }
+    _condicoesAtivas.erase(_condicoesAtivas.begin() + posicao);
+}
+
+const std::vector<Condicao>& Personagem::getCondicoesAtivas() const {
+    return _condicoesAtivas;
+}

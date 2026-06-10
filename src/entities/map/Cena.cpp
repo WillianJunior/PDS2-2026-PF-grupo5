@@ -9,8 +9,9 @@
 /**
  * @brief Construtor da classe Cena.
  */
-Cena::Cena(const InfoCena& dados)
-    :_dadosCena(dados), 
+Cena::Cena(const InfoCena& dados, Jogador& jogador)
+    :_dadosCena(dados),
+    _jogador(jogador),
     _inventarioAberto(false),
     _emBatalha(false),
     _explorando(false){
@@ -61,13 +62,11 @@ void Cena::andar(){
  * @brief Permite vasculhar o trecho atual do mapa.
  */
 void Cena::vasculhar(){
-    if(_trechoAtual->possuiItensRestantes()){
-        _trechoAtual->registrarItemEncontrado();
+    if (!_trechoAtual->possuiItensRestantes()) return;
+    if (_jogador.getInventario().estaCheio()) return;
 
-        //fazer o rand para o itens encontrado
-
-
-    }
+    Item item = _trechoAtual->gerarItem();
+    _jogador.adicionarItem(new Item(item));
 }
 
 /**
@@ -87,6 +86,7 @@ void Cena::interagirNPCs(){
  */
 void Cena::abrirInventario(){
     _inventarioAberto = true;
+    _jogador.getInventario().listarItens();
 }
 
 /**

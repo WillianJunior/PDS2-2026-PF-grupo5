@@ -3,8 +3,7 @@
  * @brief Encapsula toda a lógica de regras do sistema de combate.
  *
  * Esta classe é filha de Regras e concentra exclusivamente os cálculos
- * e tabelas que Batalha precisa — mas sem conhecer Personagem, Cena ou
- * qualquer outro objeto do jogo. Batalha orquestra, RegrasBatalha calcula.
+ * e tabelas que Batalha precisa.
  *
  * @par Responsabilidades
  * - Classificar o confronto (Trivial → Impossível) com base no ND do inimigo
@@ -15,7 +14,7 @@
  *
  * @par O que NÃO é responsabilidade desta classe
  * - Conhecer _player ou _inimigo.
- * - Rolar dados (isso é de Dados / Batalha).
+ * - Rolar dados (isso é de Dados).
  * - Calcular dano de ataque (isso é de RegrasAtaque).
  *
  * @see Batalha.hpp  — orquestra o fluxo usando esta classe
@@ -248,4 +247,4 @@ public:
     static double ProcessarEsquiva(double agiPlayer, double ataqueInimigo);
 };
 
-#endif // REGRAS_BATALHA_HPP
+#endif

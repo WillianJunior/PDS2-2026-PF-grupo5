@@ -4,6 +4,7 @@
  */
 
 #include "entities/map/TrechoMapa.hpp"
+#include <stdexcept>
 
 /**
  * @brief Construtor da classe TrechoMapa.
@@ -24,7 +25,21 @@ bool TrechoMapa::estaAberto() const{
 }
 
 bool TrechoMapa::possuiItensRestantes() const{
-    return _itensEncontrados < _dados.quantidadeItens;
+    return _itensEncontrados < (int)_dados.idsItens.size();
+}
+
+Item TrechoMapa::gerarItem() {
+    if (!possuiItensRestantes())
+        throw std::runtime_error("Nao ha itens restantes no trecho");
+    int itemId = sortearItem();
+    Item item = Item::gerarItem(_dados.cenaId, itemId);
+    registrarItemEncontrado();
+    return item;
+}
+
+int TrechoMapa::sortearItem() const {
+    if (!possuiItensRestantes()) return -1;
+    return _dados.idsItens[_itensEncontrados];
 }
 
 void TrechoMapa::registrarItemEncontrado()
@@ -44,7 +59,7 @@ void TrechoMapa::registrarInimigoDerrotado(){
 
 
 int TrechoMapa::pegarItensRestantes() const{
-    return _dados.quantidadeItens - _itensEncontrados;
+    return (int)_dados.idsItens.size() - _itensEncontrados;
 }
 
 int TrechoMapa::pegarInimigosRestantes() const

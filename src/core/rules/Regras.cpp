@@ -1,8 +1,3 @@
-/**
- * @file Regras.cpp
- * @brief Implementação da classe base Regras.
- */
-
 #include "core/rules/Regras.hpp"
 
 double Regras::calcularCoeficiente(double valorAtributo) {

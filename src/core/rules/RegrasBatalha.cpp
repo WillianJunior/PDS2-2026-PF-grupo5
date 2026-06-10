@@ -1,8 +1,3 @@
-/**
- * @file RegrasBatalha.cpp
- * @brief Implementação da classe RegrasBatalha.
- */;
-
 #include "core/rules/RegrasBatalha.hpp"
 #include <array>
 #include <map>

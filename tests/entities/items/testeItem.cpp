@@ -1,5 +1,6 @@
 #include "../../doctest.h"
 
+#include <stdexcept>
 #include "entities/items/Item.hpp"
 
 // Construtor
@@ -64,4 +65,16 @@ TEST_CASE("Item com valor negativo") {
 
     CHECK(item.pegarValor() == -5);
     CHECK(item.pegarDuracao() == 2);
+}
+
+// gerarItem
+TEST_CASE("Item::gerarItem retorna item correto do BancoItem") {
+    Item item = Item::gerarItem(1, 1);
+
+    CHECK(item.pegarTipo() == Comida);
+    CHECK(item.getCenaId() == 1);
+}
+
+TEST_CASE("Item::gerarItem lanca excecao para id invalido") {
+    CHECK_THROWS_AS(Item::gerarItem(1, 99), std::invalid_argument);
 }

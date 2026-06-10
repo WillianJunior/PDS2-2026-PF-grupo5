@@ -8,6 +8,7 @@
 
 #include "../map/TrechoMapa.hpp"
 #include "../battle/Batalha.hpp"
+#include "../character/Jogador.hpp"
 #include "../../database/StructCena.hpp"
 
 #include <memory>
@@ -23,6 +24,11 @@ private:
      * @brief Dados permanentes da cena.
      */
     InfoCena _dadosCena;
+
+    /**
+     * @brief Referência ao jogador que está explorando a cena.
+     */
+    Jogador& _jogador;
 
     /**
      * @brief Trecho atualmente explorado pelo jogador.
@@ -48,8 +54,9 @@ public:
      /**
      * @brief Construtor da cena.
      * @param dados Estrutura contendo as informações da cena.
+     * @param jogador Referência ao jogador que explorará a cena.
      */
-    Cena(const InfoCena& dados);
+    Cena(const InfoCena& dados, Jogador& jogador);
 
     /**
      * @brief Inicializa os recursos da cena (mapa, NPCs e eventos).

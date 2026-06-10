@@ -1,8 +1,3 @@
-/**
- * @file Dados.cpp
- * @brief Implementação da classe Dados.
- */
-
 #include "core/Dados.hpp"
 #include <algorithm>
 #include <random>

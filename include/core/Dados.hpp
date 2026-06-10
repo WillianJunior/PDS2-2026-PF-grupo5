@@ -136,4 +136,4 @@ public:
     int d20Desvantagem();
 };
 
-#endif // DADOS_HPP
+#endif

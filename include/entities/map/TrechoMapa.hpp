@@ -10,6 +10,7 @@
 #include <vector>
 
 #include "database/StructTrechoMapa.hpp"
+#include "entities/items/Item.hpp"
 
 // Evita a dependência circular com Cena (Forward Declaration).
 class Cena;
@@ -54,6 +55,16 @@ public:
     bool possuiItensRestantes() const;
 
     bool possuiInimigosRestantes() const;
+
+    int sortearItem() const;
+
+    /**
+     * @brief Gera o próximo item do trecho, incrementando a contagem.
+     * Delega a criação do item a Item::gerarItem usando o cenaId do trecho.
+     * @return Item gerado.
+     * @throw std::runtime_error se não houver itens restantes.
+     */
+    Item gerarItem();
 
     void registrarItemEncontrado();
 
