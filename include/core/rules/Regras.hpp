@@ -39,7 +39,7 @@
  * | xpParaProximoNivel()    | tabela LV → XP               | RegrasProgresso, RegrasBatalha     |
  */
 class Regras {
-protected:
+public:
 
     // Tabelas internas (constexpr — zero custo em runtime)
 
