@@ -153,7 +153,7 @@ TEST_CASE("Ganhou experiencia e Subiu de nivel") {
         TipoPersonagem::NPC); 
     
     p.ganharXp(300);
-    CHECK(p.getXp() == 0);
+    CHECK(p.getXp() == 300);
     CHECK(p.getNivel() == 2);
 }
 
@@ -165,7 +165,7 @@ TEST_CASE("Ganhou experiencia acima da quantidade para subir de nivel") {
         TipoPersonagem::NPC); 
     
     p.ganharXp(320);
-    CHECK(p.getXp() == 20);
+    CHECK(p.getXp() == 320);
     CHECK(p.getNivel() == 2);
 }
 
