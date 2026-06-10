@@ -28,11 +28,11 @@ TEST_CASE("Estado inicial de Cena") {
 TEST_CASE("Iniciar Cena") {
     InfoCena dados{
         1,
-        "Primeiro arcano", 
-        "recompensa", 
-        "descricao", 
-        1, 
-        {1,2,3}
+        "Primeiro arcano",
+        "recompensa",
+        "descricao",
+        101,
+        {101,102,103}
     };
 
     Cena cena(dados);
@@ -82,11 +82,11 @@ TEST_CASE("Iniciar Batalha") {
 TEST_CASE("Finalizar Cena") {
     InfoCena dados{
         1,
-        "Primeiro arcano", 
-        "recompensa", 
-        "descricao", 
-        1, 
-        {1,2,3}
+        "Primeiro arcano",
+        "recompensa",
+        "descricao",
+        101,
+        {101,102,103}
     };
 
     Cena cena(dados);
@@ -103,27 +103,27 @@ TEST_CASE("Finalizar Cena") {
 TEST_CASE("Mudar trecho"){
     InfoCena dados{
         1,
-        "Primeiro arcano", 
-        "recompensa", 
-        "descricao", 
-        1, 
-        {1,2,}
+        "Primeiro arcano",
+        "recompensa",
+        "descricao",
+        101,
+        {101,102}
     };
 
     Cena cena(dados);
-    cena.mudarTrecho(2);
+    cena.mudarTrecho(102);
 
-    CHECK(cena.pegarTrechoAtual().pegarId()==2);
+    CHECK(cena.pegarTrechoAtual().pegarId()==102);
 }
 
 TEST_CASE("Andar para o proximo trecho"){
     InfoCena dados{
         1,
-        "Primeiro arcano", 
-        "recompensa", 
-        "descricao", 
-        1, 
-        {1,2,}
+        "Primeiro arcano",
+        "recompensa",
+        "descricao",
+        101,
+        {101,102}
     };
 
     Cena cena(dados);
@@ -140,15 +140,34 @@ TEST_CASE("Andar para o proximo trecho"){
 TEST_CASE("Pegar trecho atual"){
     InfoCena dados{
         1,
-        "Primeiro arcano", 
-        "recompensa", 
-        "descricao", 
-        1, 
-        {1}
+        "Primeiro arcano",
+        "recompensa",
+        "descricao",
+        101,
+        {101}
     };
 
     Cena cena(dados);
     cena.iniciarCena();
 
-    CHECK(cena.pegarTrechoAtual().pegarId() == 1);
+    CHECK(cena.pegarTrechoAtual().pegarId() == 101);
+}
+
+TEST_CASE("Vasculhar reduz itens restantes no trecho") {
+    InfoCena dados{
+        1,
+        "Primeiro arcano",
+        "recompensa",
+        "descricao",
+        101,
+        {101}
+    };
+
+    Cena cena(dados);
+    cena.iniciarCena();
+
+    int antes = cena.pegarTrechoAtual().pegarItensRestantes();
+    cena.vasculhar();
+
+    CHECK(cena.pegarTrechoAtual().pegarItensRestantes() == antes - 1);
 }
