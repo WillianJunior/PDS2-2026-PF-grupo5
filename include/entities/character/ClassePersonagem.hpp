@@ -61,6 +61,7 @@ public:
      */
     ClassePersonagem(TipoClasse tipo);
 
+    //Getters
     /** @return Nome da classe. */
     std::string getNome() const;
 
@@ -80,6 +81,12 @@ public:
     const std::array<Ataque, 3>& getAtaques() const;
 
     const Ataque& getAtaque(TipoAtaque tipo) const;
+
+    void alteraAtaqueForte(int nivel);
+
+    //Setters
+    void setDescricao(std::string descricao);
+    void setArma(std::string nomeArma);
 };
 
 #endif

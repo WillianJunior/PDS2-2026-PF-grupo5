@@ -8,6 +8,8 @@
 
 #include <string>
 #include "../character/ClassePersonagem.hpp"
+#include <cassert>
+#include <array>
 
 /**
  * @enum TipoPersonagem
@@ -18,6 +20,22 @@ enum class TipoPersonagem {
     Inimigo, ///< Oponentes comuns encontrados em cenas.
     NPC,     ///< Personagens aliados encontrados em cena.
     BOSS     ///< Inimigos especiais específicos das Cenas.
+};
+
+/**
+ * @enum XpNiveis
+ * @brief Define todos os valores para subir de nivel ordenado
+ */
+constexpr std::array<double, 10> XpNiveis = {
+    300,
+    900,
+    2700,
+    6500,
+    14000,
+    23000,
+    34000,
+    48000,
+    64000
 };
 
 /**
@@ -110,11 +128,6 @@ class Personagem {
          * @return true se o personagem estiver vivo, false caso não esteja.
          */
         bool estaVivo() const;
-
-        /**
-         * @brief Verifica qual cena o personagem faz parte.
-         */
-        void cenaAtual();
 
         // Getters
         /** @return Nome do personagem */

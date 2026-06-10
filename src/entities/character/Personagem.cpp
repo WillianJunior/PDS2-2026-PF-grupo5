@@ -1,4 +1,5 @@
 #include "entities/character/Personagem.hpp"
+#include "core/rules/Regras.hpp"
 
 Personagem::Personagem(
     std::string nome,
@@ -26,41 +27,59 @@ Personagem::Personagem(
       _classe(tipoClasse),
       _tipo(tipo),
       _nivel(nivel)
-{}
+{
+    assert(vidaTotal > 0 && "Vida total deve ser positiva");
+    assert(ppTotal >= 0 && "Mana total nao pode ser negativa");
+    assert(ataque >= 0 && "Ataque nao pode ser negativo");
+    assert(defesa >= 0 && "Defesa nao pode ser negativa");
+    assert(agilidade >= 0 && "Agilidade nao pode ser negativa");
+    assert(nivel > 0 && "Nivel deve ser positivo");
+}
 
 void Personagem::receberDano(double dano) {
-
+    assert(dano >= 0 && "Dano nao pode ser negativo");
+    _vidaAtual -= dano;
+    if(_vidaAtual < 0)
+        _vidaAtual = 0;
 }
 
 void Personagem::recuperarVida(double cura) {
-
+    assert(cura >= 0 && "Cura nao pode ser negativa");
+    _vidaAtual += cura;
+    if(_vidaAtual > _vidaTotal)
+        _vidaAtual = _vidaTotal;
 }
 
 void Personagem::recuperarMana(double quantidadeMana) {
-
+    assert(quantidadeMana >= 0 && "Mana nao pode ser negativa");
+    _ppAtual += quantidadeMana;
+    if(_ppAtual > _ppTotal)
+        _ppAtual = _ppTotal;
 }
 
 void Personagem::gastarMana(double custoMana) {
-
+    assert(custoMana >= 0 && "Mana nao pode ser negativa");
+    _ppAtual -= custoMana;
+    if(_ppAtual < 0)
+        _ppAtual = 0;
 }
 
 void Personagem::ganharXp(double quantidadeXp) {
-
+    assert(quantidadeXp >= 0 && "Xp nao pode ser negativo");
+    _xp += quantidadeXp;
+    while (_nivel < 10 && _xp >= Regras::xpParaProximoNivel(_nivel)) {
+        subirNivel();
+    }
 }
 
 void Personagem::subirNivel() {
-
+    _nivel++;
+    //if(_nivel == 3 && _nivel == 5 && _nivel == 7)
+    //    _classe.alteraAtaqueForte(_nivel);
 }
 
 bool Personagem::estaVivo() const {
-    if(_vidaAtual == 0)
-        return false;
-    else
-        return true;
-}
-
-void Personagem::cenaAtual() {
-
+    return _vidaAtual > 0;
 }
 
 std::string Personagem::getNome() const {

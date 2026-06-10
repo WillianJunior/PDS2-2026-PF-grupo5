@@ -1,8 +1,9 @@
 #include "entities/character/ClassePersonagem.hpp"
+#include "database/BancoClassePersonagem.hpp"
 
 ClassePersonagem::ClassePersonagem(TipoClasse tipo) : _tipo(tipo) {
-    _descricao = "";
-    _arma = "";
+    BancoClassePersonagem::defineClasse(tipo, *this);
+    _ataques = BancoClassePersonagem::defineAtaques(tipo);
 };
 
 std::string ClassePersonagem::getNome() const {
@@ -30,7 +31,6 @@ std::string ClassePersonagem::getArma() const {
     return _arma;
 }
 
-
 TipoClasse ClassePersonagem::getTipo() const {
     return _tipo;
 }
@@ -51,3 +51,28 @@ const Ataque& ClassePersonagem::getAtaque(TipoAtaque tipo) const {
     return _ataques[0];
 }
 
+void ClassePersonagem::setDescricao(std::string descricao) {
+    _descricao = descricao;
+} 
+
+void ClassePersonagem::setArma(std::string nomeArma) {
+    _arma = nomeArma;
+}
+
+void ClassePersonagem::alteraAtaqueForte(int nivel) {
+    std::array<Ataque,4> opcoesAtaque 
+    = BancoClassePersonagem::getAtaquesFortesPossiveis(_tipo);
+    switch(nivel) {
+        case 3:
+            _ataques[2] = opcoesAtaque[1];
+            break;
+
+        case 5:
+            _ataques[2] = opcoesAtaque[2];
+            break;
+        
+        case 7:
+            _ataques[2] = opcoesAtaque[3];
+            break;
+    }
+}
