@@ -26,38 +26,64 @@
 
 ## Índice
 
-1. [Personagem](#1-personagem)
-   - [1.1 Classes](#11-classes)
-   - [1.2 Geração de Atributos](#12-geração-de-atributos)
-   - [1.3 Distribuição por Classe](#13-distribuição-por-classe)
-   - [1.4 Coeficientes](#14-coeficientes)
-   - [1.5 O que cada Atributo faz](#15-o-que-cada-atributo-faz)
-2. [Sistema de Combate](#2-sistema-de-combate)
-   - [2.1 Estrutura do Turno](#21-estrutura-do-turno)
-   - [2.2 Ataque Simples](#22-ataque-simples)
-   - [2.3 Ataque Rápido](#23-ataque-rápido)
-   - [2.4 Ataque Forte](#24-ataque-forte)
-   - [2.5 Condições](#25-condições)
-   - [2.6 Defender](#26-defender)
-   - [2.7 Esquivar](#27-esquivar)
-   - [2.8 Usar Item](#28-usar-item)
-   - [2.9 Fugir](#29-fugir)
-3. [Progressão](#3-progressão)
-   - [3.1 Níveis e XP](#31-níveis-e-xp)
-   - [3.2 Bônus de Proficiência](#32-bônus-de-proficiência)
-4. [Dificuldade de Encontros](#4-dificuldade-de-encontros)
-   - [4.1 Origem do Balanceamento](#41-origem-do-balanceamento)
-   - [4.2 Limiares por Nível do Jogador](#42-limiares-por-nível-do-jogador)
-   - [4.3 Tabela de ND e XP dos Inimigos](#43-tabela-de-nd-e-xp-dos-inimigos)
-   - [4.4 Classificação do Confronto](#44-classificação-do-confronto)
-   - [4.5 Casos Extremos](#45-casos-extremos)
-   - [4.6 Efeitos Mecânicos da Classificação](#46-efeitos-mecânicos-da-classificação)
-   - [4.7 Referência de ND por Inimigo](#47-referência-de-nd-por-inimigo)
-5. [Itens e Inventário](#5-itens-e-inventário)
-   - [5.1 Inventário](#51-inventário)
-   - [5.2 Comidas](#52-comidas)
-   - [5.3 Poções](#53-poções)
-   - [5.4 Cristais](#54-cristais)
+- [Regras](#regras)
+  - [Controle de Revisões](#controle-de-revisões)
+  - [Sobre](#sobre)
+  - [Índice](#índice)
+  - [1. Personagem](#1-personagem)
+    - [1.1 Classes](#11-classes)
+    - [1.2 Geração de Atributos](#12-geração-de-atributos)
+    - [1.3 Distribuição por Classe](#13-distribuição-por-classe)
+    - [1.4 Coeficientes](#14-coeficientes)
+    - [1.5 O que cada Atributo faz](#15-o-que-cada-atributo-faz)
+      - [Ataque](#ataque)
+      - [Defesa](#defesa)
+      - [Poder — PP (Pontos de Poder)](#poder--pp-pontos-de-poder)
+      - [Agilidade](#agilidade)
+  - [2. Sistema de Combate](#2-sistema-de-combate)
+    - [2.1 Estrutura do Turno](#21-estrutura-do-turno)
+    - [2.2 Ataque Simples](#22-ataque-simples)
+    - [2.3 Ataque Rápido](#23-ataque-rápido)
+    - [2.4 Ataque Forte](#24-ataque-forte)
+      - [Guerreiro — Ataques Fortes](#guerreiro--ataques-fortes)
+      - [Mago — Ataques Fortes](#mago--ataques-fortes)
+      - [Arqueiro — Ataques Fortes](#arqueiro--ataques-fortes)
+      - [Tank — Ataques Fortes](#tank--ataques-fortes)
+    - [2.5 Condições](#25-condições)
+      - [Descrição das Condições](#descrição-das-condições)
+      - [Tabela Resumo](#tabela-resumo)
+    - [2.6 Defender](#26-defender)
+    - [2.7 Esquivar](#27-esquivar)
+    - [2.8 Usar Item](#28-usar-item)
+    - [2.9 Fugir](#29-fugir)
+  - [3. Progressão](#3-progressão)
+    - [3.1 Níveis e XP](#31-níveis-e-xp)
+    - [3.2 Bônus de Proficiência](#32-bônus-de-proficiência)
+  - [4. Dificuldade de Encontros](#4-dificuldade-de-encontros)
+    - [4.1 Origem do Balanceamento](#41-origem-do-balanceamento)
+    - [4.2 Limiares por Nível do Jogador](#42-limiares-por-nível-do-jogador)
+    - [4.3 Tabela de ND e XP dos Inimigos](#43-tabela-de-nd-e-xp-dos-inimigos)
+    - [4.4 Classificação do Confronto](#44-classificação-do-confronto)
+    - [4.5 Casos Extremos](#45-casos-extremos)
+      - [Trivial — Jogador muito acima do inimigo](#trivial--jogador-muito-acima-do-inimigo)
+      - [Boss — Inimigo muito acima do jogador](#boss--inimigo-muito-acima-do-jogador)
+      - [Impossível — Inimigo extremamente acima do jogador](#impossível--inimigo-extremamente-acima-do-jogador)
+    - [4.6 Efeitos Mecânicos da Classificação](#46-efeitos-mecânicos-da-classificação)
+    - [4.7 Referência de ND por Inimigo](#47-referência-de-nd-por-inimigo)
+  - [5. Itens e Inventário](#5-itens-e-inventário)
+    - [5.1 Inventário](#51-inventário)
+    - [5.2 Comidas](#52-comidas)
+      - [Frutas](#frutas)
+      - [Carnes](#carnes)
+      - [Cogumelos e ervas](#cogumelos-e-ervas)
+    - [5.3 Poções](#53-poções)
+      - [Predefinições de Poção](#predefinições-de-poção)
+    - [5.4 Cristais](#54-cristais)
+      - [Cristal de Agressão](#cristal-de-agressão)
+      - [Cristal de Proteção](#cristal-de-proteção)
+      - [Cristal de Veneno](#cristal-de-veneno)
+      - [Cristal de Velocidade](#cristal-de-velocidade)
+      - [Cristal de Drenagem](#cristal-de-drenagem)
 
 ---
 
@@ -401,15 +427,17 @@ controle: bate melhor, mas se consome no processo.
 
 ---
 
-**Reduz Atributo** *(condição genérica — nome personalizável)*
-Um atributo específico do personagem afetado é reduzido em X pontos pelo período da
-condição. Como todos os coeficientes derivam diretamente dos atributos, reduzir um
-atributo afeta em cascata tudo que depende dele: reduzir AGI baixa a CD, reduzir DEF
-diminui a eficiência do dado de vida, e assim por diante. Qual atributo e quanto reduz
-são definidos pelo ataque que aplicou a condição.
+**Modifica Atributo** *(condição genérica — nome personalizável)*
+Um atributo específico do personagem afetado é modificado em X pontos pelo período da
+condição, ou seja, o valor pode ser positivo (reduz o atributo) ou negativo (aumenta/boost).
+Como todos os coeficientes derivam diretamente dos atributos, modificar um atributo
+afeta em cascata tudo que depende dele: reduzir AGI baixa a CD, aumentar ATQ eleva o
+dano, e assim por diante. Qual atributo e quanto modifica são definidos pela fonte que
+aplicou a condição (ataque inimigo, poção, cristal, etc.).
 
-> *Exemplos de uso com nome personalizado: "Amaldiçoado" (reduz ATQ), "Corroído"
+> *Exemplos de redução com nome personalizado: "Amaldiçoado" (reduz ATQ), "Corroído"
 > (reduz DEF), "Lentidão" (reduz AGI).*
+> *Exemplos de boost: Poção de Força (+ATQ), Cristal de Proteção (+DEF).*
 
 ---
 
@@ -457,7 +485,7 @@ O ataque não aplica nenhum efeito adicional além do dano. Nenhum campo do pers
 | Condição | PV atual | PP atual | ATQ | DEF | AGI | Poder | Rolagem de acerto | Ações disponíveis |
 |---|---|---|---|---|---|---|---|---|
 | Berserk | −1d4/turno | — | — | — | — | — | Vantagem (2d20, melhor) | Todas |
-| Reduz Atributo* | — | — | −X ou — | −X ou — | −X ou — | −X ou — | — | Todas |
+| Modifica Atributo* | — | — | ±X ou — | ±X ou — | ±X ou — | ±X ou — | — | Todas |
 | 100% de Acerto* | — | — | — | — | Força AGI = −10 | — | — | Todas |
 | Paralisado | — | — | — | — | — | — | — | Nenhuma |
 | Atordoado | — | — | — | — | — | — | — | Sem Atq. Rápido/Forte |
