@@ -22,6 +22,9 @@ TEST_SRCS    := $(shell find tests/ -name '*.cpp')
 # Comando padrão para compilar o projeto
 all: $(TARGET)
 
+INCLUDE_DIRS := $(shell find include -type d)
+ALL_INCLUDES := $(addprefix -I,$(INCLUDE_DIRS))
+
 # Linkagem do executável
 $(TARGET): $(OBJECTS)
 	@mkdir -p $(BIN)
@@ -30,7 +33,7 @@ $(TARGET): $(OBJECTS)
 # Compilação dos objetos
 $(BUILD)/%.o: $(SRC)/%.cpp
 	@mkdir -p $(dir $@)
-	$(CXX) $(CXXFLAGS) -c $< -o $@
+	$(CXX) $(CXXFLAGS) $(ALL_INCLUDES) -c $< -o $@
 
 # Comando para executar o programa
 run: all
@@ -39,7 +42,7 @@ run: all
 # Compilação dos testes com flags de cobertura
 compile_tests:
 	rm -f *.gcda *.gcno
-	$(CXX) $(CXXFLAGS) -Itests --coverage $(SRCS_NO_MAIN) $(TEST_SRCS) -o exec_tests
+	$(CXX) $(CXXFLAGS) $(ALL_INCLUDES) -Itests --coverage $(SRCS_NO_MAIN) $(TEST_SRCS) -o exec_tests
 
 # Execução dos testes
 test: compile_tests
