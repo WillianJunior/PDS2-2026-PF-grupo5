@@ -5,6 +5,7 @@
 #include "entities/map/Cena.hpp"
 #include "database/BancoTrechoMapa.hpp"
 #include <memory>
+#include <stdexcept>
 
 /**
  * @brief Construtor da classe Cena.
@@ -114,6 +115,12 @@ std::string Cena::pegarArcano() const{
 }
 
 const TrechoMapa& Cena::pegarTrechoAtual() const{
+    if(!_trechoAtual){
+        throw std::runtime_error(
+            "Trecho atual da cena ainda não foi carregado"
+        );
+    }
+
     return *_trechoAtual;
 }
 

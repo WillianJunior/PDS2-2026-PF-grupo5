@@ -10,7 +10,7 @@
  * @brief Construtor da classe TrechoMapa.
  * Inicializa os atributos básicos do trecho
  */
-TrechoMapa::TrechoMapa(const InfoTrechoMapa& dados):_dados(dados), _aberto(false),_itensEncontrados(0),_inimigosDerrotados(0){
+TrechoMapa::TrechoMapa(const InfoTrechoMapa& dados):_dados(dados), _aberto(false),_itensEncontrados(0){
 
 }
 /**
@@ -48,23 +48,17 @@ void TrechoMapa::registrarItemEncontrado()
         _itensEncontrados++;
 }
 
-bool TrechoMapa::possuiInimigosRestantes() const{
-    return _inimigosDerrotados < _dados.quantidadeInimigos;
-}
-
-void TrechoMapa::registrarInimigoDerrotado(){
-    if(possuiInimigosRestantes())
-        _inimigosDerrotados++;
-}
-
 
 int TrechoMapa::pegarItensRestantes() const{
     return (int)_dados.idsItens.size() - _itensEncontrados;
 }
 
-int TrechoMapa::pegarInimigosRestantes() const
-{
-    return _dados.quantidadeInimigos - _inimigosDerrotados;
+bool TrechoMapa::poussuiInimigo() const{
+    return _dados.existeInimigo;
+}
+
+int TrechoMapa::pegarIdInimigo() const{
+    return _dados.idInimigo;
 }
 
 int TrechoMapa::pegarId() const
