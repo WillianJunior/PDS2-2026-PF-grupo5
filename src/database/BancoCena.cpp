@@ -1,3 +1,9 @@
+/**
+ * @file BancoCena.cpp
+ * @brief Repositório estático de cenas do jogo (7 cenas — 7 arcanos).
+ * Retorna InfoCena por ID; lança std::invalid_argument para IDs inválidos.
+ */
+
 #include "database/BancoCena.hpp"
 #include <stdexcept>
 
