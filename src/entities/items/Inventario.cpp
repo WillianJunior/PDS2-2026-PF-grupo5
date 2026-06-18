@@ -1,3 +1,12 @@
+/**
+ * @file Inventario.cpp
+ * @brief Implementação da classe Inventario.
+ *
+ * Gestão de memória 100% via RAII: os nós e itens são donos de si mesmos
+ * através de std::unique_ptr. O destrutor padrão é suficiente — nenhum
+ * delete manual é necessário.
+ */
+
 #include <stdexcept>
 #include <iostream>
 
@@ -8,73 +17,66 @@
 // Construtor e destrutor
 Inventario::Inventario() : _inicio(nullptr), _quantidade(0) {}
 
-Inventario::~Inventario() {
-    No* atual = _inicio;
-    while (atual != nullptr) {
-        No* proximo = atual->_proximo;
-        delete atual->_item;
-        delete atual;
-        atual = proximo;
-    }
-}
+// Destrutor usa o padrão: unique_ptr encadeia a destruição dos nós.
+// Com capacidade máxima de 8 itens, não há risco de stack overflow.
+Inventario::~Inventario() = default;
 
 // Manipulação de itens
+
 void Inventario::adicionarItem(Item* item) {
     if (_quantidade >= _capacidadeMax)
         throw InventarioCheioException();
 
-    No* novo = new No{item, nullptr};
+    auto novoNo = std::make_unique<No>();
+    novoNo->_item    = std::unique_ptr<Item>(item); // assume ownership
+    novoNo->_proximo = nullptr;
 
     if (_inicio == nullptr) {
-        _inicio = novo;
+        _inicio = std::move(novoNo);
     } else {
-        No* atual = _inicio;
+        No* atual = _inicio.get();
         while (atual->_proximo != nullptr)
-            atual = atual->_proximo;
-        atual->_proximo = novo;
+            atual = atual->_proximo.get();
+        atual->_proximo = std::move(novoNo);
     }
     _quantidade++;
 }
 
 void Inventario::usarItem(int posicao, Personagem& personagem) {
-    No* atual = _inicio;
-    for (int i = 0; i < posicao; i++) {
-        if (atual == nullptr) return;
-        atual = atual->_proximo;
-    }
-    if (atual == nullptr) return;
+    if (posicao < 0 || posicao >= _quantidade)
+        throw std::out_of_range("Posicao de item invalida no inventario.");
 
-    Item* item = atual->_item;
-    RegrasItem::aplicarEfeito(*item, personagem);
+    No* atual = _inicio.get();
+    for (int i = 0; i < posicao; i++)
+        atual = atual->_proximo.get();
+
+    RegrasItem::aplicarEfeito(*atual->_item, personagem);
     removerItem(posicao);
 }
 
 void Inventario::removerItem(int posicao) {
-    if (_inicio == nullptr)
-        return;
+    if (_inicio == nullptr || posicao < 0 || posicao >= _quantidade)
+        throw std::out_of_range("Posicao de item invalida no inventario.");
 
     if (posicao == 0) {
-        No* removido = _inicio;
-        _inicio = _inicio->_proximo;
-        delete removido->_item;
-        delete removido;
+        // Move o _proximo para fora antes de destruir o nó raiz
+        std::unique_ptr<No> removido = std::move(_inicio);
+        _inicio = std::move(removido->_proximo);
+        // removido sai do escopo e destrói apenas o nó e seu item
         _quantidade--;
         return;
     }
 
-    No* anterior = _inicio;
+    No* anterior = _inicio.get();
     for (int i = 0; i < posicao - 1; i++) {
         if (anterior->_proximo == nullptr)
-            return;
-        anterior = anterior->_proximo;
+            throw std::out_of_range("Posicao de item invalida no inventario.");
+        anterior = anterior->_proximo.get();
     }
 
-    No* removido = anterior->_proximo;
-    if (removido == nullptr)
-        return;
-    anterior->_proximo = removido->_proximo;
-    delete removido->_item;
-    delete removido;
+    std::unique_ptr<No> removido = std::move(anterior->_proximo);
+    anterior->_proximo = std::move(removido->_proximo);
+    // removido sai do escopo e destrói apenas o nó e seu item
     _quantidade--;
 }
 
@@ -84,12 +86,12 @@ int Inventario::quantidadeItens() const { return _quantidade; }
 
 // Listagem e interface
 void Inventario::listarItens() const {
-    No* atual = _inicio;
+    No* atual = _inicio.get();
     int i = 0;
     while (atual != nullptr) {
         std::cout << i << ": " << atual->_item->pegarNome()
                   << " — " << atual->_item->pegarDescricao() << "\n";
-        atual = atual->_proximo;
+        atual = atual->_proximo.get();
         i++;
     }
 }
