@@ -9,7 +9,7 @@
 #include <string>
 #include <array>
 #include "utils/AtaqueEnum.hpp"
-#include "battle/Batalha.hpp"
+#include "battle/Condicao.hpp"
 
 /**
  * @enum TipoAtaque
