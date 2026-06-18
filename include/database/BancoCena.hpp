@@ -20,6 +20,7 @@ public:
      * @brief Recupera os dados de uma cena pelo seu identificador
      * @param id Identificador único da cena
      * @return Estrutura InfoCena com os dados da cena
+     * @throw std::invalid_argument Caso o ID seja inválido ou não exista
      */
     static InfoCena obterCena(int id);
 };

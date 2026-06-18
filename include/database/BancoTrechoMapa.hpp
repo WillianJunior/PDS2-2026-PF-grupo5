@@ -18,6 +18,7 @@ public:
      * @brief Retorna os dados de um trecho de mapa.
      * @param id Identificador único do trecho.
      * @return Estrutura InfoTrechoMapa contendo os dados do trecho.
+     * @throw std::invalid_argument Caso o ID seja inválido ou não exista.
      */
     static InfoTrechoMapa obterTrechoMapa(int id);
 };

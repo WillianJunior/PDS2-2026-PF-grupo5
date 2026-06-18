@@ -56,6 +56,7 @@ public:
      * @brief Construtor da cena.
      * @param dados Estrutura contendo as informações da cena.
      * @param jogador Referência ao jogador que explorará a cena.
+     * @throw std::invalid_argument Caso os dados da cena sejam inválidos.
      */
     Cena(const InfoCena& dados, Jogador& jogador);
 
@@ -71,16 +72,19 @@ public:
 
     /**
      * @brief Gerencia a movimentação do personagem pelo trecho do mapa.
+     * @throw std::runtime_error Caso não exista trecho carregado.
      */
     void andar();
 
     /**
      * @brief Permite ao jogador buscar itens ou decobrir NPCs no cenário.
+     * @throw std::runtime_error Caso não exista trecho carregado.
      */
     void vasculhar();
 
     /**
      * @brief Inicia o diálogo ou interação com os NPCs presentes no trecho.
+     * @throw std::runtime_error Caso não exista trecho carregado.
      */
     void interagirNPCs();
 
@@ -97,36 +101,44 @@ public:
      /**
      * @brief Troca o trecho atual.
      * @param idTrecho ID do novo trecho.
+     * @throw std::invalid_argument Caso o ID do trecho seja inválido.
      */
     void mudarTrecho(int idTrecho);
 
     /**
      * @brief Retorna o ID da cena.
+     * @return Identificador único da cena.
      */
     int pegarId() const;
 
     /**
      * @brief Retorna o arcano associado à cena.
+     * @return Nome do arcano da cena.
      */
     std::string pegarArcano() const;
 
     /**
      * @brief Retorna o trecho atual.
+     * @return Referência para o trecho atual.
+     * @throw std::runtime_error Caso nenhum trecho tenha sido carregado.
      */
     const TrechoMapa& pegarTrechoAtual() const;
 
     /**
      * @brief Retorna se o inventário está aberto.
+     * @return true se o inventário estiver aberto, false caso contrário.
      */
     bool inventarioAberto() const;
 
     /**
      * @brief Retorna se o jogador está em batalha.
+     * @return true se a cena estiver em batalha, false caso contrário.
      */
     bool emBatalha() const;
 
     /**
      * @brief Retorna se o jogador está explorando.
+     * @return true se a cena estiver em modo de exploração, false caso contrário.
      */
     bool explorando() const;
 

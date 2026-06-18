@@ -48,10 +48,22 @@ public:
      */
     void abrirTrecho();
 
+    /**
+     * @brief Verifica se o trecho está aberto.
+     * @return true se o trecho estiver aberto, false caso contrário.
+     */
     bool estaAberto() const;
 
+    /**
+     * @brief Verifica se ainda existem itens disponíveis no trecho.
+     * @return true se houver itens restantes, false caso contrário.
+     */
     bool possuiItensRestantes() const;
 
+    /**
+     * @brief Retorna o ID do próximo item disponível.
+     * @return ID do item ou -1 caso não existam itens restantes.
+     */
     int sortearItem() const;
 
     /**
@@ -62,35 +74,57 @@ public:
      */
     Item gerarItem();
 
+    /**
+     * @brief Registra que um item foi encontrado.
+     */
     void registrarItemEncontrado();
 
+    /**
+     * @brief Retorna a quantidade de itens restantes.
+     * @return Número de itens ainda não encontrados.
+     */
     int pegarItensRestantes() const;
 
+    /**
+     * @brief Verifica se existe um inimigo no trecho.
+     * @return true se existir inimigo, false caso contrário.
+     */
     bool possuiInimigo() const;
+
+    /**
+     * @brief Retorna o ID do inimigo associado ao trecho.
+     * @return ID do inimigo.
+     * @throw std::logic_error Caso o trecho não possua inimigo.
+     */
     int pegarIdInimigo() const;
 
     /**
      * @brief Retorna o ID do trecho.
+     * @return Identificador único do trecho.
      */
     int pegarId() const;
 
     /**
      * @brief Retorna a descrição.
+     * @return Texto descritivo do trecho.
      */
     std::string pegarDescricao() const;
 
     /**
      * @brief Retorna os NPCs de interação.
+     * @return ID do NPC ou -1 caso não exista.
      */
     int pegarNPCInteracao() const;
 
     /**
      * @brief Retorna os próximos trechos.
+     * @return ID do próximo trecho ou -1 caso não exista.
      */
     int pegarProximoTrecho() const;
 
     /**
      * @brief Retorna o trecho anterior.
+     * @return ID do trecho anterior ou -1 caso não exista.
      */
     int pegarTrechoAnterior() const;
 };

@@ -19,6 +19,7 @@ public:
      * @brief Retorna os dados de um NPC.
      * @param id ID do NPC.
      * @return Estrutura contendo os dados do NPC.
+     * @throw std::runtime_error Caso o NPC não exista.
      */
     static InfoNPCInteracao obterNPC(int id);
 };
