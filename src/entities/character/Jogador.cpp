@@ -1,3 +1,8 @@
+/**
+ * @file Jogador.cpp
+ * @brief Implementação da classe Jogador — extensão de Personagem com inventário.
+ */
+
 #include "entities/character/Jogador.hpp"
 
 void Jogador::adicionarItem(Item* item) {
