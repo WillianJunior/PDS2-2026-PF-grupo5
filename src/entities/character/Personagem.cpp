@@ -1,5 +1,5 @@
 #include "entities/character/Personagem.hpp"
-#include "core/rules/Regras.hpp"
+#include "core/rules/RegrasProgresso.hpp"
 
 Personagem::Personagem(
     std::string nome,
@@ -67,7 +67,7 @@ void Personagem::gastarMana(double custoMana) {
 void Personagem::ganharXp(double quantidadeXp) {
     assert(quantidadeXp >= 0 && "Xp nao pode ser negativo");
     _xp += quantidadeXp;
-    while (_nivel < 10 && _xp >= Regras::xpParaProximoNivel(_nivel)) {
+    while (_nivel < 10 && _xp >= RegrasProgresso::getXPParaProximoNivel(_nivel)) {
         subirNivel();
     }
 }

@@ -76,3 +76,16 @@ void ClassePersonagem::alteraAtaqueForte(int nivel) {
             break;
     }
 }
+
+const Condicao& ClassePersonagem::getEfeitoAtaque(TipoAtaque tipo) const {
+    switch(tipo) {
+        case TipoAtaque::Simples:
+            return _ataques[0].efeito;
+        case TipoAtaque::Rapido:
+            return _ataques[1].efeito;
+        case TipoAtaque::Forte:
+            return _ataques[2].efeito;
+    }
+    return _ataques[0].efeito;
+};
+
