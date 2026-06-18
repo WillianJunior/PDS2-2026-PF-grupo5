@@ -2,6 +2,8 @@
 
 #include "include/database/BancoCena.hpp"
 
+#include <stdexcept>
+
 TEST_CASE("BancoCena retorna Cena 1")
 {
     CHECK(BancoCena::obterCena(1).id == 1);
@@ -37,7 +39,18 @@ TEST_CASE("BancoCena retorna Cena 7")
     CHECK(BancoCena::obterCena(7).id == 7);
 }
 
-TEST_CASE("BancoCena lanca excecao para ID invalido")
+TEST_CASE("BancoCena rejeita id negativo")
 {
-    CHECK_THROWS(BancoCena::obterCena(999));
+    CHECK_THROWS_AS(
+        BancoCena::obterCena(-1),
+        std::invalid_argument
+    );
+}
+
+TEST_CASE("BancoCena rejeita id inexistente")
+{
+    CHECK_THROWS_AS(
+        BancoCena::obterCena(999),
+        std::invalid_argument
+    );
 }

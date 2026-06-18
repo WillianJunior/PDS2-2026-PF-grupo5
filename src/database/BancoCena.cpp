@@ -3,6 +3,12 @@
 
 InfoCena BancoCena::obterCena(int id){
 
+    if(id <= 0){
+    throw std::invalid_argument(
+        "ID de cena invalido"
+    );
+    }
+
     switch (id)
     {
     case 1:
@@ -15,19 +21,17 @@ InfoCena BancoCena::obterCena(int id){
             {101,102,103} //vetor com os ids dos trechos de mapa que compões a cena
 
         };
-        break;
     
     case 2:
         return{
             2,  //id
-            "Poder do segundo arcnao", //arcano
+            "Poder do segundo arcano", //arcano
             "", //recompensa entregue no final da cena
             "", //descricao da cena
             201, //id do trechoMapa inicial da cena
             {201,202,203} //vetor com os ids dos trechos de mapa que compões a cena
 
         };
-        break;
 
     case 3:
         return{
@@ -39,7 +43,6 @@ InfoCena BancoCena::obterCena(int id){
             {301,302,303} //vetor com os ids dos trechos de mapa que compões a cena
 
         };
-        break;
 
     case 4:
         return{
@@ -51,7 +54,6 @@ InfoCena BancoCena::obterCena(int id){
             {401,402,403} //vetor com os ids dos trechos de mapa que compões a cena
 
         };
-        break;
 
     case 5:
         return{
@@ -63,7 +65,6 @@ InfoCena BancoCena::obterCena(int id){
             {501,502,503} //vetor com os ids dos trechos de mapa que compões a cena
 
         };
-        break;
 
     case 6:
         return{
@@ -75,7 +76,6 @@ InfoCena BancoCena::obterCena(int id){
             {601,602,603} //vetor com os ids dos trechos de mapa que compões a cena
 
         };
-        break;
 
     case 7:
         return{
@@ -87,7 +87,6 @@ InfoCena BancoCena::obterCena(int id){
             {701,702,703} //vetor com os ids dos trechos de mapa que compões a cena
 
         };
-        break;
 
     default:
         throw std::invalid_argument("Cena com id desconhecido: " + std::to_string(id));
