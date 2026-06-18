@@ -53,7 +53,7 @@ int TrechoMapa::pegarItensRestantes() const{
     return (int)_dados.idsItens.size() - _itensEncontrados;
 }
 
-bool TrechoMapa::poussuiInimigo() const{
+bool TrechoMapa::possuiInimigo() const{
     return _dados.existeInimigo;
 }
 

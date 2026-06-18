@@ -66,7 +66,7 @@ public:
 
     int pegarItensRestantes() const;
 
-    bool poussuiInimigo() const;
+    bool possuiInimigo() const;
     int pegarIdInimigo() const;
 
     /**

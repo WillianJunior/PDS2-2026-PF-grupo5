@@ -5,15 +5,18 @@
 #include "entities/items/Item.hpp"
 #include "entities/character/Personagem.hpp"
 
-TEST_CASE("Construtor de TrechoMapa"){
+TEST_CASE("Construtor de TrechoMapa")
+{
     InfoTrechoMapa dados{
         1,
         "Floresta",
         10,
-        {1, 3, 5},
+        {},
+        true,
+        20,
         2,
-        2,
-        -1
+        -1,
+        1
     };
 
     TrechoMapa trecho(dados);
@@ -27,7 +30,17 @@ TEST_CASE("Construtor de TrechoMapa"){
 
 TEST_CASE("TrechoMapa inicia fechado")
 {
-    InfoTrechoMapa dados{ 1, "Floresta", -1, {}, 0, -1, -1 };
+    InfoTrechoMapa dados{
+        1,
+        "Floresta",
+        -1,
+        {},
+        false,
+        -1,
+        -1,
+        -1,
+        1
+    };
 
     TrechoMapa trecho(dados);
 
@@ -36,9 +49,20 @@ TEST_CASE("TrechoMapa inicia fechado")
 
 TEST_CASE("abrirTrecho altera estado")
 {
-    InfoTrechoMapa dados{ 1, "Floresta", -1, {}, 0, -1, -1 };
+    InfoTrechoMapa dados{
+        1,
+        "Floresta",
+        -1,
+        {},
+        false,
+        -1,
+        -1,
+        -1,
+        1
+    };
 
     TrechoMapa trecho(dados);
+
     trecho.abrirTrecho();
 
     CHECK(trecho.estaAberto() == true);
@@ -46,7 +70,18 @@ TEST_CASE("abrirTrecho altera estado")
 
 TEST_CASE("TrechoMapa possui itens restantes inicialmente")
 {
-    InfoTrechoMapa dados{ 1, "Floresta", -1, {1, 3, 5}, 0, -1, -1 };
+    
+    InfoTrechoMapa dados{
+        1,
+        "Floresta",
+        -1,
+        {1,2,3},
+        false,
+        -1,
+        -1,
+        -1,
+        1
+    };
 
     TrechoMapa trecho(dados);
 
@@ -55,7 +90,17 @@ TEST_CASE("TrechoMapa possui itens restantes inicialmente")
 
 TEST_CASE("registrarItemEncontrado reduz itens restantes")
 {
-    InfoTrechoMapa dados{ 1, "Floresta", -1, {1, 3, 5}, 0, -1, -1 };
+    InfoTrechoMapa dados{ 
+        1, 
+        "Floresta", 
+        -1, 
+        {1, 3, 5}, 
+        false, 
+        -1, 
+        -1, 
+        -1,
+        1
+    };
 
     TrechoMapa trecho(dados);
     trecho.registrarItemEncontrado();
@@ -65,7 +110,17 @@ TEST_CASE("registrarItemEncontrado reduz itens restantes")
 
 TEST_CASE("Nao possui itens restantes apos encontrar todos")
 {
-    InfoTrechoMapa dados{ 1, "Floresta", -1, {1, 3}, 0, -1, -1 };
+    InfoTrechoMapa dados{ 
+        1, 
+        "Floresta", 
+        -1, 
+        {1, 3}, 
+        false, 
+        -1, 
+        -1, 
+        -1,
+        1
+    };
 
     TrechoMapa trecho(dados);
     trecho.registrarItemEncontrado();
@@ -76,7 +131,17 @@ TEST_CASE("Nao possui itens restantes apos encontrar todos")
 
 TEST_CASE("Nao registra itens acima do limite")
 {
-    InfoTrechoMapa dados{ 1, "Floresta", -1, {1}, 0, -1, -1 };
+    InfoTrechoMapa dados{ 
+        1, 
+        "Floresta", 
+        -1, 
+        {1}, 
+        false,
+        0, 
+        -1, 
+        -1,
+        1
+    };
 
     TrechoMapa trecho(dados);
     trecho.registrarItemEncontrado();
@@ -87,7 +152,17 @@ TEST_CASE("Nao registra itens acima do limite")
 
 TEST_CASE("sortearItem retorna ID do proximo item")
 {
-    InfoTrechoMapa dados{ 1, "Floresta", -1, {1, 3, 5}, 0, -1, -1 };
+    InfoTrechoMapa dados{ 
+        1, 
+        "Floresta", 
+        -1, 
+        {1, 3, 5}, 
+        false, 
+        0, 
+        -1, 
+        -1,
+        1 
+    };
 
     TrechoMapa trecho(dados);
 
@@ -100,57 +175,36 @@ TEST_CASE("sortearItem retorna ID do proximo item")
 
 TEST_CASE("sortearItem retorna -1 quando nao ha itens restantes")
 {
-    InfoTrechoMapa dados{ 1, "Floresta", -1, {}, 0, -1, -1 };
+    InfoTrechoMapa dados{ 
+        1, 
+        "Floresta", 
+        -1, 
+        {}, 
+        false, 
+        0, 
+        -1, 
+        -1,
+        1
+    };
 
     TrechoMapa trecho(dados);
 
     CHECK(trecho.sortearItem() == -1);
 }
 
-TEST_CASE("Possui inimigos restantes inicialmente")
-{
-    InfoTrechoMapa dados{ 1, "Floresta", -1, {}, 2, -1, -1 };
-
-    TrechoMapa trecho(dados);
-
-    CHECK(trecho.possuiInimigosRestantes() == true);
-}
-
-TEST_CASE("registrarInimigoDerrotado reduz quantidade")
-{
-    InfoTrechoMapa dados{ 1, "Floresta", -1, {}, 3, -1, -1 };
-
-    TrechoMapa trecho(dados);
-    trecho.registrarInimigoDerrotado();
-
-    CHECK(trecho.pegarInimigosRestantes() == 2);
-}
-
-TEST_CASE("Nao possui inimigos restantes apos derrotar todos")
-{
-    InfoTrechoMapa dados{ 1, "Floresta", -1, {}, 2, -1, -1 };
-
-    TrechoMapa trecho(dados);
-    trecho.registrarInimigoDerrotado();
-    trecho.registrarInimigoDerrotado();
-
-    CHECK(trecho.possuiInimigosRestantes() == false);
-}
-
-TEST_CASE("Nao derrota inimigos acima do limite")
-{
-    InfoTrechoMapa dados{ 1, "Floresta", -1, {}, 1, -1, -1 };
-
-    TrechoMapa trecho(dados);
-    trecho.registrarInimigoDerrotado();
-    trecho.registrarInimigoDerrotado();
-
-    CHECK(trecho.pegarInimigosRestantes() == 0);
-}
-
 TEST_CASE("Retorna NPC de interacao")
 {
-    InfoTrechoMapa dados{ 1, "Floresta", 15, {}, 0, -1, -1 };
+    InfoTrechoMapa dados{ 
+        1, 
+        "Floresta", 
+        15, 
+        {}, 
+        false, 
+        0, 
+        -1, 
+        -1,
+        1
+    };
 
     TrechoMapa trecho(dados);
 
@@ -159,7 +213,17 @@ TEST_CASE("Retorna NPC de interacao")
 
 TEST_CASE("Trecho sem NPC retorna menos um")
 {
-    InfoTrechoMapa dados{ 1, "Floresta", -1, {}, 0, -1, -1 };
+    InfoTrechoMapa dados{
+        1,
+        "Floresta",
+        -1,
+        {},
+        false,
+        -1,
+        -1,
+        -1,
+        1
+    };
 
     TrechoMapa trecho(dados);
 
@@ -168,7 +232,17 @@ TEST_CASE("Trecho sem NPC retorna menos um")
 
 TEST_CASE("Retorna proximo trecho")
 {
-    InfoTrechoMapa dados{ 101, "Floresta", -1, {}, 0, 102, -1 };
+    InfoTrechoMapa dados{
+        101,
+        "Floresta",
+        -1,
+        {},
+        false,
+        -1,
+        102,
+        -1,
+        1
+    };
 
     TrechoMapa trecho(dados);
 
@@ -177,7 +251,17 @@ TEST_CASE("Retorna proximo trecho")
 
 TEST_CASE("Retorna trecho anterior")
 {
-    InfoTrechoMapa dados{ 102, "Interior da floresta", -1, {}, 0, 103, 101 };
+    InfoTrechoMapa dados{
+        102,
+        "Interior da floresta",
+        -1,
+        {},
+        false,
+        -1,
+        103,
+        101,
+        1
+    };
 
     TrechoMapa trecho(dados);
 
@@ -186,7 +270,17 @@ TEST_CASE("Retorna trecho anterior")
 
 TEST_CASE("Primeiro trecho nao possui anterior")
 {
-    InfoTrechoMapa dados{ 101, "Entrada da floresta", -1, {}, 0, 102, -1 };
+    InfoTrechoMapa dados{
+        101,
+        "Entrada da floresta",
+        -1,
+        {},
+        false,
+        -1,
+        102,
+        -1,
+        1
+    };
 
     TrechoMapa trecho(dados);
 
@@ -195,7 +289,7 @@ TEST_CASE("Primeiro trecho nao possui anterior")
 
 TEST_CASE("gerarItem retorna item e registra encontro")
 {
-    InfoTrechoMapa dados{ 101, "Floresta", -1, {1, 3}, 0, -1, -1, 1 };
+    InfoTrechoMapa dados{ 101, "Floresta", -1, {1, 3}, false, 0, -1, -1, 1 };
 
     TrechoMapa trecho(dados);
     Item item = trecho.gerarItem();
@@ -206,7 +300,7 @@ TEST_CASE("gerarItem retorna item e registra encontro")
 
 TEST_CASE("gerarItem sequencial esgota itens do trecho")
 {
-    InfoTrechoMapa dados{ 101, "Floresta", -1, {1, 3}, 0, -1, -1, 1 };
+    InfoTrechoMapa dados{ 101, "Floresta", -1, {1, 3}, false, 0, -1, -1, 1 };
 
     TrechoMapa trecho(dados);
     trecho.gerarItem();
@@ -217,9 +311,66 @@ TEST_CASE("gerarItem sequencial esgota itens do trecho")
 
 TEST_CASE("gerarItem lanca excecao quando sem itens restantes")
 {
-    InfoTrechoMapa dados{ 101, "Floresta", -1, {}, 0, -1, -1, 1 };
+    InfoTrechoMapa dados{ 101, "Floresta", -1, {}, false, 0, -1, -1, 1 };
 
     TrechoMapa trecho(dados);
 
     CHECK_THROWS_AS(trecho.gerarItem(), std::runtime_error);
+}
+
+TEST_CASE("Trecho possui inimigo")
+{
+    InfoTrechoMapa dados{
+        1,
+        "Floresta",
+        -1,
+        {},
+        true,
+        50,
+        -1,
+        -1,
+        1
+    };
+
+    TrechoMapa trecho(dados);
+
+    CHECK(trecho.possuiInimigo() == true);
+}
+
+TEST_CASE("Trecho nao possui inimigo")
+{
+    InfoTrechoMapa dados{
+        1,
+        "Floresta",
+        -1,
+        {},
+        false,
+        -1,
+        -1,
+        -1,
+        1
+    };
+
+    TrechoMapa trecho(dados);
+
+    CHECK(trecho.possuiInimigo() == false);
+}
+
+TEST_CASE("Retorna ID do inimigo")
+{
+    InfoTrechoMapa dados{
+        1,
+        "Floresta",
+        -1,
+        {},
+        true,
+        42,
+        -1,
+        -1,
+        1
+    };
+
+    TrechoMapa trecho(dados);
+
+    CHECK(trecho.pegarIdInimigo() == 42);
 }
