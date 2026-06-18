@@ -12,7 +12,8 @@ struct InfoTrechoMapa {
     std::string descricao;       ///< Descrição narrativa do trecho.
     int npcInteracao;            ///< ID do NPC com o qual o jogador pode interagir.
     std::vector<int> idsItens;   ///< IDs dos itens disponíveis no trecho (BancoItem).
-    int quantidadeInimigos;      ///< Quantidade de inimigos presentes no trecho.
+    bool existeInimigo;          ///< Bool que define se tem algum inimigo no trecho.
+    int idInimigo;                ///< ID do inimigo caso presente no trecho.
     int proximoTrecho;           ///< ID do próximo trecho.
     int trechoAnterior;          ///< ID do trecho anterior.
     int cenaId;                  ///< ID da cena à qual este trecho pertence.
