@@ -24,11 +24,14 @@ public:
     /**
      * @brief Aplica o efeito do item sobre o personagem alvo.
      *
-     * - Comida com valor positivo: chama recuperarVida().
-     * - Comida com valor negativo: chama receberDano().
-     * - Poção e Cristal: TODO; pendentes de refatoração em Personagem (Condicao / slot de equipamento).
+     * - **Comida**: rola dados conforme categoria (Regras.md §5.2):
+     *   - _valor = qtdDados (positivo = cura, negativo = dano)
+     *   - _duracao = ladosDado (6 ou 8)
+     *   - Cria Dados internamente com semente aleatória.
+     * - **Poção**: aplica ModAtributo temporário (Regras.md §5.3).
+     * - **Cristal**: aplica condição de combate (Regras.md §5.4).
      *
-     * @param item   Item a ser aplicado.
+     * @param item       Item a ser aplicado.
      * @param personagem Personagem que receberá o efeito.
      */
     static void aplicarEfeito(const Item& item, Personagem& personagem);
