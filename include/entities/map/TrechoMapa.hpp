@@ -36,8 +36,6 @@ private:
 
     int _itensEncontrados;
 
-    int _inimigosDerrotados;
-
 public:
      /**
      * @brief Construtor.
@@ -54,8 +52,6 @@ public:
 
     bool possuiItensRestantes() const;
 
-    bool possuiInimigosRestantes() const;
-
     int sortearItem() const;
 
     /**
@@ -68,11 +64,10 @@ public:
 
     void registrarItemEncontrado();
 
-    void registrarInimigoDerrotado();
-
     int pegarItensRestantes() const;
 
-    int pegarInimigosRestantes() const;
+    bool poussuiInimigo() const;
+    int pegarIdInimigo() const;
 
     /**
      * @brief Retorna o ID do trecho.
