@@ -1,3 +1,12 @@
+/**
+ * @file BancoClassePersonagem.cpp
+ * @brief Repositório estático de definições de classe e ataques por TipoClasse.
+ * Define atributos descritivos, arma e conjunto de ataques (simples, rápido e forte)
+ * para cada uma das quatro classes: Guerreiro, Mago, Arqueiro e Tanque.
+ * @see Regras.md — Seções 1.1, 2.2, 2.3 e 2.4
+ */
+
+#include <stdexcept>
 #include "database/BancoClassePersonagem.hpp"
 
 void BancoClassePersonagem::defineClasse(TipoClasse tipo, ClassePersonagem& classe) {
@@ -22,6 +31,9 @@ void BancoClassePersonagem::defineClasse(TipoClasse tipo, ClassePersonagem& clas
             classe.setDescricao("Máxima resistência, dano baseado em Defesa");
             classe.setArma("Escudo");
             break;
+
+        default:
+            throw std::invalid_argument("TipoClasse desconhecido em defineClasse.");
     }
 }
 
