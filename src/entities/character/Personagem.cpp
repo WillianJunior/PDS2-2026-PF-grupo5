@@ -1,3 +1,13 @@
+/**
+ * @file Personagem.cpp
+ * @brief Implementação da classe Personagem.
+ *
+ * Programação defensiva: todos os parâmetros inválidos lançam exceções
+ * (std::invalid_argument ou std::out_of_range) em vez de usar assert,
+ * garantindo detecção de erros mesmo em builds de release.
+ */
+
+#include <stdexcept>
 #include "entities/character/Personagem.hpp"
 #include "core/rules/RegrasProgresso.hpp"
 
@@ -5,11 +15,11 @@ Personagem::Personagem(
     std::string nome,
     std::string descricao,
     std::string fala,
-    double ataque, 
-    double defesa, 
-    double vidaTotal, 
-    double ppTotal, 
-    double agilidade, 
+    double ataque,
+    double defesa,
+    double vidaTotal,
+    double ppTotal,
+    double agilidade,
     TipoClasse tipoClasse,
     TipoPersonagem tipo,
     int nivel)
@@ -28,44 +38,55 @@ Personagem::Personagem(
       _tipo(tipo),
       _nivel(nivel)
 {
-    assert(vidaTotal > 0 && "Vida total deve ser positiva");
-    assert(ppTotal >= 0 && "Mana total nao pode ser negativa");
-    assert(ataque >= 0 && "Ataque nao pode ser negativo");
-    assert(defesa >= 0 && "Defesa nao pode ser negativa");
-    assert(agilidade >= 0 && "Agilidade nao pode ser negativa");
-    assert(nivel > 0 && "Nivel deve ser positivo");
+    if (vidaTotal <= 0)
+        throw std::invalid_argument("Vida total deve ser positiva.");
+    if (ppTotal < 0)
+        throw std::invalid_argument("PP total nao pode ser negativo.");
+    if (ataque < 0)
+        throw std::invalid_argument("Ataque nao pode ser negativo.");
+    if (defesa < 0)
+        throw std::invalid_argument("Defesa nao pode ser negativa.");
+    if (agilidade < 0)
+        throw std::invalid_argument("Agilidade nao pode ser negativa.");
+    if (nivel <= 0)
+        throw std::invalid_argument("Nivel deve ser positivo.");
 }
 
 void Personagem::receberDano(double dano) {
-    assert(dano >= 0 && "Dano nao pode ser negativo");
+    if (dano < 0)
+        throw std::invalid_argument("Dano nao pode ser negativo.");
     _vidaAtual -= dano;
-    if(_vidaAtual < 0)
+    if (_vidaAtual < 0)
         _vidaAtual = 0;
 }
 
 void Personagem::recuperarVida(double cura) {
-    assert(cura >= 0 && "Cura nao pode ser negativa");
+    if (cura < 0)
+        throw std::invalid_argument("Cura nao pode ser negativa.");
     _vidaAtual += cura;
-    if(_vidaAtual > _vidaTotal)
+    if (_vidaAtual > _vidaTotal)
         _vidaAtual = _vidaTotal;
 }
 
 void Personagem::recuperarMana(double quantidadeMana) {
-    assert(quantidadeMana >= 0 && "Mana nao pode ser negativa");
+    if (quantidadeMana < 0)
+        throw std::invalid_argument("Quantidade de mana nao pode ser negativa.");
     _ppAtual += quantidadeMana;
-    if(_ppAtual > _ppTotal)
+    if (_ppAtual > _ppTotal)
         _ppAtual = _ppTotal;
 }
 
 void Personagem::gastarMana(double custoMana) {
-    assert(custoMana >= 0 && "Mana nao pode ser negativa");
+    if (custoMana < 0)
+        throw std::invalid_argument("Custo de mana nao pode ser negativo.");
     _ppAtual -= custoMana;
-    if(_ppAtual < 0)
+    if (_ppAtual < 0)
         _ppAtual = 0;
 }
 
 void Personagem::ganharXp(double quantidadeXp) {
-    assert(quantidadeXp >= 0 && "Xp nao pode ser negativo");
+    if (quantidadeXp < 0)
+        throw std::invalid_argument("XP nao pode ser negativo.");
     _xp += quantidadeXp;
     while (_nivel < 10 && _xp >= RegrasProgresso::getXPParaProximoNivel(_nivel)) {
         subirNivel();
@@ -74,7 +95,7 @@ void Personagem::ganharXp(double quantidadeXp) {
 
 void Personagem::subirNivel() {
     _nivel++;
-    //if(_nivel == 3 && _nivel == 5 && _nivel == 7)
+    //if(_nivel == 3 || _nivel == 5 || _nivel == 7)
     //    _classe.alteraAtaqueForte(_nivel);
 }
 
@@ -82,53 +103,18 @@ bool Personagem::estaVivo() const {
     return _vidaAtual > 0;
 }
 
-std::string Personagem::getNome() const {
-    return _nome;
-}
-
-std::string Personagem::getDescricao() const {
-    return _descricao;
-}
-
-std::string Personagem::getFala() const {
-    return _fala;
-}
-
-double Personagem::getVidaAtual() const {
-    return _vidaAtual;
-}
-
-double Personagem::getAtaque() const {
-    return _ataque;
-}
-
-double Personagem::getDefesa() const {
-    return _defesa;
-}
-
-double Personagem::getAgilidade() const {
-    return _agilidade;
-}
-
-double Personagem::getManaAtual() const {
-    return _ppAtual;
-}
-
-int Personagem::getNivel() const {
-    return _nivel;
-}
-
-double Personagem::getXp() const {
-    return _xp;
-}
-
-TipoPersonagem Personagem::getTipo() const {
-    return _tipo;
-}
-
-const ClassePersonagem& Personagem::getClasse() const {
-    return _classe;
-}
+std::string Personagem::getNome() const { return _nome; }
+std::string Personagem::getDescricao() const { return _descricao; }
+std::string Personagem::getFala() const { return _fala; }
+double Personagem::getVidaAtual() const { return _vidaAtual; }
+double Personagem::getAtaque() const { return _ataque; }
+double Personagem::getDefesa() const { return _defesa; }
+double Personagem::getAgilidade() const { return _agilidade; }
+double Personagem::getManaAtual() const { return _ppAtual; }
+int Personagem::getNivel() const { return _nivel; }
+double Personagem::getXp() const { return _xp; }
+TipoPersonagem Personagem::getTipo() const { return _tipo; }
+const ClassePersonagem& Personagem::getClasse() const { return _classe; }
 
 void Personagem::aplicarCondicao(const Condicao& condicao) {
     if (condicao.tipo == TipoCondicao::ModAtributo) {
@@ -144,6 +130,9 @@ void Personagem::aplicarCondicao(const Condicao& condicao) {
 }
 
 void Personagem::removerCondicao(int posicao) {
+    if (posicao < 0 || posicao >= (int)_condicoesAtivas.size())
+        throw std::out_of_range("Posicao de condicao invalida.");
+
     const Condicao& c = _condicoesAtivas[posicao];
     if (c.tipo == TipoCondicao::ModAtributo) {
         switch (c.atributoAlvo) {
