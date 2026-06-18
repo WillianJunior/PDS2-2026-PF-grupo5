@@ -1,3 +1,10 @@
+/**
+ * @file ClassePersonagem.cpp
+ * @brief Implementação da classe ClassePersonagem.
+ * Define os ataques, arma e descrição de cada arquétipo via BancoClassePersonagem.
+ * @see Regras.md — Seções 1.1, 2.2, 2.3 e 2.4
+ */
+
 #include "entities/character/ClassePersonagem.hpp"
 #include "database/BancoClassePersonagem.hpp"
 
