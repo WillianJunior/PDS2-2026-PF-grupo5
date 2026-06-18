@@ -4,17 +4,6 @@
 InfoTrechoMapa BancoTrechoMapa::obterTrechoMapa(int id) {
     switch (id) {
 
-    ///< Identificador único do trecho.
-    ///< Descrição narrativa do trecho.
-    ///< ID do NPC com o qual o jogador pode interagir.
-    ///< IDs dos itens disponíveis no trecho (BancoItem).
-    ///< Bool que define se tem algum inimigo no trecho.
-    ///< ID do inimigo caso presente no trecho.
-    ///< ID do próximo trecho.
-    ///< ID do trecho anterior.
-    ///< ID da cena à qual este trecho pertence.  
-
-
     // Cena 1: trechos 101–103
     case 101:
         return { 101, "", 1, {1, 2}, false, -1, 102, -1, 1 };
