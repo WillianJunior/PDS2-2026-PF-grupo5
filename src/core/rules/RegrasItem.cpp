@@ -1,15 +1,29 @@
+/**
+ * @file RegrasItem.cpp
+ * @brief Implementação das regras de uso de itens (Comida, Poção e Cristal).
+ * @see Regras.md — Seção 5
+ */
+
+#include <cstdlib>
+
 #include "core/rules/RegrasItem.hpp"
+#include "core/Dados.hpp"
 #include "utils/AtributoEnum.hpp"
 #include "utils/TipoCondicaoEnum.hpp"
 
 void RegrasItem::aplicarEfeito(const Item& item, Personagem& personagem) {
 
     if (item.pegarTipo() == Comida) {
-        int valor = item.pegarValor();
-        if (valor >= 0)
-            personagem.recuperarVida(valor);
+        // _valor = qtdDados (+ = cura, - = dano) | _duracao = ladosDado
+        // Regras.md §5.2: Fruta=1d6, Carne=2d6, Cogumelo/Erva=2d8
+        int qtd   = item.pegarValor();
+        int lados = item.pegarDuracao();
+        Dados d;
+        int total = d.rolar(std::abs(qtd), lados);
+        if (qtd >= 0)
+            personagem.recuperarVida(total);
         else
-            personagem.receberDano(-valor);
+            personagem.receberDano(total);
         return;
     }
 
