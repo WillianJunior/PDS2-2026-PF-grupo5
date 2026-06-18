@@ -1,3 +1,10 @@
+/**
+ * @file BancoTrechoMapa.cpp
+ * @brief Repositório estático de trechos de mapa (21 trechos — 7 cenas × 3 trechos).
+ * Retorna InfoTrechoMapa por ID; lança std::invalid_argument para IDs inválidos.
+ * IDs seguem o padrão: cenaId × 100 + índice (ex: cena 1 → 101, 102, 103).
+ */
+
 #include "database/BancoTrechoMapa.hpp"
 #include <stdexcept>
 
