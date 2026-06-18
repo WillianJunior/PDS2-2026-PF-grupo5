@@ -38,8 +38,12 @@ public:
     static Item obterItem(int cenaId, int itemId);
 
 private:
-    static Item criarComidaPositiva(int cenaId, std::string nome, std::string desc, int valor);
-    static Item criarComidaNegativa(int cenaId, std::string nome, std::string desc, int valor);
+    /// @param qtdDados  Quantidade de dados (ex: 1 para 1d6, 2 para 2d8).
+    /// @param ladosDado Lados do dado (ex: 6 para d6, 8 para d8).
+    static Item criarComidaPositiva(int cenaId, std::string nome, std::string desc,
+                                    int qtdDados, int ladosDado);
+    static Item criarComidaNegativa(int cenaId, std::string nome, std::string desc,
+                                    int qtdDados, int ladosDado);
     static Item criarPocaoAtaque(int cenaId, std::string nome, std::string desc, int valor);
     static Item criarPocaoDefesa(int cenaId, std::string nome, std::string desc, int valor);
     static Item criarPocaoVelocidade(int cenaId, std::string nome, std::string desc, int valor);
