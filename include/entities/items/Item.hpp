@@ -30,8 +30,19 @@ private:
     TipoItem _tipo;         ///< Categoria do item (Pocao, Comida ou Cristal).
 
     std::string _efeito;    ///< Descrição do efeito aplicado (ex: "Cura", "Dano").
-    int _valor;             ///< Intensidade do efeito (ex: +20 de HP).
-    int _duracao;           ///< Tempo de duração do efeito em turnos (0 para imediato).
+    /**
+     * Semântica dupla conforme o tipo do item:
+     * - Pocao / Cristal: valor numérico do modificador (ex: +4 de ATQ).
+     * - Comida: quantidade de dados a rolar (positivo = cura, negativo = dano).
+     *   Ex: +1 → 1d? de cura; -2 → 2d? de dano. Lados do dado em _duracao.
+     */
+    int _valor;
+    /**
+     * Semântica dupla conforme o tipo do item:
+     * - Pocao / Cristal: duração do efeito em turnos (0 = permanente na cena).
+     * - Comida: lados do dado (ex: 6 para d6, 8 para d8).
+     */
+    int _duracao;
     int _cenaId;            ///< ID da cena à qual o item pertence (0 = genérico).
 
 public:
