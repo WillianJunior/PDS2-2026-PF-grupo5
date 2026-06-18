@@ -1,3 +1,10 @@
+/**
+ * @file RegrasBatalha.cpp
+ * @brief Implementação das regras de combate: classificação de encontros,
+ *        cálculo de XP, fuga, defesa e esquiva.
+ * @see Regras.md — Seções 2.6, 2.7, 2.9, 4.2 a 4.6
+ */
+
 #include "core/rules/RegrasBatalha.hpp"
 #include <array>
 #include <map>
