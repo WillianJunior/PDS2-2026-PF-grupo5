@@ -31,6 +31,7 @@ std::array<Ataque,3> BancoClassePersonagem::defineAtaques(TipoClasse tipo) {
 
         case TipoClasse::Arqueiro:
             ataques[0] = {
+                IdAtaque::Flecha,
                 "Flecha",
                 "Fraco porém não gasta mana.",
                 TipoAtaque::Simples,
@@ -38,6 +39,7 @@ std::array<Ataque,3> BancoClassePersonagem::defineAtaques(TipoClasse tipo) {
             };
 
             ataques[1] = {
+                IdAtaque::TiroRapido,
                 "Tiro Rápido",
                 "Saca e solta duas flechas em sequência.",
                 TipoAtaque::Rapido,
@@ -50,6 +52,7 @@ std::array<Ataque,3> BancoClassePersonagem::defineAtaques(TipoClasse tipo) {
 
         case TipoClasse::Guerreiro:
             ataques[0] = {
+                IdAtaque::Espada,
                 "Espada",
                 "Fraco porém não gasta mana.",
                 TipoAtaque::Simples,
@@ -57,6 +60,7 @@ std::array<Ataque,3> BancoClassePersonagem::defineAtaques(TipoClasse tipo) {
             };
 
             ataques[1] = {
+                IdAtaque::GolpeRelampago,
                 "Golpe Relâmpago",
                 "Uma sequência veloz espada-cotovelo.",
                 TipoAtaque::Rapido,
@@ -69,6 +73,7 @@ std::array<Ataque,3> BancoClassePersonagem::defineAtaques(TipoClasse tipo) {
 
         case TipoClasse::Mago:
             ataques[0] = {
+                IdAtaque::Truque,
                 "Truque",
                 "Fraco porém não gasta mana.",
                 TipoAtaque::Simples,
@@ -76,6 +81,7 @@ std::array<Ataque,3> BancoClassePersonagem::defineAtaques(TipoClasse tipo) {
             };
 
             ataques[1] = {
+                IdAtaque::ProjetilArcano,
                 "Projétil Arcano",
                 "Um feitiço simples e certeiro que não precisa de foco.",
                 TipoAtaque::Rapido,
@@ -88,6 +94,7 @@ std::array<Ataque,3> BancoClassePersonagem::defineAtaques(TipoClasse tipo) {
 
         case TipoClasse::Tanque:
             ataques[0] = {
+                IdAtaque::Escudo,
                 "Escudo",
                 "Fraco porém não gasta mana.",
                 TipoAtaque::Simples,
@@ -95,6 +102,7 @@ std::array<Ataque,3> BancoClassePersonagem::defineAtaques(TipoClasse tipo) {
             };
 
             ataques[1] = {
+                IdAtaque::Investida,
                 "Investida",
                 "Carregar com o escudo na frente, empurrando o inimigo.",
                 TipoAtaque::Rapido,
@@ -103,7 +111,7 @@ std::array<Ataque,3> BancoClassePersonagem::defineAtaques(TipoClasse tipo) {
 
             ataques[2] = 
             BancoClassePersonagem::getAtaquesFortesPossiveis(TipoClasse::Tanque)[0];
-            break;
+        break;
     }
     return ataques;
 }
@@ -114,6 +122,7 @@ std::array<Ataque, 4> BancoClassePersonagem::getAtaquesFortesPossiveis(TipoClass
 
         case TipoClasse::Arqueiro:
             ataquesFortes[0] = {
+                IdAtaque::FlechaExplosiva,
                 "Flecha Explosiva",
                 "A flecha detona ao impactar, espalhando fogo nos pés do inimigo.",
                 TipoAtaque::Forte,
@@ -121,6 +130,7 @@ std::array<Ataque, 4> BancoClassePersonagem::getAtaquesFortesPossiveis(TipoClass
             };
 
             ataquesFortes[1] = {
+                IdAtaque::TiroCerteiro,
                 "Tiro Certeiro",
                 "Um disparo calculado que não pode errar.",
                 TipoAtaque::Forte,
@@ -128,6 +138,7 @@ std::array<Ataque, 4> BancoClassePersonagem::getAtaquesFortesPossiveis(TipoClass
             };
             
             ataquesFortes[2] = {
+                IdAtaque::Saraivada,
                 "Saraivada",
                 "Uma chuva de flechas de alta variância.",
                 TipoAtaque::Forte,
@@ -135,6 +146,7 @@ std::array<Ataque, 4> BancoClassePersonagem::getAtaquesFortesPossiveis(TipoClass
             };
 
             ataquesFortes[3] = {
+                IdAtaque::TiroFinal,
                 "Tiro Final",
                 "Uma única flecha disparada com precisão absoluta.",
                 TipoAtaque::Forte,
@@ -144,6 +156,7 @@ std::array<Ataque, 4> BancoClassePersonagem::getAtaquesFortesPossiveis(TipoClass
           
         case TipoClasse::Guerreiro:
             ataquesFortes[0] = {
+                IdAtaque::FuriaBerserker,
                 "Fúria Berserker",
                 "O guerreiro entra em estado de fúria total.",
                 TipoAtaque::Forte,
@@ -151,6 +164,7 @@ std::array<Ataque, 4> BancoClassePersonagem::getAtaquesFortesPossiveis(TipoClass
             };
             
             ataquesFortes[1] = {
+                IdAtaque::GolpeDevastador,
                 "Golpe Devastador",
                 "Um impacto pesado que compromete a armadura do inimigo.",
                 TipoAtaque::Forte,
@@ -158,6 +172,7 @@ std::array<Ataque, 4> BancoClassePersonagem::getAtaquesFortesPossiveis(TipoClass
             };
 
             ataquesFortes[2] = {
+                IdAtaque::Perfuracao,
                 "Perfuração",
                 "Um golpe preciso que atravessa toda armadura.",
                 TipoAtaque::Forte,
@@ -165,6 +180,7 @@ std::array<Ataque, 4> BancoClassePersonagem::getAtaquesFortesPossiveis(TipoClass
             };
 
             ataquesFortes[3] = {
+                IdAtaque::GolpeDoAbismo,
                 "Golpe do Abismo",
                 "O guerreiro abandona qualquer postura defensiva e desfere tudo de uma vez.",
                 TipoAtaque::Forte,
@@ -174,6 +190,7 @@ std::array<Ataque, 4> BancoClassePersonagem::getAtaquesFortesPossiveis(TipoClass
 
             case TipoClasse::Mago:
             ataquesFortes[0] = {
+                IdAtaque::BolaDeFogo,
                 "Bola de Fogo",
                 "Uma explosão mágica que afeta toda a área.",
                 TipoAtaque::Forte,
@@ -181,6 +198,7 @@ std::array<Ataque, 4> BancoClassePersonagem::getAtaquesFortesPossiveis(TipoClass
             };
 
             ataquesFortes[1] = {
+                IdAtaque::Raio,
                 "Raio",
                 "Um raio elétrico concentrado.",
                 TipoAtaque::Forte,
@@ -188,6 +206,7 @@ std::array<Ataque, 4> BancoClassePersonagem::getAtaquesFortesPossiveis(TipoClass
             };
 
             ataquesFortes[2] = {
+                IdAtaque::DrenoDaMagia,
                 "Dreno da Magia",
                 "O feitiço mais econômico do Mago.",
                 TipoAtaque::Forte,
@@ -195,6 +214,7 @@ std::array<Ataque, 4> BancoClassePersonagem::getAtaquesFortesPossiveis(TipoClass
             };
 
             ataquesFortes[3] = {
+                IdAtaque::VorticeArcano,
                 "Vórtice Arcano",
                 "Colapso de energia mágica diretamente no inimigo, contorna qualquer barreira física.",
                 TipoAtaque::Forte,
@@ -204,6 +224,7 @@ std::array<Ataque, 4> BancoClassePersonagem::getAtaquesFortesPossiveis(TipoClass
 
         case TipoClasse::Tanque:
             ataquesFortes[0] = {
+                IdAtaque::PancadaDeEscudo,
                 "Pancada de Escudo",
                 "O escudo é usado como arma de impacto.",
                 TipoAtaque::Forte,
@@ -211,6 +232,7 @@ std::array<Ataque, 4> BancoClassePersonagem::getAtaquesFortesPossiveis(TipoClass
             };
 
             ataquesFortes[1] = {
+                IdAtaque::Terremoto,
                 "Terremeto",
                 "Um golpe pesado no chão que desequilibra o inimigo e fractura sua armadura.",
                 TipoAtaque::Forte,
@@ -218,6 +240,7 @@ std::array<Ataque, 4> BancoClassePersonagem::getAtaquesFortesPossiveis(TipoClass
             };
 
             ataquesFortes[2] = {
+                IdAtaque::BarreiraDeEspinhos,
                 "Barreira de Espinhos",
                 "O Tanque assume postura totalmente reativa.",
                 TipoAtaque::Forte,
@@ -225,6 +248,7 @@ std::array<Ataque, 4> BancoClassePersonagem::getAtaquesFortesPossiveis(TipoClass
             };
 
             ataquesFortes[3] = {
+                IdAtaque::Martirio,
                 "Martírio",
                 "O Tanque abaixa o escudo e absorve o próximo impacto, usando o golpe para se impulsionar.",
                 TipoAtaque::Forte,
