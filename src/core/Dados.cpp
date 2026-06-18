@@ -1,3 +1,8 @@
+/**
+ * @file Dados.cpp
+ * @brief Implementação da classe Dados — rolagem de dados para o RPG.
+ */
+
 #include "core/Dados.hpp"
 #include <algorithm>
 #include <random>
