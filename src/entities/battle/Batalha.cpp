@@ -1,3 +1,13 @@
+/**
+ * @file Batalha.cpp
+ * @brief Implementação do motor de combate por turnos.
+ *
+ * @note Todos os métodos de cálculo de dano e ataque dependem de RegrasAtaque,
+ *       que está pendente de implementação (Matheus). Os stubs abaixo
+ *       estão prontos para receber a lógica assim que o módulo for integrado.
+ * @see Batalha.hpp, Regras.md — Seção 2
+ */
+
 #include "entities/battle/Batalha.hpp"
 #include "entities/character/Personagem.hpp"
 #include "entities/items/Item.hpp"
