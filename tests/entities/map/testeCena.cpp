@@ -100,6 +100,19 @@ TEST_CASE("Pegar trecho atual") {
     CHECK(cena.pegarTrechoAtual().pegarId() == 101);
 }
 
+TEST_CASE("Pegar trecho atual sem iniciar cena gera excecao")
+{
+    InfoCena dados{1,"Arcano","recompensa","descricao",101,{101}};
+    Jogador jogador = criarJogadorTeste();
+
+    Cena cena(dados, jogador);
+
+    CHECK_THROWS_AS(
+        cena.pegarTrechoAtual(),
+        std::runtime_error
+    );
+}
+
 TEST_CASE("Vasculhar adiciona item ao inventario do jogador") {
     InfoCena dados{ 1, "Primeiro arcano", "recompensa", "descricao", 101, {101} };
     Jogador jogador = criarJogadorTeste();
@@ -128,4 +141,30 @@ TEST_CASE("Vasculhar nao adiciona item se inventario cheio") {
 
     CHECK(cena.pegarTrechoAtual().pegarItensRestantes() == itensTrecho);
     CHECK(jogador.getInventario().quantidadeItens() == 8);
+}
+
+TEST_CASE("Andar sem trecho carregado")
+{
+    InfoCena dados{1,"Arcano","recompensa","descricao",101,{101}};
+    Jogador jogador = criarJogadorTeste();
+
+    Cena cena(dados, jogador);
+
+    CHECK_NOTHROW(cena.andar());
+}
+
+TEST_CASE("Andar em trecho final nao muda trecho")
+{
+    InfoCena dados{1,"Arcano","recompensa","descricao",103,{103}};
+    Jogador jogador = criarJogadorTeste();
+
+    Cena cena(dados,jogador);
+
+    cena.iniciarCena();
+
+    int idAntes = cena.pegarTrechoAtual().pegarId();
+
+    cena.andar();
+
+    CHECK(cena.pegarTrechoAtual().pegarId() == idAntes);
 }

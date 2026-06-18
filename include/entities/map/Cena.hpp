@@ -69,14 +69,6 @@ public:
     void finalizarCena();
 
     /**
-     * @brief Verifica se o jogador ainda pode progredir na cena atual.
-     * @return true se houver continuidade, false se a cena deve ser encerrada.
-     * @note O jogador pode progredir se ainda houver interações com itens e/ou 
-     * NPCs no trecho de mapa atual ou outros trechos de mapa ainda não explorados.
-     */
-    bool verificarContinuidade() const;
-
-    /**
      * @brief Gerencia a movimentação do personagem pelo trecho do mapa.
      */
     void andar();

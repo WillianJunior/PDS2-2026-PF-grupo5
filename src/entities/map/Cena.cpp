@@ -39,13 +39,6 @@ void Cena::finalizarCena(){
 }
 
 /**
- * @brief Verifica a continuidade da cena
- */
-bool Cena::verificarContinuidade() const{
-    //para ser definido
-}
-
-/**
  * @brief Gerencia a movimentação no mapa.
  */
 void Cena::andar(){
