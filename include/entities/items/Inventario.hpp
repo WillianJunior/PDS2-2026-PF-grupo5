@@ -6,6 +6,7 @@
 #ifndef INVENTARIO_HPP
 #define INVENTARIO_HPP
 
+#include <memory>
 #include <stdexcept>
 
 #include "Item.hpp"
@@ -24,16 +25,16 @@ public:
  * @class Inventario
  * @brief Classe responsável pelo armazenamento e gerenciamento de itens.
  * Possui uma capacidade limitada e permite que o personagem armazene, use ou remova itens coletados durante o jogo.
- * @todo Revisitar essa estrutura, pois pode ser interessante usarmos uma estrutura mais eficiente de dados, como um vetor ou um array.
+ * Toda a gestão de memória é feita via RAII (std::unique_ptr), sem new/delete manual.
  */
 class Inventario {
 private:
     struct No {
-        Item* _item;    ///< Ponteiro para o item armazenado neste nó.
-        No* _proximo;   ///< Ponteiro para o próximo item armazenado na lista.
+        std::unique_ptr<Item> _item;      ///< Dono do item armazenado neste nó.
+        std::unique_ptr<No>   _proximo;   ///< Dono do próximo nó da lista.
     };
-    
-    No* _inicio;
+
+    std::unique_ptr<No> _inicio;
     int _quantidade;    ///< Contador de itens atualmente armazenados.
     static const int _capacidadeMax = 8; ///< Capacidade máxima do inventário.
 
