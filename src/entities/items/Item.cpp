@@ -1,3 +1,9 @@
+/**
+ * @file Item.cpp
+ * @brief Implementação da classe Item e do factory estático gerarItem().
+ * @see Regras.md — Seção 5
+ */
+
 #include "entities/items/Item.hpp"
 #include "database/BancoItem.hpp"
 
