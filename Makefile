@@ -42,7 +42,7 @@ run: all
 # Compilação dos testes com flags de cobertura
 compile_tests:
 	rm -f *.gcda *.gcno
-	$(CXX) $(CXXFLAGS) $(ALL_INCLUDES) -Itests --coverage $(SRCS_NO_MAIN) $(TEST_SRCS) -o exec_tests
+	$(CXX) $(CXXFLAGS) $(ALL_INCLUDES) -Itests -I. --coverage $(SRCS_NO_MAIN) $(TEST_SRCS) -o exec_tests
 
 # Execução dos testes
 test: compile_tests
