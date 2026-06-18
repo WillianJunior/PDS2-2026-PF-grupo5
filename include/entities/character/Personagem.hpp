@@ -61,7 +61,7 @@ class Personagem {
         int _nivel;                 ///< Nível atual de progressão.
         double _xp;                 ///< Pontos de experiência acumulados.
 
-        TipoPersonagem _tipo;                    ///< Categoria da entidade.
+        TipoPersonagem _tipo;                   ///< Categoria da entidade.
         ClassePersonagem _classe;               ///< Arquétipo que define as habilidades disponíveis.
         std::vector<Condicao> _condicoesAtivas; ///< Condições ativas aplicadas ao personagem.
 

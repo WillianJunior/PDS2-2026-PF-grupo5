@@ -8,6 +8,8 @@
 
 #include <string>
 #include <array>
+#include "utils/AtaqueEnum.hpp"
+#include "battle/Batalha.hpp"
 
 /**
  * @enum TipoAtaque
@@ -24,10 +26,12 @@ enum class TipoAtaque {
  * @brief Estrutura que armazena os dados brutos de um golpe específico.
  */
 struct Ataque {
-    std::string nome;      ///< Nome identificador do ataque.
+    IdAtaque id;           ///< Identificador do ataque.
+    std::string nome;      ///< Nome do ataque.
     std::string descricao; ///< Descrição do ataque.
     TipoAtaque tipo;       ///< Categoria (Simples, Rapido ou Forte).
     double custoPP;        ///< Custo de Mana (Pontos de Poder) para execução.
+    Condicao efeito;       ///< Efeito que o ataque aplica ao ser usado.
 };
 
 /**
@@ -80,12 +84,35 @@ public:
      */
     const std::array<Ataque, 3>& getAtaques() const;
 
+    /**
+     *  @return  Devolve um Ataque
+     *  @param tipo O tipo do Ataque para devolver. 
+    */
     const Ataque& getAtaque(TipoAtaque tipo) const;
 
+    /**
+     *  @return  Devolve um Efeito de um Ataque.
+     *  @param tipo O tipo do Ataque para devolver o Efeito. 
+    */
+    const Condicao& getEfeitoAtaque(TipoAtaque tipo) const;
+
+    /**
+     * @brief Altera o Ataque forte.
+     * @param nivel O nivel atual do Personagem.
+     */
     void alteraAtaqueForte(int nivel);
 
     //Setters
+    /**
+     * @brief Altera a Descrição do Personagem.
+     * @param descricao O texto definido para ser a Descrição.
+     */
     void setDescricao(std::string descricao);
+
+    /**
+     * @brief Altera a Arma do Personagem (flavor).
+     * @param nomeArma O texto definido para ser a o nome da Arma.
+     */
     void setArma(std::string nomeArma);
 };
 
