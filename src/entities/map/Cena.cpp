@@ -16,6 +16,11 @@ Cena::Cena(const InfoCena& dados, Jogador& jogador)
     _inventarioAberto(false),
     _emBatalha(false),
     _explorando(false){
+
+    if(dados.id <= 0){
+    throw std::invalid_argument("ID da cena invalido");
+    }
+
 }
 
 /**
@@ -42,7 +47,9 @@ void Cena::finalizarCena(){
  * @brief Gerencia a movimentação no mapa.
  */
 void Cena::andar(){
-    if(!_trechoAtual){return;}
+    if(!_trechoAtual){ throw std::runtime_error(
+        "Trecho atual nao carregado"
+    );}
 
     int proximoTrecho = _trechoAtual->pegarProximoTrecho();
    
@@ -56,6 +63,13 @@ void Cena::andar(){
  * @brief Permite vasculhar o trecho atual do mapa.
  */
 void Cena::vasculhar(){
+    if(!_trechoAtual)
+    {
+        throw std::runtime_error(
+            "Trecho atual nao carregado"
+        );
+    }
+
     if (!_trechoAtual->possuiItensRestantes()) return;
     if (_jogador.getInventario().estaCheio()) return;
 
@@ -67,11 +81,17 @@ void Cena::vasculhar(){
  * @brief Realiza as interações com os NPCs de diálogo
  */
 void Cena::interagirNPCs(){
+    if(!_trechoAtual){
+    throw std::runtime_error(
+        "Trecho atual nao carregado"
+    );
+    }
+
     auto npc = _trechoAtual->pegarNPCInteracao();
-    if(npc == -1){return;} //se não tiver npc
+    if(npc == -1){return;} //caso não tenha NPC
    
    
-    //fazer um banco de npc com as falas
+    //parte do viewer de interação
 
 }
 
@@ -92,6 +112,10 @@ void Cena::iniciarBatalha(){
 }
 
 void Cena::mudarTrecho(int idTrecho){
+    if(idTrecho <= 0){
+    throw std::invalid_argument("ID de trecho invalido");
+    }
+
     InfoTrechoMapa dados = BancoTrechoMapa::obterTrechoMapa(idTrecho);
 
     _trechoAtual = std::make_unique<TrechoMapa>(dados);

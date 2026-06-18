@@ -12,6 +12,7 @@
 #include "../../database/StructCena.hpp"
 
 #include <memory>
+#include <string>
 
 /**
  * @class Cena
