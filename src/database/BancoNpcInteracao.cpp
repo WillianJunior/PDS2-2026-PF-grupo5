@@ -4,6 +4,10 @@
 
 InfoNPCInteracao BancoNPCInteracao::obterNPC(int id)
 {
+    if(id <= 0){
+    throw std::invalid_argument("ID de NPC invalido");
+    }
+
     switch(id)
     {
         case 1:
