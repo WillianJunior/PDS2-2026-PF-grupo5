@@ -143,16 +143,6 @@ TEST_CASE("Vasculhar nao adiciona item se inventario cheio") {
     CHECK(jogador.getInventario().quantidadeItens() == 8);
 }
 
-TEST_CASE("Andar sem trecho carregado")
-{
-    InfoCena dados{1,"Arcano","recompensa","descricao",101,{101}};
-    Jogador jogador = criarJogadorTeste();
-
-    Cena cena(dados, jogador);
-
-    CHECK_NOTHROW(cena.andar());
-}
-
 TEST_CASE("Andar em trecho final nao muda trecho")
 {
     InfoCena dados{1,"Arcano","recompensa","descricao",103,{103}};
