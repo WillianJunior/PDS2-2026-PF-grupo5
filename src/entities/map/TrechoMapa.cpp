@@ -10,13 +10,36 @@
  * @brief Construtor da classe TrechoMapa.
  * Inicializa os atributos básicos do trecho
  */
-TrechoMapa::TrechoMapa(const InfoTrechoMapa& dados):_dados(dados), _aberto(false),_itensEncontrados(0){
+TrechoMapa::TrechoMapa(const InfoTrechoMapa& dados)
+    :_dados(dados), 
+    _aberto(false),
+    _itensEncontrados(0){
+
+         if(dados.id <= 0)
+    {
+        throw std::invalid_argument("ID do trecho invalido");
+    }
+
+    if(dados.cenaId <= 0)
+    {
+        throw std::invalid_argument("ID da cena invalido");
+    }
+
+    if(dados.existeInimigo &&
+       dados.idInimigo <= 0)
+    {
+        throw std::invalid_argument("ID do inimigo invalido");
+    }
 
 }
 /**
  * @brief Marca o trecho como aberto.
  */
 void TrechoMapa::abrirTrecho(){
+    if(_aberto){
+        throw std::logic_error("Trecho ja aberto");
+    }
+
     _aberto = true;
 }
 
@@ -58,6 +81,10 @@ bool TrechoMapa::possuiInimigo() const{
 }
 
 int TrechoMapa::pegarIdInimigo() const{
+    if(!_dados.existeInimigo){
+        throw std::logic_error("Trecho nao possui inimigo");
+    }
+
     return _dados.idInimigo;
 }
 

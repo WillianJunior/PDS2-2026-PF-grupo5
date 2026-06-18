@@ -2,6 +2,14 @@
 #include <stdexcept>
 
 InfoTrechoMapa BancoTrechoMapa::obterTrechoMapa(int id) {
+
+    if(id <= 0)
+    {
+        throw std::invalid_argument(
+            "ID de trecho invalido"
+        );
+    }
+
     switch (id) {
 
     // Cena 1: trechos 101–103
@@ -22,7 +30,7 @@ InfoTrechoMapa BancoTrechoMapa::obterTrechoMapa(int id) {
 
     // Cena 3: trechos 301–303
     case 301:
-        return { 301, "", -1, {20, 21}, false, 1, 302, -1, 3 };
+        return { 301, "", -1, {20, 21}, false, -1, 302, -1, 3 };
     case 302:
         return { 302, "", -1, {22, 20}, false, -1, 303, 301, 3 };
     case 303:
@@ -61,6 +69,7 @@ InfoTrechoMapa BancoTrechoMapa::obterTrechoMapa(int id) {
         return { 703, "", -1, {63, 61}, false, -1, -1, 702, 7 };
 
     default:
-        throw std::invalid_argument("TrechoMapa com id desconhecido: " + std::to_string(id));
+        throw std::invalid_argument("TrechoMapa com id desconhecido: "
+        + std::to_string(id));
     }
 }

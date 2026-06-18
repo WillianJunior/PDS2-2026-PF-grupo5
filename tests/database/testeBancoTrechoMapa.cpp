@@ -2,6 +2,8 @@
 
 #include "include/database/BancoTrechoMapa.hpp"
 
+#include <stdexcept>
+
 TEST_CASE("BancoTrechoMapa retorna trecho 101")
 {
     CHECK(
@@ -149,9 +151,18 @@ TEST_CASE("BancoTrechoMapa retorna trecho 703")
     );
 }
 
-TEST_CASE("BancoTrechoMapa lanca excecao para ID invalido")
+TEST_CASE("BancoTrechoMapa lanca excecao para id negativo")
 {
-    CHECK_THROWS(
-        BancoTrechoMapa::obterTrechoMapa(-1)
+    CHECK_THROWS_AS(
+        BancoTrechoMapa::obterTrechoMapa(-1),
+        std::invalid_argument
+    );
+}
+
+TEST_CASE("BancoTrechoMapa lanca excecao para id inexistente")
+{
+    CHECK_THROWS_AS(
+        BancoTrechoMapa::obterTrechoMapa(999),
+        std::invalid_argument
     );
 }
