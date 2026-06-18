@@ -1,3 +1,8 @@
+/**
+ * @file StructTrechoMapa.hpp
+ * @brief Estrutura que armazena os dados de um trecho do mapa.
+ */
+
 #ifndef STRUCT_TRECHO_MAPA_HPP
 #define STRUCT_TRECHO_MAPA_HPP
 #include <string>

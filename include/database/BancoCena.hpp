@@ -9,6 +9,7 @@
 #include "database/StructCena.hpp"
 
 /**
+ * @class BancoCena
  * @brief Classe de acesso aos dados da tabela de cenas
  *
  * Encapsula a lógica de obtenção de informações de cena a partir do ID.

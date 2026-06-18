@@ -1,3 +1,8 @@
+/**
+ * @file StructNPCInteracao.hpp
+ * @brief Estrutura que armazena os dados de NPCs de interação.
+ */
+
 #ifndef STRUCT_NPC_INTERACAO_HPP
 #define STRUCT_NPC_INTERACAO_HPP
 

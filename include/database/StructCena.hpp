@@ -1,8 +1,14 @@
+/**
+ * @file StructCena.hpp
+ * @brief Estrutura que armazena os dados de uma cena do jogo.
+ */
+
 #ifndef STRUCT_CENA_HPP
 #define STRUCT_CENA_HPP
 
 #include <string>
 #include <vector>
+
 
 /**
  * @struct InfoCena

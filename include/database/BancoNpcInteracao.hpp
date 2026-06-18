@@ -1,3 +1,8 @@
+/**
+ * @file BancoNpcInteracao.hpp
+ * @brief Banco estático contendo os NPCs de interação do jogo.
+ */
+
 #ifndef BANCO_NPC_INTERACAO_HPP
 #define BANCO_NPC_INTERACAO_HPP
 
