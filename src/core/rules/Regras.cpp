@@ -1,3 +1,9 @@
+/**
+ * @file Regras.cpp
+ * @brief Implementação das regras base: coeficientes, CD, PP e progressão.
+ * @see Regras.md — Seções 1.4, 3.1 e 3.2
+ */
+
 #include "core/rules/Regras.hpp"
 
 double Regras::calcularCoeficiente(double valorAtributo) {
