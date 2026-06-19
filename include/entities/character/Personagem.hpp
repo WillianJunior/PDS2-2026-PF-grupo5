@@ -141,6 +141,8 @@ class Personagem {
         std::string getFala() const;
         /** @return Vida atual do personagem. */
         double getVidaAtual() const;
+        /** @return Limite máximo de vida. */
+        double getVidaTotal() const;
         /** @return Valor do atributo de ataque. */
         double getAtaque() const;
         /** @return Valor do atributo de defesa. */

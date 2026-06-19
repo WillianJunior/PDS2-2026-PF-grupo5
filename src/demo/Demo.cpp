@@ -5,21 +5,15 @@
 #include "entities/map/Cena.hpp"
 #include "database/BancoCena.hpp"
 #include "database/BancoNpcInteracao.hpp"
+#include "database/BancoItem.hpp"
 
-// Pergunta sim/não e retorna true para 's'/'S'.
-static bool perguntarSim(IView& view, IController& ctrl, const std::string& pergunta) {
-    view.exibir(pergunta + " [s/n]");
-    std::string resp = ctrl.lerTexto();
-    return !resp.empty() && (resp[0] == 's' || resp[0] == 'S');
-}
-
-// Aguarda o usuário pressionar Enter.
+// Aguarda o usuário pressionar Enter
 static void aguardarEnter(IView& view, IController& ctrl, const std::string& msg) {
     view.exibir(msg);
     ctrl.lerTexto();
 }
 
-// Exibe o inventário e oferece ao jogador a opção de usar um item.
+// Exibe o inventário e oferece ao jogador a opção de usar um item
 static void interagirInventario(IView& view, IController& ctrl, Jogador& jogador) {
     view.exibir("\n--- Inventário ---");
     int qtd = jogador.getInventario().quantidadeItens();
@@ -32,7 +26,71 @@ static void interagirInventario(IView& view, IController& ctrl, Jogador& jogador
     int idx = ctrl.lerInteiro();
     if (idx >= 0 && idx < qtd) {
         jogador.usarItem(idx);
-        view.exibir("Item usado!  HP atual: " + std::to_string(jogador.getVidaAtual()));
+        view.exibir("Item usado!  HP atual: " + std::to_string(static_cast<int>(jogador.getVidaAtual())));
+    } else if (idx != -1) {
+        view.exibir("Índice inválido. Nenhum item foi usado.");
+    }
+}
+
+// Exibe o menu de ações e processa a escolha do jogador num trecho
+// Retorna quando o jogador escolher "Avançar"
+static void loopAcoesTrecho(IView& view, IController& ctrl, Jogador& jogador, Cena& cena) {
+    while (true) {
+        view.exibir("\nO que deseja fazer?");
+
+        bool temItens = cena.pegarTrechoAtual().possuiItensRestantes();
+        bool temNpc   = cena.pegarTrechoAtual().pegarNPCInteracao() > 0;
+
+        view.exibir("  [1] Vasculhar o local" + std::string(temItens ? "" : " (nada a vasculhar)"));
+        view.exibir("  [2] Interagir com NPCs" + std::string(temNpc  ? "" : " (nenhum NPC aqui)"));
+        view.exibir("  [3] Abrir inventário");
+        view.exibir("  [4] Avançar para o próximo trecho");
+
+        int opcao = ctrl.lerInteiro();
+
+        switch (opcao) {
+        case 1:
+            if (temItens) {
+                int itemId = cena.pegarTrechoAtual().sortearItem();
+                Item preview = BancoItem::obterItem(cena.pegarId(), itemId);
+                view.exibir("\nVocê encontrou: " + preview.pegarNome() +
+                            " — " + preview.pegarDescricao());
+                view.exibir("Deseja pegar o item? [s/n]  (se não, o item será perdido)");
+                std::string resp = ctrl.lerTexto();
+                if (!resp.empty() && (resp[0] == 's' || resp[0] == 'S')) {
+                    cena.vasculhar();
+                    view.exibir("-> " + preview.pegarNome() + " adicionado ao inventário!");
+                } else {
+                    cena.descartarItem();
+                    view.exibir("Você deixou o item para trás. Ele foi perdido.");
+                }
+            } else {
+                view.exibir("Não há nada para vasculhar aqui.");
+            }
+            break;
+
+        case 2:
+            if (temNpc) {
+                int npcId = cena.pegarTrechoAtual().pegarNPCInteracao();
+                InfoNPCInteracao npc = BancoNPCInteracao::obterNPC(npcId);
+                view.exibir("\n" + npc.nome + ": \"" + npc.fala + "\"");
+            } else {
+                view.exibir("Não há NPCs para interagir aqui.");
+            }
+            break;
+
+        case 3:
+            interagirInventario(view, ctrl, jogador);
+            break;
+
+        case 4:
+            cena.andar();
+            return;
+
+        default:
+            view.exibir("Opção inválida. Escolha entre 1 e 4.");
+            break;
+        }
     }
 }
 
@@ -47,7 +105,7 @@ static void exibirRelatorio(IView& view, Jogador& jogador, const Cena& cena) {
     view.exibir("Nível       : " + std::to_string(jogador.getNivel()) +
                 " | XP: " + std::to_string(static_cast<int>(jogador.getXp())));
     view.exibir("HP          : " + std::to_string(static_cast<int>(jogador.getVidaAtual())) +
-                " / " + std::to_string(100));
+                " / " + std::to_string(static_cast<int>(jogador.getVidaTotal())));
 
     view.exibir("\n--- Inventário final ---");
     int qtd = jogador.getInventario().quantidadeItens();
@@ -70,7 +128,7 @@ void executarDemo(IView& view, IController& ctrl) {
 
     // ── Criar jogador com dados pré-setados ───────────────────────────────────
     Jogador jogador(
-        "Alric",          // nome
+        "Alric",
         "Um guerreiro experiente das Florestas de Edhen.",
         "Pelo Arcano, lutarei, uai!",
         12.0,   // ataque
@@ -92,30 +150,9 @@ void executarDemo(IView& view, IController& ctrl) {
     view.exibirLinha();
     view.exibir("[Localização] " + cena.pegarTrechoAtual().pegarDescricao());
 
-    // NPC de diálogo
-    int npcId = cena.pegarTrechoAtual().pegarNPCInteracao();
-    if (npcId > 0) {
-        InfoNPCInteracao npc = BancoNPCInteracao::obterNPC(npcId);
-        view.exibir("\n" + npc.nome + ": \"" + npc.fala + "\"");
-    }
-
-    // Vasculhar
-    if (cena.pegarTrechoAtual().possuiItensRestantes()) {
-        if (perguntarSim(view, ctrl, "\nVasculhar o local?")) {
-            cena.vasculhar();
-            view.exibir("-> Item adicionado ao inventário!");
-        }
-    }
-
-    // Inventário
-    if (perguntarSim(view, ctrl, "\nAbrir inventário?"))
-        interagirInventario(view, ctrl, jogador);
-
-    aguardarEnter(view, ctrl, "\n[Pressione Enter para avançar...]");
+    loopAcoesTrecho(view, ctrl, jogador, cena); // move para trecho 102 ao escolher [4]
 
     // ── Trecho 102 — Batalha mockada ──────────────────────────────────────────
-    cena.andar(); // move para trecho 102
-
     view.exibirLinha();
     view.exibir("[Localização] " + cena.pegarTrechoAtual().pegarDescricao());
 
@@ -123,9 +160,11 @@ void executarDemo(IView& view, IController& ctrl) {
         view.exibir("\nUm inimigo bloqueia o caminho!");
         aguardarEnter(view, ctrl, "[Pressione Enter para batalhar...]");
 
-        // Mock da batalha
+        // Lore mockado
         view.exibir("\n*** A batalha foi iniciada. O jogador se esforçou muito");
-        view.exibir("    e ganhou! Uhul! ***\n");
+        view.exibir("    e ganhou! Uhul! ***");
+
+        aguardarEnter(view, ctrl, "\n[Pressione Enter para continuar...]");
 
         cena.iniciarBatalha();
         jogador.ganharXp(10.0);

@@ -107,6 +107,7 @@ std::string Personagem::getNome() const { return _nome; }
 std::string Personagem::getDescricao() const { return _descricao; }
 std::string Personagem::getFala() const { return _fala; }
 double Personagem::getVidaAtual() const { return _vidaAtual; }
+double Personagem::getVidaTotal() const { return _vidaTotal; }
 double Personagem::getAtaque() const { return _ataque; }
 double Personagem::getDefesa() const { return _defesa; }
 double Personagem::getAgilidade() const { return _agilidade; }

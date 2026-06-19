@@ -83,6 +83,13 @@ public:
     void vasculhar();
 
     /**
+     * @brief Descarta o próximo item do trecho sem adicioná-lo ao inventário.
+     * Avança o contador de itens encontrados sem entregar o item ao jogador.
+     * @throw std::runtime_error Caso não exista trecho carregado.
+     */
+    void descartarItem();
+
+    /**
      * @brief Inicia o diálogo ou interação com os NPCs presentes no trecho.
      * @throw std::runtime_error Caso não exista trecho carregado.
      */

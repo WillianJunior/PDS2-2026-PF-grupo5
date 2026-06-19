@@ -78,6 +78,16 @@ void Cena::vasculhar(){
 }
 
 /**
+ * @brief Descarta o próximo item do trecho sem adicioná-lo ao inventário.
+ */
+void Cena::descartarItem() {
+    if (!_trechoAtual)
+        throw std::runtime_error("Trecho atual nao carregado");
+    if (_trechoAtual->possuiItensRestantes())
+        _trechoAtual->registrarItemEncontrado();
+}
+
+/**
  * @brief Realiza as interações com os NPCs de diálogo
  */
 void Cena::interagirNPCs(){
