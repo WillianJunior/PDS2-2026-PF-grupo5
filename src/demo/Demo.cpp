@@ -94,68 +94,6 @@ static void loopAcoesTrecho(IView& view, IController& ctrl, Jogador& jogador, Ce
     }
 }
 
-// Exibe o menu de ações e processa a escolha do jogador num trecho
-// Retorna quando o jogador escolher "Avançar"
-static void loopAcoesTrecho(IView& view, IController& ctrl, Jogador& jogador, Cena& cena) {
-    while (true) {
-        view.exibir("\nO que deseja fazer?");
-
-        bool temItens = cena.pegarTrechoAtual().possuiItensRestantes();
-        bool temNpc   = cena.pegarTrechoAtual().pegarNPCInteracao() > 0;
-
-        view.exibir("  [1] Vasculhar o local" + std::string(temItens ? "" : " (nada a vasculhar)"));
-        view.exibir("  [2] Interagir com NPCs" + std::string(temNpc  ? "" : " (nenhum NPC aqui)"));
-        view.exibir("  [3] Abrir inventário");
-        view.exibir("  [4] Avançar para o próximo trecho");
-
-        int opcao = ctrl.lerInteiro();
-
-        switch (opcao) {
-        case 1:
-            if (temItens) {
-                int itemId = cena.pegarTrechoAtual().sortearItem();
-                Item preview = BancoItem::obterItem(cena.pegarId(), itemId);
-                view.exibir("\nVocê encontrou: " + preview.pegarNome() +
-                            " — " + preview.pegarDescricao());
-                view.exibir("Deseja pegar o item? [s/n]  (se não, o item será perdido)");
-                std::string resp = ctrl.lerTexto();
-                if (!resp.empty() && (resp[0] == 's' || resp[0] == 'S')) {
-                    cena.vasculhar();
-                    view.exibir("-> " + preview.pegarNome() + " adicionado ao inventário!");
-                } else {
-                    cena.descartarItem();
-                    view.exibir("Você deixou o item para trás. Ele foi perdido.");
-                }
-            } else {
-                view.exibir("Não há nada para vasculhar aqui.");
-            }
-            break;
-
-        case 2:
-            if (temNpc) {
-                int npcId = cena.pegarTrechoAtual().pegarNPCInteracao();
-                InfoNPCInteracao npc = BancoNPCInteracao::obterNPC(npcId);
-                view.exibir("\n" + npc.nome + ": \"" + npc.fala + "\"");
-            } else {
-                view.exibir("Não há NPCs para interagir aqui.");
-            }
-            break;
-
-        case 3:
-            interagirInventario(view, ctrl, jogador);
-            break;
-
-        case 4:
-            cena.andar();
-            return;
-
-        default:
-            view.exibir("Opção inválida. Escolha entre 1 e 4.");
-            break;
-        }
-    }
-}
-
 // Exibe o relatório de validação ao final da demo
 static void exibirRelatorio(IView& view, Jogador& jogador, const Cena& cena) {
     view.exibirLinha();
