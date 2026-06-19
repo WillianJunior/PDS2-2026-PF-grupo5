@@ -23,12 +23,12 @@ Inventario::~Inventario() = default;
 
 // Manipulação de itens
 
-void Inventario::adicionarItem(Item* item) {
+void Inventario::adicionarItem(std::unique_ptr<Item> item) {
     if (_quantidade >= _capacidadeMax)
         throw InventarioCheioException();
 
     auto novoNo = std::make_unique<No>();
-    novoNo->_item    = std::unique_ptr<Item>(item); // assume ownership
+    novoNo->_item    = std::move(item);
     novoNo->_proximo = nullptr;
 
     if (_inicio == nullptr) {

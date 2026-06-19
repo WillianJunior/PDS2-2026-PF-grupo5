@@ -5,8 +5,8 @@
 
 #include "entities/character/Jogador.hpp"
 
-void Jogador::adicionarItem(Item* item) {
-    _inventario.adicionarItem(item);
+void Jogador::adicionarItem(std::unique_ptr<Item> item) {
+    _inventario.adicionarItem(std::move(item));
 }
 
 void Jogador::usarItem(int posicao) {

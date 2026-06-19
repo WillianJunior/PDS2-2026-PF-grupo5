@@ -74,7 +74,7 @@ void Cena::vasculhar(){
     if (_jogador.getInventario().estaCheio()) return;
 
     Item item = _trechoAtual->gerarItem();
-    _jogador.adicionarItem(new Item(item));
+    _jogador.adicionarItem(std::make_unique<Item>(item));
 }
 
 /**

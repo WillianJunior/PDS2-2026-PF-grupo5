@@ -21,9 +21,9 @@ InfoTrechoMapa BancoTrechoMapa::obterTrechoMapa(int id) {
 
     // Cena 1: trechos 101–103
     case 101:
-        return { 101, "", 1, {1, 2}, false, -1, 102, -1, 1 };
+        return { 101, "Uma clareira iluminada pelos raios do sol.", 1, {1}, false, -1, 102, -1, 1 };
     case 102:
-        return { 102, "", 2, {3, 1}, false, -1, 103, 101, 1 };
+        return { 102, "Uma passagem sombria coberta de nevoa.", -1, {}, true, 1, 103, 101, 1 };
     case 103:
         return { 103, "", 3, {4, 2}, false, -1, -1, 102, 1 };
 

@@ -1,5 +1,7 @@
 #include "../../doctest.h"
 
+#include <memory>
+
 #include "entities/map/Cena.hpp"
 #include "entities/map/TrechoMapa.hpp"
 #include "entities/character/Jogador.hpp"
@@ -134,7 +136,7 @@ TEST_CASE("Vasculhar nao adiciona item se inventario cheio") {
 
     cena.iniciarCena();
     for (int i = 0; i < 8; i++)
-        jogador.adicionarItem(new Item("Item", "", Pocao, "", 0, 0));
+        jogador.adicionarItem(std::make_unique<Item>("Item", "", Pocao, "", 0, 0));
 
     int itensTrecho = cena.pegarTrechoAtual().pegarItensRestantes();
     cena.vasculhar();

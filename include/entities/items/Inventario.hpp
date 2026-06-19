@@ -51,11 +51,10 @@ public:
 
     /**
      * @brief Tenta adicionar um item ao primeiro slot disponível.
-     * @param item Ponteiro para o item a ser adicionado.
+     * @param item Unique pointer para o item; o Inventario assume a posse.
      * @throw InventarioCheioException quando a quantidade de itens atinge a capacidade máxima permitida (8).
-     * @note Se a exceção for lançada, o chamador deverá ser responsável por liberar a memória do item.
      */
-    void adicionarItem(Item* item);
+    void adicionarItem(std::unique_ptr<Item> item);
 
     /**
      * @brief Realiza o uso de um item em um personagem alvo.

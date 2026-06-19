@@ -26,10 +26,10 @@ public:
 
     /**
      * @brief Adiciona um item ao inventário do jogador.
-     * @param item Ponteiro para o item. O Inventario assume a posse e o deleta quando necessário.
+     * @param item Unique pointer para o item; a posse é transferida ao Inventario.
      * @throw InventarioCheioException se o inventário estiver cheio.
      */
-    void adicionarItem(Item* item);
+    void adicionarItem(std::unique_ptr<Item> item);
 
     /**
      * @brief Usa o item na posição indicada sobre si mesmo e o remove do inventário.

@@ -62,7 +62,7 @@ Item TrechoMapa::gerarItem() {
 
 int TrechoMapa::sortearItem() const {
     if (!possuiItensRestantes()) return -1;
-    return _dados.idsItens[_itensEncontrados];
+    return _dados.idsItens.at(_itensEncontrados);
 }
 
 void TrechoMapa::registrarItemEncontrado()

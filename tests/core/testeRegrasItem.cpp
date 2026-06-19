@@ -14,32 +14,34 @@ static Personagem criarHeroi() {
 // ── Comida ────────────────────────────────────────────────────────────────
 
 TEST_CASE("Comida positiva recupera vida do personagem") {
-    Item comida("Fruta Fresca", "Recupera 3 PV", Comida, "Cura", 3, 0);
+    Item comida("Fruta Fresca", "Recupera 1d6 PV", Comida, "Cura", 1, 6);
     Personagem heroi = criarHeroi();
     heroi.receberDano(20.0);
 
     RegrasItem::aplicarEfeito(comida, heroi);
 
-    CHECK(heroi.getVidaAtual() == 83.0);
+    CHECK(heroi.getVidaAtual() > 80.0);   // herói estava a 80 HP, sempre cura algo
+    CHECK(heroi.getVidaAtual() <= 100.0);
 }
 
 TEST_CASE("Comida negativa causa dano ao personagem") {
-    Item comidaRuim("Cogumelo Toxico", "Causa 9 de dano", Comida, "Dano", -9, 0);
+    Item comidaRuim("Cogumelo Toxico", "Causa 1d8 de dano", Comida, "Dano", -1, 8);
     Personagem heroi = criarHeroi();
 
     RegrasItem::aplicarEfeito(comidaRuim, heroi);
 
-    CHECK(heroi.getVidaAtual() == 91.0);
+    CHECK(heroi.getVidaAtual() < 100.0);  // sempre recebe algum dano
+    CHECK(heroi.getVidaAtual() >= 0.0);
 }
 
 TEST_CASE("Comida nao ultrapassa limite maximo de PV") {
-    Item comida("Carne Preparada", "Recupera 7 PV", Comida, "Cura", 7, 0);
+    Item comida("Carne Preparada", "Recupera 7d6 PV", Comida, "Cura", 7, 6);
     Personagem heroi = criarHeroi();
     heroi.receberDano(5.0);
 
     RegrasItem::aplicarEfeito(comida, heroi);
 
-    CHECK(heroi.getVidaAtual() == 100.0);
+    CHECK(heroi.getVidaAtual() == 100.0); // 7d6 mínimo = 7 > 5 de dano → sempre atinge o máximo
 }
 
 // ── Poção ─────────────────────────────────────────────────────────────────

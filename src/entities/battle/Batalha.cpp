@@ -24,8 +24,8 @@ Batalha::Batalha(
 Batalha::~Batalha() {}
 
 // Verificações e atualização de status
-double Batalha::calcularVariabilidade(double valorBase) {}
-bool Batalha::verificarAcerto(double coefAtaque, int nivel, bool gastaPP, bool vantagem, double cdAlvo) {}
+double Batalha::calcularVariabilidade(double valorBase) { return valorBase; }
+bool Batalha::verificarAcerto(double coefAtaque, int nivel, bool gastaPP, bool vantagem, double cdAlvo) { return false; }
 void Batalha::atualizarAcoesDisponiveis() {}
 
 // Mecânica de batalha
@@ -37,5 +37,5 @@ void Batalha::definirRecompensa(Cena &cenaAtual) {}
 void Batalha::finalizarBatalha() {}
 void Batalha::aplicarCondicao(const Condicao& condicao, bool noPlayer) {}
 void Batalha::processarCondicoesAtivas() {}
-bool Batalha::verificarFuga() {}
+bool Batalha::verificarFuga() { return false; }
 

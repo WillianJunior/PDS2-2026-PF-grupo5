@@ -22,7 +22,7 @@ InfoCena BancoCena::obterCena(int id){
             1,  //id
             "Poder do primeiro arcano", //arcano
             "", //recompensa entregue no final da cena
-            "", //descricao da cena
+            "As Florestas de Edhen — onde o primeiro arcano desperta.", //descricao da cena
             101, //id do trechoMapa inicial da cena
             {101,102,103} //vetor com os ids dos trechos de mapa que compões a cena
 
