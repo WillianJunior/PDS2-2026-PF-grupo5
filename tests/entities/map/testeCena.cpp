@@ -109,10 +109,7 @@ TEST_CASE("Pegar trecho atual sem iniciar cena gera excecao")
 
     Cena cena(dados, jogador);
 
-    CHECK_THROWS_AS(
-        cena.pegarTrechoAtual(),
-        std::runtime_error
-    );
+    CHECK_THROWS_AS(cena.pegarTrechoAtual(), std::runtime_error);
 }
 
 TEST_CASE("Vasculhar adiciona item ao inventario do jogador") {

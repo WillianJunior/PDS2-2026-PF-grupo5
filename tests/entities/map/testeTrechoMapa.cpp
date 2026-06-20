@@ -374,3 +374,111 @@ TEST_CASE("Retorna ID do inimigo")
 
     CHECK(trecho.pegarIdInimigo() == 42);
 }
+
+TEST_CASE("ID negativo do trecho lança exceção")
+{
+    InfoTrechoMapa dados{
+        -1,
+        "Floresta",
+        -1,
+        {},
+        true,
+        42,
+        -1,
+        -1,
+        1
+    };
+
+    CHECK_THROWS_AS(TrechoMapa trecho(dados), std::invalid_argument);
+}
+
+TEST_CASE("Lança exceção para id inválido de cena")
+{
+    InfoTrechoMapa dados{
+        1,
+        "Floresta",
+        -1,
+        {},
+        true,
+        42,
+        -1,
+        -1,
+        0
+    };
+
+    CHECK_THROWS_AS(TrechoMapa trecho(dados), std::invalid_argument);
+}
+
+TEST_CASE("Lança exceção para id inválido do inimigo")
+{
+    InfoTrechoMapa dados{
+        1,
+        "Floresta",
+        -1,
+        {},
+        true,
+        0,
+        -1,
+        -1,
+        1
+    };
+
+    CHECK_THROWS_AS(TrechoMapa trecho(dados), std::invalid_argument);
+}
+
+TEST_CASE("Lança exceção para id inválido do inimigo")
+{
+    InfoTrechoMapa dados{
+        1,
+        "Floresta",
+        -1,
+        {},
+        true,
+        0,
+        -1,
+        -1,
+        1
+    };
+
+    CHECK_THROWS_AS(TrechoMapa trecho(dados), std::invalid_argument);
+}
+
+TEST_CASE("Não permite abrir o mesmo trecho duas vezes")
+{
+    InfoTrechoMapa dados{
+        1,
+        "Floresta",
+        -1,
+        {},
+        true,
+        42,
+        -1,
+        -1,
+        1
+    };
+
+    TrechoMapa trecho(dados);
+
+    trecho.abrirTrecho();
+
+    CHECK_THROWS_AS(trecho.abrirTrecho(), std::logic_error);
+}
+
+TEST_CASE("Não retorna id do inimigo quando ele não existe")
+{
+    InfoTrechoMapa dados{
+        1,
+        "Floresta",
+        -1,
+        {},
+        false,
+        -1,
+        -1,
+        -1,
+        1
+    };
+
+    TrechoMapa trecho(dados);
+
+    CHECK_THROWS_AS(trecho.pegarIdInimigo(), std::logic_error);
+}
