@@ -7,11 +7,13 @@
 /**
  * Calculo de Dano: 
  * Normal: dado(s) + coeficiente.
- * Multiplicador: (dado(s) + coeficiente) * multiplicador.
- * Nivel: nivel + dado(s) + coeficiente.
- * Com Tudo: (nivel + dado(s) + coeficiente) * multiplicador
+ * Nivel: (nivel, face) + coeficiente.
  * 
  * Calculo de Coeficiente: (valorAtributo * 0.5) - 5.0
+ * 
+ * Execucoes Ataque:
+ * Normal: execucoes x (dado(s) + coeficiente).
+ * Nivel: execucoes x ((nivel, face) + coeficiente)
  * 
  * 
  * Dado(1):
@@ -23,90 +25,123 @@
  * (1, 10) = 5
  */
 
-TEST_CASE("Calcula dano de ataque fraco de personagem") {
+TEST_CASE("Dano de ataque simples de personagem") {
     Personagem p("John Doe", "Descricao", "Fala", 
         20, 20, 100, 50, 20, 
         TipoClasse::Guerreiro, 
         TipoPersonagem::Jogador, 1);
 
     Ataque ataque = p.getClasse().getAtaque(TipoAtaque::Simples);
-    double dano = RegrasAtaque::calcularDano(p, ataque, 1);
-    // CoefAtaque + dado -> 5 + 4 = 9
+    double dano = 0;
+    for(int i = 0; i < RegrasAtaque::getExecucoes(p, ataque); i++)
+        dano += RegrasAtaque::calcularDano(p, ataque, 1);
+    // 1 x (CoefAtaque + dado) -> 5 + 4 = 9
     CHECK(dano == 9);
 }
 
-TEST_CASE("Calcula dano de ataque fraco de personagem com ataque com valor baixo") {
+TEST_CASE("Dano de ataque simples de personagem com ataque com valor baixo") {
     Personagem p("John Doe", "Descricao", "Fala", 
         1, 20, 100, 50, 20, 
         TipoClasse::Guerreiro, 
         TipoPersonagem::Jogador, 1);
 
     Ataque ataque = p.getClasse().getAtaque(TipoAtaque::Simples);
-    double dano = RegrasAtaque::calcularDano(p, ataque, 1);
-    // CoefAtaque + dado -> -4.5 + 4 = -0.5
+    double dano = 0;
+    for(int i = 0; i < RegrasAtaque::getExecucoes(p, ataque); i++)
+        dano += RegrasAtaque::calcularDano(p, ataque, 1);
+    // 1 x (CoefAtaque + dado) -> -4.5 + 4 = -0.5
     // -0.5 vira 0
     CHECK(dano == 0);
 }
 
-TEST_CASE("Calcula dano de ataque rapido de Guerreiro") {
+TEST_CASE("Dano de multi ataques simples de Guerreiro em nivel 5") {
+    Personagem p("John Doe", "Descricao", "Fala", 
+        20, 20, 100, 50, 20, 
+        TipoClasse::Guerreiro, 
+        TipoPersonagem::Jogador, 5);
+
+    Ataque ataque = p.getClasse().getAtaque(TipoAtaque::Simples);
+    double dano = 0;
+    for(int i = 0; i < RegrasAtaque::getExecucoes(p, ataque); i++)
+        dano += RegrasAtaque::calcularDano(p, ataque, 1);
+    // 2 x (CoefAtaque + dado) -> 2 x (5 + 4) = 18
+    CHECK(dano == 18);
+}
+
+TEST_CASE("Dano de ataque simples de Arqueiro em nivel 3") {
+    Personagem p("John Doe", "Descricao", "Fala", 
+        20, 20, 100, 50, 20, 
+        TipoClasse::Arqueiro, 
+        TipoPersonagem::Jogador, 3);
+
+    Ataque ataque = p.getClasse().getAtaque(TipoAtaque::Simples);
+    double dano = 0;
+    for(int i = 0; i < RegrasAtaque::getExecucoes(p, ataque); i++)
+        dano += RegrasAtaque::calcularDano(p, ataque, 1);
+    // 1 x (CoefAtaque + dado) -> 5 + 4 = 9
+    CHECK(dano == 9);
+}
+
+TEST_CASE("Dano de ataque simples de Mago em nivel 10") {
+    Personagem p("John Doe", "Descricao", "Fala", 
+        20, 20, 100, 50, 20, 
+        TipoClasse::Mago, 
+        TipoPersonagem::Jogador, 10);
+
+    Ataque ataque = p.getClasse().getAtaque(TipoAtaque::Simples);
+    double dano = 0;
+    for(int i = 0; i < RegrasAtaque::getExecucoes(p, ataque); i++)
+        dano += RegrasAtaque::calcularDano(p, ataque, 1);
+    // 1 x (CoefAtaque + dado) -> 5 + 33 = 38
+    Dados dados(1);
+    CHECK(dados.rolar(4,10) == 33);
+    CHECK(dano == 38);
+}
+
+TEST_CASE("Dano de ataque rapido de Guerreiro") {
    Personagem p("John Doe", "Descricao", "Fala", 
         20, 20, 100, 50, 20, 
         TipoClasse::Guerreiro, 
         TipoPersonagem::Jogador, 1);
 
     Ataque ataque = p.getClasse().getAtaque(TipoAtaque::Rapido);
-    double dano = RegrasAtaque::calcularDano(p, ataque, 1);
-    Dados dados(1);
-    // 2*(CoefAtaque + dado) -> 2*(15 + 2) = 14
+    double dano = 0;
+    for(int i = 0; i < RegrasAtaque::getExecucoes(p, ataque); i++)
+        dano += RegrasAtaque::calcularDano(p, ataque, 1);
+    // 2 x (CoefAtaque + dado) -> 2 x (5 + 4) = 18
     CHECK(dano == 14);
 }
 
-TEST_CASE("Calcula dano de ataque forte de Tanque") {
+TEST_CASE("Dano de ataque forte que usa CoefAgilidade e usa Nivel de Arqueiro nivel 7") {
    Personagem p("John Doe", "Descricao", "Fala", 
-        20, 40, 100, 50, 20, 
+        20, 40, 100, 50, 30, 
+        TipoClasse::Arqueiro, 
+        TipoPersonagem::Jogador, 7);
+
+    p.alteraAtaqueForte();
+    Ataque ataque = p.getClasse().getAtaque(TipoAtaque::Forte);
+    double dano = 0;
+    for(int i = 0; i < RegrasAtaque::getExecucoes(p, ataque); i++)
+        dano += RegrasAtaque::calcularDano(p, ataque, 1);
+    // 1 x (CoefAgil + (nivel, face)) -> (10 + 24) +  = 34
+    CHECK(ataque.id == IdAtaque::TiroFinal);
+    CHECK(dano == 34);
+}
+
+TEST_CASE("Dano de ataque forte que usa CoefDefesa") {
+   Personagem p("John Doe", "Descricao", "Fala", 
+        20, 40, 100, 50, 32, 
         TipoClasse::Tanque, 
-        TipoPersonagem::Jogador, 1);
+        TipoPersonagem::Jogador, 7);
 
     Ataque ataque = p.getClasse().getAtaque(TipoAtaque::Forte);
-    double dano = RegrasAtaque::calcularDano(p, ataque, 1);
-    Dados dados(1);
-    // CoefDefesa + dado -> (15 + 5) = 20
+    double dano = 0;
+    for(int i = 0; i < RegrasAtaque::getExecucoes(p, ataque); i++)
+        dano += RegrasAtaque::calcularDano(p, ataque, 1);
+    // 1 x (CoefDefesa + dado) -> 15 + 5 = 20
     CHECK(ataque.id == IdAtaque::PancadaDeEscudo);
     CHECK(dano == 20);
 }
-
-
-TEST_CASE("Calcula dano de ataque forte que escalaNivel de Mago nivel 7") {
-   Personagem p("John Doe", "Descricao", "Fala", 
-        20, 20, 100, 50, 20, 
-        TipoClasse::Mago, 
-        TipoPersonagem::Jogador, 7);
-
-    p.alteraAtaqueForte();
-    Ataque ataque = p.getClasse().getAtaque(TipoAtaque::Forte);
-    double dano = RegrasAtaque::calcularDano(p, ataque, 1);
-    
-    // Nivel * (CoefAtaque + dado) -> 7*(5 + 3) = 56
-    CHECK(dano == 56);
-}
-
-/**
- * TEST_CASE("Calcula dano de ataque forte que escalaNivel de Mago nivel 7") {
-   Personagem p("John Doe", "Descricao", "Fala", 
-        20, 20, 100, 50, 20, 
-        TipoClasse::Mago, 
-        TipoPersonagem::Jogador, 7);
-
-    p.alteraAtaqueForte();
-    Ataque ataque = p.getClasse().getAtaque(TipoAtaque::Forte);
-    double dano = RegrasAtaque::calcularDano(p, ataque, 1);
-    
-    // Nivel * (CoefAtaque + dado) -> 7*(5 + 3) = 56
-    CHECK(ataque.id == IdAtaque::VorticeArcano);
-}
- */
-
-
 
 TEST_CASE("Dano de ataque abaixo ou igual ao valor maximo/minimo") {
     Personagem p("John Doe", "Descricao", "Fala", 
@@ -129,5 +164,4 @@ TEST_CASE("Dano de ataque abaixo ou igual ao valor maximo/minimo") {
     dano = RegrasAtaque::calcularDano(p, ataque);
     CHECK(dano >= 6);
     CHECK(dano <= 13);
-
 }
