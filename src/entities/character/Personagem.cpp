@@ -150,3 +150,7 @@ void Personagem::removerCondicao(int posicao) {
 const std::vector<Condicao>& Personagem::getCondicoesAtivas() const {
     return _condicoesAtivas;
 }
+
+void Personagem::alteraAtaqueForte() {
+    _classe.alteraAtaqueForte(_nivel);
+}

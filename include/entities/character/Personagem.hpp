@@ -175,6 +175,8 @@ class Personagem {
 
         /** @return Referência constante às condições ativas. */
         const std::vector<Condicao>& getCondicoesAtivas() const;
+
+        void alteraAtaqueForte();
 };
 
 #endif
