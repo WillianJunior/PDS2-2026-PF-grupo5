@@ -17,8 +17,7 @@
 enum class AtributoCoef {
     Ataque,
     Defesa,
-    Agilidade,
-    Nenhum   //< Caso não utilize um Coeficiente para o calculo do Dano.
+    Agilidade
 };
 
 /**

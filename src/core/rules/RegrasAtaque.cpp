@@ -25,8 +25,6 @@ double RegrasAtaque::calcularCoeficiente(const Personagem& personagem, AtributoC
         case AtributoCoef::Defesa:
         return Regras::calcularCoeficiente(personagem.getDefesa());
 
-        case AtributoCoef::Nenhum:
-        return 0.0;
     }
     throw std::invalid_argument("AtributoCoef inválido");
 }
