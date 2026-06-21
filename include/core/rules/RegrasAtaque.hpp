@@ -14,6 +14,7 @@
 #include "entities/character/ClassePersonagem.hpp"
 #include "entities/character/Personagem.hpp"
 #include "database/BancoClassePersonagem.hpp"
+#include "database/BancoDadosAtaque.hpp"
 #include "core/Dados.hpp"
 #include "Regras.hpp"
 
@@ -24,13 +25,27 @@
  */
 class RegrasAtaque : public Regras {
     public:
-
+        /**
+         * @brief Calcula o dano baseado no Ataque e na Classe do Personagem.
+         * @param personagem O Personagem que atacou.
+         * @param ataque O Ataque que o Personagem utilizou.
+         * @return O dano do Ataque baseado em seu comportamento e influencias de nível, atributos e classe.
+         *
+        */
         static double calcularDano(const Personagem& personagem, const Ataque& ataque);
         
     private:
-        static double calcularDanoSimples(const Personagem& personagem, const Ataque& ataque);
-        static double calcularDanoRapido(const Personagem& personagem, const Ataque& ataque);
-        static double calcularDanoForte(const Personagem& personagem, const Ataque& ataque);
+        /**
+         * @brief Calcula o coeficiente baseado no AtributoCoef de um Ataque.
+         * @param personagem O Personagem.
+         * @param atributoCoef O Ataque que o Personagem utilizou.
+         * @return O coeficiente a ser usado para calcular o Dano do ataque.
+         * 
+         * Utilizado internamente para separar a lógica de calcular dano e coeficiente.
+         * Apenas usado por calcularDano().
+         *
+        */
+        static double calcularCoeficiente(const Personagem& personagem, AtributoCoef atributoCoef);
 };
 
 #endif
