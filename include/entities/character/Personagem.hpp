@@ -10,6 +10,7 @@
 #include <vector>
 #include "../character/ClassePersonagem.hpp"
 #include "../battle/Condicao.hpp"
+#include "utils/TipoArcanoEnum.hpp"
 #include <cassert>
 #include <array>
 
@@ -64,6 +65,7 @@ class Personagem {
         TipoPersonagem _tipo;                   ///< Categoria da entidade.
         ClassePersonagem _classe;               ///< Arquétipo que define as habilidades disponíveis.
         std::vector<Condicao> _condicoesAtivas; ///< Condições ativas aplicadas ao personagem.
+        std::vector<TipoArcano> _arcanosAtivos; ///< Arcanos primordiais adquiridos pelo personagem.
 
     public:
     /**
@@ -183,6 +185,28 @@ class Personagem {
          * @see ClassePersonagem.hpp - Implementação interna da alteração de ataque.
          */
         void alteraAtaqueForte();
+
+        // ── Arcanos ──────────────────────────────────────────────────────────
+
+        /**
+         * @brief Concede um Arcano ao personagem.
+         * @param arcano O Arcano a ser adquirido.
+         * @note Arcanos duplicados são ignorados (cada arcano pode ser obtido apenas uma vez).
+         */
+        void adicionarArcano(TipoArcano arcano);
+
+        /**
+         * @brief Verifica se o personagem possui um determinado Arcano.
+         * @param arcano O Arcano a ser verificado.
+         * @return true se o Arcano estiver ativo.
+         */
+        bool temArcano(TipoArcano arcano) const;
+
+        /**
+         * @brief Retorna a lista de Arcanos ativos do personagem.
+         * @return Referência constante ao vetor de arcanos.
+         */
+        const std::vector<TipoArcano>& getArcanos() const;
 };
 
 #endif
