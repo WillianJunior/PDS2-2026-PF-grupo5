@@ -176,6 +176,12 @@ class Personagem {
         /** @return Referência constante às condições ativas. */
         const std::vector<Condicao>& getCondicoesAtivas() const;
 
+        /**
+         * @brief Altera o ataque forte do personagem.
+         * Usado por outros para alterar o ataque sem precisar de acesso a classe.
+         * Utiliza o nível do personagem internamente.
+         * @see ClassePersonagem.hpp - Implementação interna da alteração de ataque.
+         */
         void alteraAtaqueForte();
 };
 
