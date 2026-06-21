@@ -17,6 +17,7 @@
 #include "database/BancoDadosAtaque.hpp"
 #include "core/Dados.hpp"
 #include "Regras.hpp"
+#include <optional>
 
 /**
  * @class RegrasAtaque
@@ -29,11 +30,12 @@ class RegrasAtaque : public Regras {
          * @brief Calcula o dano baseado no Ataque e na Classe do Personagem.
          * @param personagem O Personagem que atacou.
          * @param ataque O Ataque que o Personagem utilizou.
+         * @param seed Usado apenas para testes.
          * @return O dano do Ataque baseado em seu comportamento e influencias de nível, atributos e classe.
          *
         */
-        static double calcularDano(const Personagem& personagem, const Ataque& ataque);
-        
+        static double calcularDano(const Personagem& personagem, const Ataque& ataque, std::optional<unsigned int> seed = std::nullopt); 
+
     private:
         /**
          * @brief Calcula o coeficiente baseado no AtributoCoef de um Ataque.
