@@ -1,6 +1,6 @@
 /**
  * @file AtaqueEnum.hpp
- * @brief Enum tipado para os atributos do personagem.
+ * @brief Enum usado para identificar um ataque com id fixo.
  *
  * Ataques definidos em regras.md seção 2.
  * Utilizado em classes variadas para evitar comparações por string.
