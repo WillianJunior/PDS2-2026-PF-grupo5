@@ -31,10 +31,25 @@ class RegrasAtaque : public Regras {
          * @param personagem O Personagem que atacou.
          * @param ataque O Ataque que o Personagem utilizou.
          * @param seed Usado apenas para testes.
-         * @return O dano do Ataque baseado em seu comportamento e influencias de nível, atributos e classe.
+         * @return O dano do Ataque baseado em seu comportamento e influências de nível, atributos e classe.
          *
         */
-        static double calcularDano(const Personagem& personagem, const Ataque& ataque, std::optional<unsigned int> seed = std::nullopt); 
+        static double calcularDano(const Personagem& personagem, const Ataque& ataque, 
+            std::optional<unsigned int> seed = std::nullopt); 
+
+        /**
+         * @brief Retorna o numero de Ataques que um Ataque permite fazer em uma rodada.
+         * @param personagem O Personagem para analisar quantos ataques simples vão ser executados.
+         * @param ataque O Ataque para consultar o Banco e encontrar quantidade de execuções.
+         * @return O numero de execuções do Ataque.
+         * 
+         * O Personagem vai performar multiplos ataques na mesma rodada ao escolher um Ataque com essa condição.
+         * Depende do level do Personagem e de sua Classe para Ataques Simples.
+         * 
+         * @see regras.md 2.2
+         *
+        */
+        static int getExecucoes(const Personagem& personagem, const Ataque& ataque);
 
     private:
         /**
@@ -48,6 +63,20 @@ class RegrasAtaque : public Regras {
          *
         */
         static double calcularCoeficiente(const Personagem& personagem, AtributoCoef atributoCoef);
-};
+
+        /**
+         * @brief Retorna o número de execuções de ataque com base na faixa de nível.
+         * 
+         * Esta função aplica uma tabela de progressão por nível, onde cada posição do array
+         * representa uma faixa específica de níveis.
+         * 
+         * @param nivel Nível atual do personagem.
+         * @param faixas Tabela de valores de execução por faixa de nível.
+         * @return Número de execuções do ataque para o nível informado.
+         * 
+         * @note É utilizada internamente por calcularExecucoes().
+         */
+        static int regraPorNivel(int nivel, std::array<int, 4> faixas);
+    };
 
 #endif
