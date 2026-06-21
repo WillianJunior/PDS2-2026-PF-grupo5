@@ -9,8 +9,27 @@ std::string InputController::lerTexto() {
 }
 
 int InputController::lerInteiro() {
-    int n = 0;
-    std::cin >> n;
-    std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
-    return n;
+    int valor;
+
+    while (true) {
+        std::cin >> valor;
+
+        if (!std::cin.fail()) {
+            std::cin.ignore(
+                std::numeric_limits<std::streamsize>::max(),
+                '\n'
+            );
+
+            return valor;
+        }
+
+        std::cin.clear();
+
+        std::cin.ignore(
+            std::numeric_limits<std::streamsize>::max(),
+            '\n'
+        );
+
+        std::cout << "Entrada invalida. Digite um numero: ";
+    }
 }

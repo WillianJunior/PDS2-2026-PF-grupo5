@@ -124,6 +124,8 @@ public:
      */
     std::string pegarArcano() const;
 
+    std::string pegarDescricao() const;
+
     /**
      * @brief Retorna o trecho atual.
      * @return Referência para o trecho atual.

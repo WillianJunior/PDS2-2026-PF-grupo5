@@ -25,7 +25,7 @@ InfoTrechoMapa BancoTrechoMapa::obterTrechoMapa(int id) {
     case 102:
         return { 102, "Uma passagem sombria coberta de nevoa.", 2, {}, false, -1, 103, 101, 1 };
     case 103:
-        return { 103, "Trecho 103", 3, {4, 2}, false, -1, -1, 102, 1 };
+        return { 103, "Trecho 103", 3, {4, 2}, true, 10, -1, 102, 1 };
 
     // Cena 2: trechos 201–203
     case 201:

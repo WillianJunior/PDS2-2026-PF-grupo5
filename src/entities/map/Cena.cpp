@@ -141,6 +141,10 @@ std::string Cena::pegarArcano() const{
     return _dadosCena.arcano;
 }
 
+std::string Cena::pegarDescricao() const{
+    return _dadosCena.descricao;
+}
+
 const TrechoMapa& Cena::pegarTrechoAtual() const{
     if(!_trechoAtual){
         throw std::runtime_error(
@@ -150,6 +154,8 @@ const TrechoMapa& Cena::pegarTrechoAtual() const{
 
     return *_trechoAtual;
 }
+
+
 
 bool Cena::inventarioAberto() const{
     return _inventarioAberto;

@@ -36,6 +36,8 @@ static void interagirInventario(IView& view, IController& ctrl, Jogador& jogador
 // Retorna quando o jogador escolher "Avançar"
 static void loopAcoesTrecho(IView& view, IController& ctrl, Jogador& jogador, Cena& cena) {
     while (true) {
+        view.exibirLinha();
+        view.exibir("[Localização] " + cena.pegarTrechoAtual().pegarDescricao());
         view.exibir("\nO que deseja fazer?");
 
         bool temItens = cena.pegarTrechoAtual().possuiItensRestantes();
