@@ -2,7 +2,13 @@
 
 /**
  * Estrutura:
- * {IdAtaque, {quantidadeDeDados, quantidadeDeLados, AtributoCoef, escalaComNivel*, multiplicador*}}
+ * {IdAtaque, 
+ * {quantidadeDeDados, 
+ * quantidadeDeLados, 
+ * AtributoCoef, 
+ * dadosComoNivel*, 
+ * numeroDeExcecoes*
+ * }}
  * * - Opcional
  */
 
@@ -11,13 +17,13 @@ BancoDadosAtaque::ataques = {
     //Ataque Simples
     { IdAtaque::Flecha, {1, 8, AtributoCoef::Ataque} },                      //< Arqueiro
     { IdAtaque::Espada, {1, 8, AtributoCoef::Ataque} },                      //< Guerreiro
-    { IdAtaque::Truque, {1, 6, AtributoCoef::Ataque} },                      //< Mago
-    { IdAtaque::Escudo, {1, 10, AtributoCoef::Ataque}},                      //< Tanque
+    { IdAtaque::Truque, {1, 10, AtributoCoef::Ataque}},                      //< Mago  
+    { IdAtaque::Escudo, {1, 6, AtributoCoef::Ataque}},                       //< Tanque
 
 
     //Ataque Rapido
-    { IdAtaque::TiroRapido, {1, 4, AtributoCoef::Ataque, false, 2.0} },      //< Arqueiro
-    { IdAtaque::GolpeRelampago, {1, 4, AtributoCoef::Ataque, false, 2.0} },  //< Guerreiro
+    { IdAtaque::TiroRapido, {1, 4, AtributoCoef::Ataque, false, 2} },        //< Arqueiro
+    { IdAtaque::GolpeRelampago, {1, 4, AtributoCoef::Ataque, false, 2} },    //< Guerreiro
     { IdAtaque::ProjetilArcano, {1, 6, AtributoCoef::Ataque} },              //< Mago
     { IdAtaque::Investida, {1, 6, AtributoCoef::Defesa} },                   //< Tanque
     
