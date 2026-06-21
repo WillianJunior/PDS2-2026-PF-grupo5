@@ -31,7 +31,7 @@ struct Ataque {
     std::string descricao; ///< Descrição do ataque.
     TipoAtaque tipo;       ///< Categoria (Simples, Rapido ou Forte).
     double custoPP;        ///< Custo de Mana (Pontos de Poder) para execução.
-    Condicao efeito;       ///< Efeito que o ataque aplica ao ser usado.
+//    Condicao efeito;       ///< Efeito que o ataque aplica ao ser usado.
 };
 
 /**
