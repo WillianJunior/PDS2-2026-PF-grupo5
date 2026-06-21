@@ -33,7 +33,7 @@ InfoCena BancoCena::obterCena(int id){
             2,  //id
             "Poder do segundo arcano", //arcano
             "", //recompensa entregue no final da cena
-            "", //descricao da cena
+            "cena 2", //descricao da cena
             201, //id do trechoMapa inicial da cena
             {201,202,203} //vetor com os ids dos trechos de mapa que compões a cena
 
@@ -44,7 +44,7 @@ InfoCena BancoCena::obterCena(int id){
             3,  //id
             "Poder do terceiro arcano", //arcano
             "", //recompensa entregue no final da cena
-            "", //descricao da cena
+            "cena 3", //descricao da cena
             301, //id do trechoMapa inicial da cena
             {301,302,303} //vetor com os ids dos trechos de mapa que compões a cena
 
@@ -55,7 +55,7 @@ InfoCena BancoCena::obterCena(int id){
             4,  //id
             "Poder do quarto arcano", //arcano
             "", //recompensa entregue no final da cena
-            "", //descricao da cena
+            "cena 4", //descricao da cena
             401, //id do trechoMapa inicial da cena
             {401,402,403} //vetor com os ids dos trechos de mapa que compões a cena
 
@@ -66,7 +66,7 @@ InfoCena BancoCena::obterCena(int id){
             5,  //id
             "Poder do quinto arcano", //arcano
             "", //recompensa entregue no final da cena
-            "", //descricao da cena
+            "cena 5", //descricao da cena
             501, //id do trechoMapa inicial da cena
             {501,502,503} //vetor com os ids dos trechos de mapa que compões a cena
 
@@ -77,7 +77,7 @@ InfoCena BancoCena::obterCena(int id){
             6,  //id
             "Poder do sexto arcano", //arcano
             "", //recompensa entregue no final da cena
-            "", //descricao da cena
+            "Cena 6", //descricao da cena
             601, //id do trechoMapa inicial da cena
             {601,602,603} //vetor com os ids dos trechos de mapa que compões a cena
 

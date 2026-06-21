@@ -16,8 +16,8 @@ BancoDadosAtaque::ataques = {
 
 
     //Ataque Rapido
-    { IdAtaque::TiroRapido, {1, 4, AtributoCoef::Ataque, 2.0} },      //< Arqueiro
-    { IdAtaque::GolpeRelampago, {1, 4, AtributoCoef::Ataque, 2.0} },  //< Guerreiro
+    { IdAtaque::TiroRapido, {1, 4, AtributoCoef::Ataque, false,2.0} },      //< Arqueiro
+    { IdAtaque::GolpeRelampago, {1, 4, AtributoCoef::Ataque, false ,2.0} },  //< Guerreiro
     { IdAtaque::ProjetilArcano, {1, 6, AtributoCoef::Ataque} },       //< Mago
     { IdAtaque::Investida, {1, 6, AtributoCoef::Defesa} },            //< Tank
     
