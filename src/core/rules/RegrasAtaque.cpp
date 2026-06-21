@@ -1,6 +1,6 @@
 #include "core/rules/RegrasAtaque.hpp"
 
-double RegrasAtaque::calcularDano(const Personagem& personagem, const Ataque& ataque, 
+double RegrasAtaque::calcularDano(const Personagem& personagem, const Ataque& ataque,
     std::optional<unsigned int> seed) {
 
     Dados dados = seed.has_value()
@@ -20,7 +20,7 @@ double RegrasAtaque::calcularDano(const Personagem& personagem, const Ataque& at
         valorDados = dados.rolar(quantidadeDados, dadosAtaque.faces);
     } else
         valorDados = dados.rolar(dadosAtaque.quantidadeDados, dadosAtaque.faces);
-    
+
     dano = valorDados + coeficiente;
 
     if(dano < 0)
@@ -39,9 +39,8 @@ double RegrasAtaque::calcularCoeficiente(const Personagem& personagem, AtributoC
 
         case AtributoCoef::Defesa:
         return Regras::calcularCoeficiente(personagem.getDefesa());
-
     }
-    throw std::invalid_argument("AtributoCoef inválido");
+    throw std::invalid_argument("AtributoCoef invalido");
 }
 
 int RegrasAtaque::regraPorNivel(int nivel, std::array<int, 4> faixas){
@@ -50,7 +49,6 @@ int RegrasAtaque::regraPorNivel(int nivel, std::array<int, 4> faixas){
     if(nivel <= 6) return faixas[2];
     return faixas[3];
 }
-
 
 int RegrasAtaque::getExecucoes(const Personagem& personagem, const Ataque& ataque) {
     int nivel = personagem.getNivel();
@@ -62,7 +60,7 @@ int RegrasAtaque::getExecucoes(const Personagem& personagem, const Ataque& ataqu
 
         case TipoClasse::Guerreiro:
             return regraPorNivel(nivel, {1,2,2,3});
-            
+
         case TipoClasse::Mago:
             return regraPorNivel(nivel, {1,1,1,1});
 
@@ -71,5 +69,5 @@ int RegrasAtaque::getExecucoes(const Personagem& personagem, const Ataque& ataqu
     } else
         return BancoDadosAtaque::getDadosAtaque(ataque.id).numeroDeExecucoes;
 
-    throw std::invalid_argument("Tipo de ataque inválido");
+    throw std::invalid_argument("Tipo de ataque invalido");
 }

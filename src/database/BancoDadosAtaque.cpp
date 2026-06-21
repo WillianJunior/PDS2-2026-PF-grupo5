@@ -1,64 +1,48 @@
 #include "database/BancoDadosAtaque.hpp"
 
-/**
- * Estrutura:
- * {IdAtaque, 
- * {quantidadeDeDados, 
- * quantidadeDeLados, 
- * AtributoCoef, 
- * dadosComoNivel*, 
- * numeroDeExcecoes*
- * }}
- * * - Opcional
- */
-
 const std::map<IdAtaque, DadosAtaque>
 BancoDadosAtaque::ataques = {
     //Ataque Simples
-    { IdAtaque::Flecha, {1, 8, AtributoCoef::Ataque} },                      //< Arqueiro
-    { IdAtaque::Espada, {1, 8, AtributoCoef::Ataque} },                      //< Guerreiro
-    { IdAtaque::Truque, {1, 10, AtributoCoef::Ataque}},                      //< Mago  
-    { IdAtaque::Escudo, {1, 6, AtributoCoef::Ataque}},                       //< Tanque
-
+    { IdAtaque::Flecha, {1, 8, AtributoCoef::Ataque} },
+    { IdAtaque::Espada, {1, 8, AtributoCoef::Ataque} },
+    { IdAtaque::Truque, {1, 10, AtributoCoef::Ataque}},
+    { IdAtaque::Escudo, {1, 6, AtributoCoef::Ataque}},
 
     //Ataque Rapido
-    { IdAtaque::TiroRapido, {1, 4, AtributoCoef::Ataque, false, 2} },        //< Arqueiro
-    { IdAtaque::GolpeRelampago, {1, 4, AtributoCoef::Ataque, false, 2} },    //< Guerreiro
-    { IdAtaque::ProjetilArcano, {1, 6, AtributoCoef::Ataque} },              //< Mago
-    { IdAtaque::Investida, {1, 6, AtributoCoef::Defesa} },                   //< Tanque
-    
-    //Ataque Forte
-    //Arqueiro
-    { IdAtaque::FlechaExplosiva, {2, 8, AtributoCoef::Ataque} },             //< Ataque Forte 1
-    { IdAtaque::TiroCerteiro, {2, 10, AtributoCoef::Ataque} },               //< Ataque Forte 2
-    { IdAtaque::Saraivada, {5, 4, AtributoCoef::Ataque} },                   //< Ataque Forte 3
-    { IdAtaque::TiroFinal, {1, 6, AtributoCoef::Agilidade, true}, },         //< Ataque Forte 4
-    
-    //Guerreiro
-    { IdAtaque::FuriaBerserker, {3, 6, AtributoCoef::Ataque} },              //< Ataque Forte 1
-    { IdAtaque::GolpeDevastador, {2, 10, AtributoCoef::Ataque} },            //< Ataque Forte 2
-    { IdAtaque::Perfuracao, {2, 8, AtributoCoef::Ataque} },                  //< Ataque Forte 3
-    { IdAtaque::GolpeDoAbismo, {1, 10, AtributoCoef::Ataque, true} },        //< Ataque Forte 4
+    { IdAtaque::TiroRapido, {1, 4, AtributoCoef::Ataque, false, 2} },
+    { IdAtaque::GolpeRelampago, {1, 4, AtributoCoef::Ataque, false, 2} },
+    { IdAtaque::ProjetilArcano, {1, 6, AtributoCoef::Ataque} },
+    { IdAtaque::Investida, {1, 6, AtributoCoef::Defesa} },
 
-    //Mago
-    { IdAtaque::BolaDeFogo, {4, 6, AtributoCoef::Ataque} },                  //< Ataque Forte 1
-    { IdAtaque::Raio, {2, 10, AtributoCoef::Ataque} },                       //< Ataque Forte 2
-    { IdAtaque::DrenoDaMagia, {1, 8, AtributoCoef::Ataque} },                //< Ataque Forte 3
-    { IdAtaque::VorticeArcano, {1, 6, AtributoCoef::Ataque, true} },         //< Ataque Forte 4
+    //Ataque Forte - Arqueiro
+    { IdAtaque::FlechaExplosiva, {2, 8, AtributoCoef::Ataque} },
+    { IdAtaque::TiroCerteiro, {2, 10, AtributoCoef::Ataque} },
+    { IdAtaque::Saraivada, {5, 4, AtributoCoef::Ataque} },
+    { IdAtaque::TiroFinal, {1, 6, AtributoCoef::Agilidade, true} },
 
-    //Tanque
-    { IdAtaque::PancadaDeEscudo, {1, 10, AtributoCoef::Defesa} },            //< Ataque Forte 1
-    { IdAtaque::Terremoto, {2, 6, AtributoCoef::Defesa} },                   //< Ataque Forte 2
-    { IdAtaque::BarreiraDeEspinhos, {1, 8, AtributoCoef::Defesa} },          //< Ataque Forte 3
-    { IdAtaque::Martirio, {1, 8, AtributoCoef::Defesa, true} },              //< Ataque Forte 4
-    
+    //Ataque Forte - Guerreiro
+    { IdAtaque::FuriaBerserker, {3, 6, AtributoCoef::Ataque} },
+    { IdAtaque::GolpeDevastador, {2, 10, AtributoCoef::Ataque} },
+    { IdAtaque::Perfuracao, {2, 8, AtributoCoef::Ataque} },
+    { IdAtaque::GolpeDoAbismo, {1, 10, AtributoCoef::Ataque, true} },
+
+    //Ataque Forte - Mago
+    { IdAtaque::BolaDeFogo, {4, 6, AtributoCoef::Ataque} },
+    { IdAtaque::Raio, {2, 10, AtributoCoef::Ataque} },
+    { IdAtaque::DrenoDaMagia, {1, 8, AtributoCoef::Ataque} },
+    { IdAtaque::VorticeArcano, {1, 6, AtributoCoef::Ataque, true} },
+
+    //Ataque Forte - Tanque
+    { IdAtaque::PancadaDeEscudo, {1, 10, AtributoCoef::Defesa} },
+    { IdAtaque::Terremoto, {2, 6, AtributoCoef::Defesa} },
+    { IdAtaque::BarreiraDeEspinhos, {1, 8, AtributoCoef::Defesa} },
+    { IdAtaque::Martirio, {1, 8, AtributoCoef::Defesa, true} },
 };
 
 const DadosAtaque& BancoDadosAtaque::getDadosAtaque(IdAtaque id) {
     auto it = ataques.find(id);
     if (it == ataques.end()) {
-        throw std::runtime_error("Ataque não encontrado");
+        throw std::runtime_error("Ataque nao encontrado");
     }
-
     return it->second;
 }

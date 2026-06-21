@@ -1,6 +1,6 @@
 /**
  * @file Personagem.hpp
- * @brief Definição da classe Personagem, responsável por gerenciar estados e atributos de indivíduos no jogo.
+ * @brief Definicao da classe Personagem, responsavel por gerenciar estados e atributos de individuos no jogo.
  */
 
 #ifndef PERSONAGEM_HPP
@@ -18,11 +18,11 @@
  * @enum TipoPersonagem
  * @brief Define as categorias dos personagens do jogo.
  */
-enum class TipoPersonagem { 
-    Jogador, ///< Personagem controlado pelo usuário.
+enum class TipoPersonagem {
+    Jogador, ///< Personagem controlado pelo usuario.
     Inimigo, ///< Oponentes comuns encontrados em cenas.
     NPC,     ///< Personagens aliados encontrados em cena.
-    BOSS     ///< Inimigos especiais específicos das Cenas.
+    BOSS     ///< Inimigos especiais especificos das Cenas.
 };
 
 /**
@@ -43,67 +43,69 @@ constexpr std::array<double, 10> XpNiveis = {
 
 /**
  * @class Personagem
- * @brief Representa um indivíduo único no mundo do jogo.
- * Mantém os atributos (vida, mana, agilidade, ataque, defesa)
- * e a lógica de progressão (nível, experiência) de cada personagem.
+ * @brief Representa um individuo unico no mundo do jogo.
+ * Mantem os atributos (vida, mana, agilidade, ataque, defesa)
+ * e a logica de progressao (nivel, experiencia) de cada personagem.
  */
 class Personagem {
     private:
-        std::string _nome;          ///< Nome único do indivíduo.
-        std::string _descricao;     ///< Breve história (flavor) do personagem.
+        std::string _nome;          ///< Nome unico do individuo.
+        std::string _descricao;     ///< Breve historia (flavor) do personagem.
         std::string _fala;          ///< Fala do personagem em batalhas ou na cena.
-        double _ataque;             ///< Pontuação de ataque.
-        double _defesa;             ///< Pontuação de defesa.
+        double _ataque;             ///< Pontuacao de ataque.
+        double _defesa;             ///< Pontuacao de defesa.
         double _vidaAtual;          ///< Pontos de vida remanescentes.
-        double _vidaTotal;          ///< Limite máximo de pontos de vida.
-        double _ppAtual;            ///< Pontos de Poder (Mana) disponíveis.
-        double _ppTotal;            ///< Capacidade máxima de mana.
-        double _agilidade;          ///< Pontuação de agilidade. Influencia a esquiva e velocidade.
-        int _nivel;                 ///< Nível atual de progressão.
-        double _xp;                 ///< Pontos de experiência acumulados.
+        double _vidaTotal;          ///< Limite maximo de pontos de vida.
+        double _ppAtual;            ///< Pontos de Poder (Mana) disponiveis.
+        double _ppTotal;            ///< Capacidade maxima de mana.
+        double _agilidade;          ///< Pontuacao de agilidade. Influencia a esquiva e velocidade.
+        int _nivel;                 ///< Nivel atual de progressao.
+        double _xp;                 ///< Pontos de experiencia acumulados.
 
         TipoPersonagem _tipo;                   ///< Categoria da entidade.
-        ClassePersonagem _classe;               ///< Arquétipo que define as habilidades disponíveis.
-        std::vector<Condicao> _condicoesAtivas; ///< Condições ativas aplicadas ao personagem.
+        ClassePersonagem _classe;               ///< Arquetipo que define as habilidades disponiveis.
+        std::vector<Condicao> _condicoesAtivas; ///< Condicoes ativas aplicadas ao personagem.
         std::vector<TipoArcano> _arcanosAtivos; ///< Arcanos primordiais adquiridos pelo personagem.
 
     public:
-    /**
-         * @brief Construtor para inicialização de um personagem individualizado.
+        /**
+         * @brief Construtor para inicializacao de um personagem individualizado.
          * @param nome Nome do personagem.
+         * @param descricao Breve descricao/historia do personagem.
+         * @param fala Fala do personagem em batalha ou cena.
          * @param ataque Pontos de ataque iniciais.
          * @param defesa Pontos de defesa iniciais.
-         * @param vidaTotal Limite máximo de vida.
-         * @param ppTotal Limite máximo de mana.
+         * @param vidaTotal Limite maximo de vida.
+         * @param ppTotal Limite maximo de mana.
          * @param agilidade Pontos de agilidade iniciais.
-         * @param tipoClasse Enum que define o arquétipo.
+         * @param tipoClasse Enum que define o arquetipo.
          * @param tipo Categoria (Jogador, Boss, etc).
-         * @param nivel Nível inicial (default = 1).
+         * @param nivel Nivel inicial (default = 1).
          */
         Personagem(
             std::string nome,
             std::string descricao,
             std::string fala,
-            double ataque, 
-            double defesa, 
-            double vidaTotal, 
-            double ppTotal, 
-            double agilidade, 
+            double ataque,
+            double defesa,
+            double vidaTotal,
+            double ppTotal,
+            double agilidade,
             TipoClasse tipoClasse,
             TipoPersonagem tipo,
             int nivel = 1);
 
         /**
          * @brief Reduz a vida atual do personagem com base em um ataque.
-         * @param dano Quantidade de dano a ser subtraída.
+         * @param dano Quantidade de dano a ser subtraida.
          */
         void receberDano(double dano);
 
         /**
-         * @brief Incrementa a vida atual, respeitando o limite máximo.
+         * @brief Incrementa a vida atual, respeitando o limite maximo.
          * @param cura Quantidade de pontos de vida recuperados.
          */
-        void recuperarVida(double cura); 
+        void recuperarVida(double cura);
 
         /**
          * @brief Recupera pontos de mana.
@@ -112,25 +114,25 @@ class Personagem {
         void recuperarMana(double quantidadeMana);
 
         /**
-         * @brief Deduz pontos de mana para a execução de ataques.
+         * @brief Deduz pontos de mana para a execucao de ataques.
          * @param custoMana Valor de mana consumido.
          */
-        void gastarMana(double custoMana); 
+        void gastarMana(double custoMana);
 
         /**
-         * @brief Adiciona experiência e verifica condições para subir de nível.
-         * @param quantidadeXp Valor de experiência recebido.
+         * @brief Adiciona experiencia e verifica condicoes para subir de nivel.
+         * @param quantidadeXp Valor de experiencia recebido.
          */
         void ganharXp(double quantidadeXp);
 
         /**
-         * @brief Incrementa o nível e melhora os atributos base do personagem.
+         * @brief Incrementa o nivel e melhora os atributos base do personagem.
          */
         void subirNivel();
 
         /**
-         * @brief Verifica se a vida atual é superior a zero.
-         * @return true se o personagem estiver vivo, false caso não esteja.
+         * @brief Verifica se a vida atual e superior a zero.
+         * @return true se o personagem estiver vivo, false caso nao esteja.
          */
         bool estaVivo() const;
 
@@ -143,7 +145,7 @@ class Personagem {
         std::string getFala() const;
         /** @return Vida atual do personagem. */
         double getVidaAtual() const;
-        /** @return Limite máximo de vida. */
+        /** @return Limite maximo de vida. */
         double getVidaTotal() const;
         /** @return Valor do atributo de ataque. */
         double getAtaque() const;
@@ -153,45 +155,45 @@ class Personagem {
         double getAgilidade() const;
         /** @return Mana Atual */
         double getManaAtual() const;
-        /** @return Nível atual do personagem. */
+        /** @return Nivel atual do personagem. */
         int getNivel() const;
-        /** @return Experiência acumulada. */
+        /** @return Experiencia acumulada. */
         double getXp() const;
         /** @return Tipo (Jogador, Inimigo, etc). */
         TipoPersonagem getTipo() const;
-        /** @return Referência constante à classe/arquétipo. */
+        /** @return Referencia constante a classe/arquetipo. */
         const ClassePersonagem& getClasse() const;
 
         /**
-         * @brief Aplica uma condição ao personagem.
+         * @brief Aplica uma condicao ao personagem.
          * Para ModAtributo, modifica o atributo imediatamente e armazena para reverter depois.
          * Para outros tipos, apenas armazena (batalha processa por turno).
          */
         void aplicarCondicao(const Condicao& condicao);
 
         /**
-         * @brief Remove e reverte a condição na posição indicada.
-         * @param posicao Índice em _condicoesAtivas.
+         * @brief Remove e reverte a condicao na posicao indicada.
+         * @param posicao Indice em _condicoesAtivas.
          */
         void removerCondicao(int posicao);
 
-        /** @return Referência constante às condições ativas. */
+        /** @return Referencia constante as condicoes ativas. */
         const std::vector<Condicao>& getCondicoesAtivas() const;
 
         /**
          * @brief Altera o ataque forte do personagem.
          * Usado por outros para alterar o ataque sem precisar de acesso a classe.
-         * Utiliza o nível do personagem internamente.
-         * @see ClassePersonagem.hpp - Implementação interna da alteração de ataque.
+         * Utiliza o nivel do personagem internamente.
+         * @see ClassePersonagem.hpp - Implementacao interna da alteracao de ataque.
          */
         void alteraAtaqueForte();
 
-        // ── Arcanos ──────────────────────────────────────────────────────────
+        // Arcanos
 
         /**
          * @brief Concede um Arcano ao personagem.
          * @param arcano O Arcano a ser adquirido.
-         * @note Arcanos duplicados são ignorados (cada arcano pode ser obtido apenas uma vez).
+         * @note Arcanos duplicados sao ignorados (cada arcano pode ser obtido apenas uma vez).
          */
         void adicionarArcano(TipoArcano arcano);
 
@@ -204,7 +206,7 @@ class Personagem {
 
         /**
          * @brief Retorna a lista de Arcanos ativos do personagem.
-         * @return Referência constante ao vetor de arcanos.
+         * @return Referencia constante ao vetor de arcanos.
          */
         const std::vector<TipoArcano>& getArcanos() const;
 };

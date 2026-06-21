@@ -1,14 +1,11 @@
 /**
  * @file BancoTrechoMapa.cpp
- * @brief Repositório estático de trechos de mapa (21 trechos — 7 cenas × 3 trechos).
- * Retorna InfoTrechoMapa por ID; lança std::invalid_argument para IDs inválidos.
+ * @brief Repositorio estatico de trechos de mapa (21 trechos - 7 cenas x 3 trechos).
  *
- * Padrão de ID: cenaId × 100 + índice (ex: cena 1 → 101, 102, 103).
- *
- * Estrutura de cada cena:
- *   Trecho X01 — Exploração: NPC de diálogo + itens. Sem inimigo.
- *   Trecho X02 — Combate comum: inimigo regular da fase.
- *   Trecho X03 — Boss / Arauto: inimigo final da fase (sem próximo trecho).
+ * Padrao de ID: cenaId x 100 + indice (ex: cena 1 -> 101, 102, 103).
+ *   Trecho X01 - Exploracao: NPC de dialogo + itens. Sem inimigo.
+ *   Trecho X02 - Combate comum: inimigo regular da fase.
+ *   Trecho X03 - Boss / Arauto: inimigo final da fase.
  *
  * IDs de inimigos (BancoInimigo):
  *   Fase I   -> 1   (Orc Saqueador),    101 (Device - Arauto de Talos)
@@ -18,8 +15,6 @@
  *   Fase V   -> 42  (Anao Berserker),   105 (Livies - Arauto de Lathander)
  *   Fase VI  -> 52  (Cavaleiro Morte),  106 (Nyriel - Arauto de Eldath)
  *   Cena 7   -> 53  (Zumbi Colossal),   999 (Sonath - Boss Final)
- *
- * @see BancoInimigo.cpp, BancoItem.cpp, BancoNpcInteracao.cpp
  */
 
 #include "database/BancoTrechoMapa.hpp"
@@ -33,7 +28,6 @@ InfoTrechoMapa BancoTrechoMapa::obterTrechoMapa(int id) {
     switch (id) {
 
     // Cena 1: Magisk - Floresta Geada (LV 1-2)
-    // Arauto: Device (Talos) | Inimigos: Orcs
     case 101: {
         std::vector<int> itens = {1};
         return InfoTrechoMapa{ 101,
@@ -54,7 +48,6 @@ InfoTrechoMapa BancoTrechoMapa::obterTrechoMapa(int id) {
     }
 
     // Cena 2: Mantuu - Territorios Militares (LV 3-4)
-    // Arauto: Vaelthor (Glaron) | Inimigos: Guerreiros, Elfos, Dragonatos
     case 201: {
         std::vector<int> itens = {10, 11};
         return InfoTrechoMapa{ 201,
@@ -70,12 +63,11 @@ InfoTrechoMapa BancoTrechoMapa::obterTrechoMapa(int id) {
     case 203: {
         std::vector<int> itens = {13, 11};
         return InfoTrechoMapa{ 203,
-            "O salao do trone de Mantuu. Vaelthor, Arauto de Glaron, emerge das sombras draconicas.",
+            "O salao do trono de Mantuu. Vaelthor, Arauto de Glaron, emerge das sombras draconicas.",
             6, itens, true, 102, -1, 202, 2 };
     }
 
     // Cena 3: Xantares - Portos e Becos (LV 5-6)
-    // Arauto: Malphas (Asmodeus) | Inimigos: Piratas, Tieflings
     case 301: {
         std::vector<int> itens = {20, 21};
         return InfoTrechoMapa{ 301,
@@ -96,7 +88,6 @@ InfoTrechoMapa BancoTrechoMapa::obterTrechoMapa(int id) {
     }
 
     // Cena 4: Kenyrock - Academias de Magia (LV 7-8)
-    // Arauto: N'baki D'Itris (Azuth) | Inimigos: Elfos magos
     case 401: {
         std::vector<int> itens = {30, 31};
         return InfoTrechoMapa{ 401,
@@ -117,7 +108,6 @@ InfoTrechoMapa BancoTrechoMapa::obterTrechoMapa(int id) {
     }
 
     // Cena 5: Skyprout - Guildas e Minas (LV 9-10)
-    // Arauto: Livies (Lathander) | Inimigos: Drows, Anoes, Necromantes
     case 501: {
         std::vector<int> itens = {40, 41};
         return InfoTrechoMapa{ 501,
@@ -137,8 +127,7 @@ InfoTrechoMapa BancoTrechoMapa::obterTrechoMapa(int id) {
             15, itens, true, 105, -1, 502, 5 };
     }
 
-    // Cena 6: Retorno a Magisk - Servos de Sonath (medium-hard)
-    // Arauto: Nyriel (Eldath) | Inimigos: Orcs elite, mortos-vivos
+    // Cena 6: Retorno a Magisk - Servos de Sonath
     case 601: {
         std::vector<int> itens = {50, 51};
         return InfoTrechoMapa{ 601,
@@ -159,7 +148,6 @@ InfoTrechoMapa BancoTrechoMapa::obterTrechoMapa(int id) {
     }
 
     // Cena 7: Confronto Final - Santuario de Sonath
-    // Boss Final: Sonath (ND 9-10)
     case 701: {
         std::vector<int> itens = {60, 61};
         return InfoTrechoMapa{ 701,

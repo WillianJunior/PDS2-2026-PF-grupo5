@@ -448,10 +448,10 @@ void Batalha::processarCondicoesAtivas() {
 }
 
 /**
- * Verifica se a fuga está disponível para o player.
+ * Verifica se a fuga esta disponivel para o player.
  *
  * Delega a RegrasBatalha::FugirDisponivel usando _fatorDificuldade como ND.
- * Fuga bloqueada em Boss e Impossível (Regras.md §2.9, §4.6).
+ * Fuga bloqueada em Boss e Impossivel (Regras.md 2.9, 4.6).
  */
 bool Batalha::verificarFuga() {
     return RegrasBatalha::FugirDisponivel(_player->getNivel(), _fatorDificuldade);
