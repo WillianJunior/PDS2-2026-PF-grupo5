@@ -14,6 +14,7 @@
 >| 1 | Adiciona trecho 2.5 Condições | HVLO | 03/06/26 |
 >| 2 | Adiciona Controle de Revisões | HVLO | 07/06/26 |
 >| 3 | Adiciona Seção 5 — Itens e Inventário | MFC | 09/06/26 |
+>| 4 | Adiciona Seção 6 — Sistema de Arcanos | HVLO | 21/06/26 |
 
 ## Sobre
 > Este documento descreve todas as regras, mecânicas e sistemas do jogo.
@@ -84,6 +85,12 @@
       - [Cristal de Veneno](#cristal-de-veneno)
       - [Cristal de Velocidade](#cristal-de-velocidade)
       - [Cristal de Drenagem](#cristal-de-drenagem)
+  - [6. Sistema de Arcanos](#6-sistema-de-arcanos)
+    - [6.1 O que são os Arcanos](#61-o-que-são-os-arcanos)
+    - [6.2 Aquisição](#62-aquisição)
+    - [6.3 Efeitos Mecânicos por Arcano](#63-efeitos-mecânicos-por-arcano)
+    - [6.4 Regras de Empilhamento](#64-regras-de-empilhamento)
+    - [6.5 Tabela Resumo](#65-tabela-resumo)
 
 ---
 
@@ -897,6 +904,142 @@ Ao iniciar cada combate da cena, o portador recebe **+3 na iniciativa** e **+2 n
 Ao fim de cada turno em que o portador acertar pelo menos um ataque, ele recupera
 **1d4 PV**. A cura não ultrapassa o limite máximo de PV. Evoca poderes obscuros de
 absorção vital — frequente em cenas ligadas à morte e ao submundo.
+
+---
+
+---
+
+## 6. Sistema de Arcanos
+
+### 6.1 O que são os Arcanos
+
+Os Arcanos são os seis poderes primordiais criados por Ao e concedidos aos Lordes da
+existência — Talos, Azuth, Glaron, Eldath, Lathander e Asmodeus. No jogo, o personagem
+pode adquirir até seis Arcanos ao longo da progressão narrativa, um por fase, ao
+derrotar ou superar o Arauto correspondente.
+
+Diferentemente de poções e cristais, os Arcanos são **permanentes**: uma vez obtido,
+o Arcano permanece ativo pelo restante da jogatina, sem limite de usos nem expiração
+de turnos.
+
+---
+
+### 6.2 Aquisição
+
+Cada Arcano está vinculado a uma nação e ao seu Arauto:
+
+| Fase | Nação | Arauto | Arcano | Deus |
+|------|-------|--------|--------|------|
+| I | Magisk | Guardião da Tempestade | Poder da Alma | Talos |
+| II | Mantuu | Guardião das Chamas | Poder dos Elementos | Glaron |
+| III | Xantares | Guardião do Caos | Poder do Caos | Asmodeus |
+| IV | Kenyrock | Guardião da Mente | Poder da Mente | Azuth |
+| V | Skyprout | Guardião da Vida | Poder da Vida | Lathander |
+| VI | Retorno a Magisk | Guardião da Natureza | Poder da Natureza | Eldath |
+
+> O Arcano é concedido após a cena final de cada fase — geralmente após a batalha
+> contra o Arauto. O jogador recebe uma sequência narrativa confirmando a obtenção.
+
+---
+
+### 6.3 Efeitos Mecânicos por Arcano
+
+Cada Arcano produz um **efeito passivo permanente** que é verificado automaticamente
+em combate. Nenhuma ação adicional é necessária para ativá-lo.
+
+---
+
+#### Poder da Alma *(Talos)*
+
+| Campo | Detalhe |
+|-------|---------|
+| **Efeito em combate** | O XP ganho ao vencer uma batalha é aumentado em **+50 %**. |
+| **Imunidade** | O personagem fica **imune à condição Paralisado**. Tentativas de aplicar Paralisado são ignoradas silenciosamente. |
+| **Efeito narrativo** | Resistência espiritual; criaturas de natureza mental ou mágica sentem a presença de Talos e hesitam. |
+
+---
+
+#### Poder dos Elementos *(Glaron)*
+
+| Campo | Detalhe |
+|-------|---------|
+| **Efeito em combate** | Todo dano causado pelo personagem (Ataque Simples, Rápido e Forte) é multiplicado por **×1,20** antes da variabilidade. |
+| **Efeito narrativo** | O portador irradia energia elemental; seus ataques físicos ganham carga de vento, fogo, gelo ou raio conforme o momento. |
+
+---
+
+#### Poder do Caos *(Asmodeus)*
+
+| Campo | Detalhe |
+|-------|---------|
+| **Efeito em combate** | A cada ataque bem-sucedido, **25 % do dano causado** é convertido em cura para o portador (`recuperarVida(dano × 0.25)`). A cura não ultrapassa o PV máximo. |
+| **Efeito narrativo** | A energia caótica do ataque se volta parcialmente ao atacante, regenerando-o com a força subtraída do inimigo. |
+
+> **Interação com Elementos:** se ambos estiverem ativos, o modificador ×1,20 é aplicado
+> primeiro, e então 25 % do dano já ampliado é curado.
+
+---
+
+#### Poder da Mente *(Azuth)*
+
+| Campo | Detalhe |
+|-------|---------|
+| **Efeito em combate** | O custo em PP de **Ataque Rápido** e **Ataque Forte** é reduzido em **25 %** (arredondado para baixo). |
+| **Efeito narrativo** | O portador acessa os padrões arcanos com eficiência sobrenatural, gastando menos energia para canalizar habilidades mágicas e especiais. |
+
+> **Exemplo:** Bola de Fogo custa normalmente 40 PP → com Mente ativo: 30 PP.
+
+---
+
+#### Poder da Vida *(Lathander)*
+
+| Campo | Detalhe |
+|-------|---------|
+| **Regeneração passiva** | No **início de cada turno** do player, recupera automaticamente **1d4 PV × 1,5** (mínimo 1 PV). |
+| **Cura amplificada** | Qualquer cura recebida pelo player (itens, habilidades) é multiplicada por **×1,5** antes de ser aplicada. |
+| **Efeito narrativo** | A bênção de Lathander mantém o portador em constante renovação; mesmo ferimentos graves cicatrizam com velocidade sobre-humana. |
+
+---
+
+#### Poder da Natureza *(Eldath)*
+
+| Campo | Detalhe |
+|-------|---------|
+| **Efeito de exploração** | Aumenta a chance de encontrar itens raros e de qualidade superior nas cenas (implementado na camada de Cena/Inventário). |
+| **Efeito em combate** | Passivo. Não produz modificador numérico direto durante o turno; o benefício é de progressão e inventário. |
+| **Efeito narrativo** | A natureza responde ao portador — animais amigáveis aparecem, ervas medicinais se revelam com mais frequência, e criaturas da floresta hesitam antes de atacar. |
+
+---
+
+### 6.4 Regras de Empilhamento
+
+Todos os seis Arcanos são **cumulativos** — um jogador com todos os Arcanos ativa
+todos os efeitos simultaneamente.
+
+**Ordem de aplicação quando múltiplos Arcanos afetam o mesmo ataque:**
+
+1. Calculado o dano base por `RegrasAtaque::calcularDano`.
+2. Arcano dos **Elementos** multiplica o dano (×1,20).
+3. `calcularVariabilidade` aplica fator de ±20 %.
+4. Dano é entregue ao inimigo (`receberDano`).
+5. Arcano do **Caos** calcula cura (25 % do dano final entregue).
+
+**Interação entre Alma e Paralisado:** o bloqueio ocorre no momento da tentativa de
+aplicação. Não é possível "cancelar" uma paralisia já ativa antes de obter o Arcano
+— ele protege apenas a partir do momento de aquisição.
+
+---
+
+### 6.5 Tabela Resumo
+
+| Arcano | Deus | Tipo de Efeito | Parâmetro |
+|--------|------|----------------|-----------|
+| Poder da Alma | Talos | Multiplicador de XP + Imunidade | XP × 1,5 ; sem Paralisado |
+| Poder dos Elementos | Glaron | Multiplicador de dano | Dano × 1,20 |
+| Poder do Caos | Asmodeus | Lifesteal | Cura = dano × 0,25 |
+| Poder da Mente | Azuth | Redução de custo de PP | CustoPP × 0,75 |
+| Poder da Vida | Lathander | Regen + amplificador de cura | +1d4 × 1,5 / turno ; Cura × 1,5 |
+| Poder da Natureza | Eldath | Exploração | Itens raros / encontros |
 
 ---
 
