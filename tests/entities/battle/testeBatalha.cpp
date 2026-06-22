@@ -1,9 +1,6 @@
 /**
  * @file testeBatalha.cpp
  * @brief Testes unitarios para Batalha.cpp.
- *
- * Usa seed fixa no Dados para reproducibilidade.
- * IView/IController passados como nullptr (nao usados nas funcoes testadas).
  */
 
 #include "../../doctest.h"
@@ -18,10 +15,6 @@
 #include "utils/TipoArcanoEnum.hpp"
 #include "entities/battle/Condicao.hpp"
 
-// ---------------------------------------------------------------------------
-// Helpers
-// ---------------------------------------------------------------------------
-
 static Personagem makePlayer(int nivel = 5) {
     return Personagem("Heroi", "desc", "fala",
         20.0, 15.0, 200.0, 100.0, 12.0,
@@ -34,15 +27,12 @@ static Personagem makeInimigo(int nivel = 1) {
         TipoClasse::Guerreiro, TipoPersonagem::Inimigo, nivel);
 }
 
-// ---------------------------------------------------------------------------
-// Construtor e iniciarBatalha
-// ---------------------------------------------------------------------------
+// --- Construtor e iniciarBatalha ---
 
 TEST_CASE("Batalha - construtor e iniciarBatalha") {
     Personagem player  = makePlayer();
     Personagem inimigo = makeInimigo(2);
     Dados dados(42);
-
     Batalha b(&player, &inimigo, dados);
     CHECK(b.getTurno() == 0);
     b.iniciarBatalha();
@@ -50,18 +40,16 @@ TEST_CASE("Batalha - construtor e iniciarBatalha") {
     CHECK(b.getFatorDificuldade() == doctest::Approx(1.0));
 }
 
-TEST_CASE("Batalha - fatorDificuldade minimo 0.125 para nivel 0") {
+TEST_CASE("Batalha - fatorDificuldade calculada corretamente") {
     Personagem player  = makePlayer();
-    Personagem inimigo = makeInimigo(0);
+    Personagem inimigo = makeInimigo(1);
     Dados dados(1);
     Batalha b(&player, &inimigo, dados);
     b.iniciarBatalha();
-    CHECK(b.getFatorDificuldade() >= 0.125);
+    CHECK(b.getFatorDificuldade() == doctest::Approx(0.5));
 }
 
-// ---------------------------------------------------------------------------
-// getAcoesDisponiveis
-// ---------------------------------------------------------------------------
+// --- getAcoesDisponiveis ---
 
 TEST_CASE("Batalha - acoes disponiveis apos iniciar") {
     Personagem player  = makePlayer(1);
@@ -72,9 +60,7 @@ TEST_CASE("Batalha - acoes disponiveis apos iniciar") {
     CHECK(b.getAcoesDisponiveis().size() >= 5);
 }
 
-// ---------------------------------------------------------------------------
-// realizarAcao
-// ---------------------------------------------------------------------------
+// --- realizarAcao ---
 
 TEST_CASE("Batalha - acao invalida lanca excecao") {
     Personagem player  = makePlayer();
@@ -87,6 +73,7 @@ TEST_CASE("Batalha - acao invalida lanca excecao") {
     paralisa.tipo = TipoCondicao::Paralisado;
     paralisa.duracaoTurnos = 3;
     b.aplicarCondicao(paralisa, true);
+    b.processarCondicoesAtivas();
 
     CHECK_THROWS_AS(b.realizarAcao(AcaoBatalha::AtaqueSimples), std::invalid_argument);
 }
@@ -165,9 +152,7 @@ TEST_CASE("Batalha - AtaqueForte consome mana e avanca turno") {
     CHECK(b.getTurno() == 2);
 }
 
-// ---------------------------------------------------------------------------
-// finalizarBatalha
-// ---------------------------------------------------------------------------
+// --- finalizarBatalha ---
 
 TEST_CASE("Batalha - finalizarBatalha reseta estado") {
     Personagem player  = makePlayer();
@@ -180,9 +165,7 @@ TEST_CASE("Batalha - finalizarBatalha reseta estado") {
     CHECK(b.getTurno() == 0);
 }
 
-// ---------------------------------------------------------------------------
-// aplicarCondicao
-// ---------------------------------------------------------------------------
+// --- aplicarCondicao ---
 
 TEST_CASE("Batalha - aplicarCondicao Berserk no player") {
     Personagem player  = makePlayer();
@@ -239,9 +222,7 @@ TEST_CASE("Batalha - Arcano Alma bloqueia Paralisado") {
     CHECK(!found);
 }
 
-// ---------------------------------------------------------------------------
-// processarCondicoesAtivas
-// ---------------------------------------------------------------------------
+// --- processarCondicoesAtivas ---
 
 TEST_CASE("Batalha - Berserk causa dano ao player por turno") {
     Personagem player  = makePlayer();
@@ -291,9 +272,7 @@ TEST_CASE("Batalha - Arcano Vida regenera HP do player") {
     CHECK(player.getVidaAtual() >= vidaAntes);
 }
 
-// ---------------------------------------------------------------------------
-// verificarFuga
-// ---------------------------------------------------------------------------
+// --- verificarFuga ---
 
 TEST_CASE("Batalha - verificarFuga nivel alto vs ND baixo") {
     Personagem player  = makePlayer(10);
@@ -304,9 +283,7 @@ TEST_CASE("Batalha - verificarFuga nivel alto vs ND baixo") {
     CHECK(b.verificarFuga());
 }
 
-// ---------------------------------------------------------------------------
-// definirRecompensa
-// ---------------------------------------------------------------------------
+// --- definirRecompensa ---
 
 TEST_CASE("Batalha - definirRecompensa concede XP") {
     Personagem playerPers  = makePlayer(3);
@@ -344,9 +321,7 @@ TEST_CASE("Batalha - Arcano Alma aumenta XP ganho") {
     CHECK(playerPers.getXp() > 0);
 }
 
-// ---------------------------------------------------------------------------
-// Atordoado remove acoes
-// ---------------------------------------------------------------------------
+// --- Atordoado ---
 
 TEST_CASE("Batalha - Atordoado remove AtaqueRapido e AtaqueForte") {
     Personagem player  = makePlayer(5);
@@ -359,6 +334,7 @@ TEST_CASE("Batalha - Atordoado remove AtaqueRapido e AtaqueForte") {
     atord.tipo = TipoCondicao::Atordoado;
     atord.duracaoTurnos = 2;
     b.aplicarCondicao(atord, true);
+    b.processarCondicoesAtivas();
 
     const auto& acoes = b.getAcoesDisponiveis();
     bool temRapido = false, temForte = false;
