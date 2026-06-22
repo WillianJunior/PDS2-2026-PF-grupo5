@@ -67,11 +67,9 @@ static bool processarAndar(
         view,
         cena
     );
-    view.exibir("DEBUG: indo para trecho " + std::to_string(proximo));
     return true;
 }
 
-[[maybe_unused]]
 static void interagirNpc(
     IView& view,
     const Cena& cena
@@ -105,7 +103,7 @@ static void interagirNpc(
     );
 
     view.exibir(
-        npc.fala
+        "Fala: " + npc.fala
     );
 
     view.exibirLinha();
@@ -233,20 +231,7 @@ static bool loopExploracaoCena(
 
         case 2:
         {
-            int npcId = cena.pegarTrechoAtual().pegarNPCInteracao();
-
-            if (npcId <= 0)
-            {
-                view.exibir("Não há NPCs aqui.");
-            }
-            else
-            {
-                InfoNPCInteracao npc = BancoNPCInteracao::obterNPC(npcId);
-
-                view.exibir("Nome: " + npc.nome);
-                view.exibir("Descrição: " + npc.descricaoFisica);
-                view.exibir(npc.fala);
-            }
+            interagirNpc(view, cena);
             break;
         }
 
