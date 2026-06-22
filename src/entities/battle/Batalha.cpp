@@ -36,13 +36,13 @@ Batalha::Batalha(
     RegrasBatalha *regras)
     : _player(player),
       _inimigo(inimigo),
+      _turnoAtual(0),
+      _fatorDificuldade(1.0),
+      _progressoBatalha(0),
       _dados(dados),
       _view(view),
       _controller(controller),
-      _regras(regras),
-      _turnoAtual(0),
-      _fatorDificuldade(1.0),
-      _progressoBatalha(0)
+      _regras(regras)
 {}
 
 Batalha::~Batalha() {}

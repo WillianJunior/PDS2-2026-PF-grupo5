@@ -70,6 +70,7 @@ Item BancoItem::criarCristal(int cenaId, std::string nome, std::string desc, int
 
 Item BancoItem::obterItem(int cenaId, int itemId)
 {
+    (void)cenaId;
     switch (itemId)
     {
     // ── Cena 1 ───────────────────────────────────────────────────────────────

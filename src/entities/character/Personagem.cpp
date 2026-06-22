@@ -28,15 +28,15 @@ Personagem::Personagem(
       _fala(fala),
       _ataque(ataque),
       _defesa(defesa),
-      _vidaTotal(vidaTotal),
       _vidaAtual(vidaTotal),
-      _ppTotal(ppTotal),
+      _vidaTotal(vidaTotal),
       _ppAtual(ppTotal),
+      _ppTotal(ppTotal),
       _agilidade(agilidade),
+      _nivel(nivel),
       _xp(0),
-      _classe(tipoClasse),
       _tipo(tipo),
-      _nivel(nivel)
+      _classe(tipoClasse)
 {
     if (vidaTotal <= 0)
         throw std::invalid_argument("Vida total deve ser positiva.");

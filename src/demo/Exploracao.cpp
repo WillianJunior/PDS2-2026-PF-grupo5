@@ -71,6 +71,7 @@ static bool processarAndar(
     return true;
 }
 
+[[maybe_unused]]
 static void interagirNpc(
     IView& view,
     const Cena& cena
@@ -120,6 +121,7 @@ static void aguardarEnter(IView& view, IController& ctrl, const std::string& msg
 }
 
 // Exibe o inventário e oferece ao jogador a opção de usar um item
+[[maybe_unused]]
 static void interagirInventario(IView& view, IController& ctrl, Jogador& jogador) {
     view.exibir("\n--- Inventário ---");
     int qtd = jogador.getInventario().quantidadeItens();
@@ -187,7 +189,6 @@ static bool loopExploracaoCena(
         view.exibir("[Localização] " + cena.pegarTrechoAtual().pegarDescricao());
 
         bool temItens = cena.pegarTrechoAtual().possuiItensRestantes();
-        bool temNpc   = cena.pegarTrechoAtual().pegarNPCInteracao() > 0;
 
         view.exibir("O que deseja fazer?");
         view.exibir("  [1] Vasculhar o local");

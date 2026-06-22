@@ -1,0 +1,28 @@
+[doctest] doctest version is "2.5.0"
+[doctest] run with "--help" for options
+===============================================================================
+tests/entities/battle/testeBatalha.cpp:53:
+TEST CASE:  Batalha - fatorDificuldade minimo 0.125 para nivel 0
+
+tests/entities/battle/testeBatalha.cpp:53: ERROR: test case THREW exception: Nivel deve ser positivo.
+
+===============================================================================
+tests/entities/battle/testeBatalha.cpp:79:
+TEST CASE:  Batalha - acao invalida lanca excecao
+
+tests/entities/battle/testeBatalha.cpp:91: ERROR: CHECK_THROWS_AS( b.realizarAcao(AcaoBatalha::AtaqueSimples), std::invalid_argument ) did NOT throw at all!
+
+===============================================================================
+tests/entities/battle/testeBatalha.cpp:351:
+TEST CASE:  Batalha - Atordoado remove AtaqueRapido e AtaqueForte
+
+tests/entities/battle/testeBatalha.cpp:369: ERROR: CHECK( !temRapido ) is NOT correct!
+  values: CHECK( false )
+
+tests/entities/battle/testeBatalha.cpp:370: ERROR: CHECK( !temForte ) is NOT correct!
+  values: CHECK( false )
+
+===============================================================================
+[doctest] test cases:  279 |  276 passed | 3 failed | 0 skipped
+[doctest] assertions: 1380 | 1377 passed | 3 failed |
+[doctest] Status: FAILURE!
