@@ -157,3 +157,104 @@ TEST_CASE("Andar em trecho final nao muda trecho")
 
     CHECK(cena.pegarTrechoAtual().pegarId() == idAntes);
 }
+
+TEST_CASE("Exceção lançada com id incorreto de cena")
+{
+    InfoCena dados{0,"Arcano","recompensa","descricao",101, {101}};
+
+    Jogador jogador = criarJogadorTeste();
+
+    CHECK_THROWS_AS(Cena(dados, jogador),std::invalid_argument);
+}
+
+TEST_CASE("Andar sem trecho carregado gera excecao")
+{
+    InfoCena dados{1,"Arcano","recompensa","descricao",101,{101}};
+
+    Jogador jogador = criarJogadorTeste();
+    Cena cena(dados, jogador);
+
+    CHECK_THROWS_AS(cena.andar(),std::runtime_error);
+}
+
+TEST_CASE("Vasculhar sem trecho carregado gera excecao")
+{
+    InfoCena dados{1,"Arcano","recompensa","descricao",101,{101}};
+
+    Jogador jogador = criarJogadorTeste();
+    Cena cena(dados, jogador);
+
+    CHECK_THROWS_AS(cena.vasculhar(),std::runtime_error);
+}
+
+TEST_CASE("Interagir NPC sem trecho carregado gera excecao")
+{
+    InfoCena dados{1,"Arcano","recompensa","descricao",101,{101}};
+
+    Jogador jogador = criarJogadorTeste();
+    Cena cena(dados, jogador);
+
+    CHECK_THROWS_AS(cena.interagirNPCs(),std::runtime_error);
+}
+
+TEST_CASE("Descartar item sem trecho carregado gera excecao")
+{
+    InfoCena dados{1,"Arcano","recompensa","descricao",101,{101}};
+
+    Jogador jogador = criarJogadorTeste();
+    Cena cena(dados, jogador);
+
+    CHECK_THROWS_AS(cena.descartarItem(),std::runtime_error);
+}
+
+TEST_CASE("Mudar trecho rejeita id invalido")
+{
+    InfoCena dados{1,"Arcano","recompensa","descricao",101,{101}};
+
+    Jogador jogador = criarJogadorTeste();
+    Cena cena(dados, jogador);
+
+    CHECK_THROWS_AS(cena.mudarTrecho(0),std::invalid_argument);
+}
+
+TEST_CASE("Pegar descricao da cena")
+{
+    InfoCena dados{1,"Arcano","recompensa","Descricao de teste",101,{101}};
+
+    Jogador jogador = criarJogadorTeste();
+    Cena cena(dados, jogador);
+
+    CHECK(cena.pegarDescricao() == "Descricao de teste");
+}
+
+TEST_CASE("Interagir NPCs sem NPC no trecho")
+{
+    InfoCena dados{2,"Arcano","recompensa","descricao",201,{201,202,203}};
+
+    Jogador jogador = criarJogadorTeste();
+
+    Cena cena(dados, jogador);
+
+    cena.iniciarCena();
+
+    CHECK_NOTHROW(cena.interagirNPCs());
+}
+
+TEST_CASE("Descartar item quando nao ha itens restantes")
+{
+    InfoCena dados{1,"Arcano","recompensa","descricao",101,{101}};
+
+    Jogador jogador = criarJogadorTeste();
+
+    Cena cena(dados, jogador);
+
+    cena.iniciarCena();
+
+    while(cena.pegarTrechoAtual().possuiItensRestantes()){
+        cena.descartarItem();
+    }
+
+    CHECK_NOTHROW(cena.descartarItem());
+
+    CHECK(cena.pegarTrechoAtual().pegarItensRestantes() == 0);
+}

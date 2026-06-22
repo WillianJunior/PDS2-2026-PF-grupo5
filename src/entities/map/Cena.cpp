@@ -168,4 +168,3 @@ bool Cena::emBatalha() const{
 bool Cena::explorando() const{
     return _explorando;
 }
-
