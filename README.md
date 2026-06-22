@@ -1,16 +1,33 @@
 # Dark Age - The Arcanum Quest
-**Grupo 5**: RPG Turn-Based Game  
+
+**Grupo 5** - RPG Turn-Based Game  
 **Disciplina:** Programação e Desenvolvimento de Software II - UFMG  
-**Semestre:** 2026/1 
-**Turma:**  TF
->---
+**Semestre:** 2026/1 | **Turma:** TF
+
+---
+
+## Sumário
+
+1. [Integrantes](#integrantes-do-grupo)
+2. [Descrição do Projeto](#descrição-do-projeto)
+3. [Motivação](#motivação)
+4. [Objetivos e Funcionalidades](#objetivos)
+5. [Visão Geral do Jogo](#visão-geral-do-jogo)
+6. [Como Compilar e Testar](#como-compilar-e-testar)
+7. [Estrutura de Diretórios](#estrutura-de-diretórios)
+
+---
+
 ## Integrantes do Grupo
+
 | Nome | Matrícula |
 |------|-----------|
-| Matheus Mariano Euzébio | 2023066543 |
+| Henrique Viana Lima de Oliveira | 2023066543 |
 | Mariana Ferreira de Castro | 2025019658 |
 | Laura Silveira Brandão Pinto | 2025075060 |
-| Henrique Viana Lima de Oliveira | 2025102628 |
+| Matheus Mariano Euzébio | 2025102628 |
+
+---
 
 ## Descrição do Projeto
 
@@ -23,22 +40,29 @@ A motivação para o desenvolvimento deste jogo nasce da experiência vivida pel
 ---
 
 ## Objetivos
-Desenvolver um motor de RPG em turnos capaz de representar personagens, classes, batalhas, inventário, itens, cenas e progressão de nível de forma organizada e extensível. O sistema deve permitir que o jogador explore o mapa, vasculhe ambientes, interaja com NPCs, participe de batalhas e utilize itens para alterar atributos e influenciar o resultado das lutas.
 
- - Funcionalidades previstas
- - Escolha de classe no início do jogo.
- - Sistema de exploração com ações como andar e vasculhar.
- - Inventário com capacidade limitada.
- - Batalha em turnos com ações ofensivas e defensivas.
- - Uso de comidas, poções e cristais.
- - Sistema de experiência e subida de nível.
- - Estrutura preparada para cenas, trechos de mapa e bosses.
+Desenvolver um motor de RPG em turnos que represente personagens, classes, batalhas, inventário, itens, cenas e progressão de nível de forma organizada e extensível.
 
- ---
+Funcionalidades implementadas:
+
+- Escolha de classe no início do jogo (Guerreiro, Mago, Arqueiro, Tank)
+- Exploração: andar por trechos, vasculhar itens, interagir com NPCs
+- Inventário com 8 slots e uso de itens em batalha
+- Batalha em turnos: ataque simples, rápido e forte, defesa, esquiva, fuga
+- Condições: Berserk, Envenenado, Paralisado, Atordoado, ModAtributo, CemPorcentoAcerto
+- Arcanos: seis poderes divinos com efeitos passivos em combate e progressão
+- XP, subida de nível e banco de inimigos por fase
+- Hierarquia de Regras (RegrasAtaque, RegrasBatalha, RegrasProgresso, RegrasClassePersonagem, RegrasItem)
+- Padrão MVC com interfaces IView e IController; implementação via TerminalView e InputController
+- Injeção de dependência de Dados (RNG) para testes determinísticos
+- Testes com doctest e relatório de cobertura via gcovr
+
+---
 
 ## Visão Geral do Jogo
 
 ### Classes de Personagem
+
 | Classe | Arma | Característica |
 |--------|------|----------------|
 | Guerreiro | Espada | Alta resistência física |
@@ -55,22 +79,102 @@ Cada personagem possui: **vida**, **PP/mana**, **ataque**, **defesa**, **agilida
 - **Cristais** — efeitos únicos; removidos ao mudar de cena
 
 ### Arcanos (Poderes dos Deuses)
-| Arcano | Deus | Efeito |
-|--------|--------|--------|
-| Poder do Caos | Asmodeus | Parte do dano causado é convertido em vida |
-| Poder da Alma | Talos | Amplifica a energia espiritual do portador, aumentando ganho de XP e resistência contra efeitos mentais |
-| Poder da Natureza | Eldath | Aumenta a chance de encontrar recursos raros, itens naturais e criaturas amistosas |
-| Poder da Vida | Lathander | Cura recebida e regeneração natural são significativamente aumentadas |
-| Poder dos Elementos | Glaron (Bahamut e Tiamat) | Fortalece ataques físicos e elementais, aumentando dano e resistência elemental |
-| Poder da Mente | Azuth | Expande o uso de habilidades mágicas, reduzindo custo de mana e aumentando controle arcano |
 
+| Arcano | Deus | Efeito |
+|--------|------|--------|
+| Poder do Caos | Asmodeus | Parte do dano causado vira vida |
+| Poder da Alma | Talos | +50% XP ganho e imunidade a Paralisado |
+| Poder da Natureza | Eldath | Maior chance de encontrar itens raros |
+| Poder da Vida | Lathander | Regeneração de HP passiva por turno |
+| Poder dos Elementos | Glaron (Bahamut e Tiamat) | +20% de dano em ataques |
+| Poder da Mente | Azuth | -25% no custo de mana das habilidades |
 
 ### Sistema de Batalha
-Batalhas são por turnos — age primeiro quem tem maior **agilidade**. Em cada turno o jogador pode: **atacar** (simples, rápido ou forte), **defender**, **esquivar**, **usar item** ou **fugir** (quando disponível).
+
+Batalhas são por turnos - age primeiro quem tem maior **agilidade**. Em cada turno o jogador pode: **atacar** (simples, rápido ou forte), **defender**, **esquivar**, **usar item** ou **fugir**. Condições aplicadas durante a batalha afetam as ações disponíveis no turno seguinte.
+
+### Inimigos
+
+| Fase | Região | Boss | Nível |
+|------|--------|------|-------|
+| I | Magisk | Device | 1-2 |
+| II | Mantuu | Vaelthor | 3-4 |
+| III | Xantares | Malphas | 5-6 |
+| IV | Kenyrock | N'baki D'Itris | 7-8 |
+| V | Skyprout | Livies | 9-10 |
+| VI | Retorno Magisk | Nyriel | 9-10 |
+| Final | - | Sonath | 10 |
 
 ---
 
-##  Licença
+## Como Compilar e Testar
 
-Projeto acadêmico — UFMG, DCC. Todos os direitos reservados aos autores.
+```bash
+# Compilar o projeto
+make
 
+# Executar todos os testes
+make test
+
+# Gerar relatório de cobertura (requer gcovr)
+make test_coverage
+
+# Limpar artefatos de build
+make clean
+```
+
+---
+
+## Estrutura de Diretórios
+
+```
+PDS2-2026-PF-grupo5/
+├── include/                    # Cabeçalhos (.hpp)
+│   ├── controllers/
+│   ├── core/
+│   │   └── rules/
+│   ├── database/
+│   ├── demo/
+│   ├── entities/
+│   │   ├── battle/
+│   │   ├── character/
+│   │   ├── items/
+│   │   └── map/
+│   ├── utils/
+│   └── views/
+├── src/                        # Implementações (.cpp)
+│   ├── controllers/
+│   ├── core/
+│   │   └── rules/
+│   ├── database/
+│   ├── demo/
+│   ├── entities/
+│   │   ├── battle/
+│   │   ├── character/
+│   │   ├── items/
+│   │   └── map/
+│   ├── views/
+│   └── main.cpp
+├── tests/                      # Testes unitários (doctest)
+│   ├── controllers/
+│   ├── core/
+│   ├── database/
+│   ├── entities/
+│   │   ├── battle/
+│   │   ├── character/
+│   │   ├── items/
+│   │   └── map/
+│   └── views/
+├── design/                     # Documentação de design
+├── data/                       # Dados do jogo
+├── docs/                       # Documentação gerada (Doxygen, cobertura)
+├── Makefile
+├── Doxyfile
+└── README.md
+```
+
+---
+
+## Licença
+
+Projeto acadêmico - UFMG, DCC. Todos os direitos reservados aos autores.
