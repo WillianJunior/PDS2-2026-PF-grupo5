@@ -1,271 +1,36 @@
 #include <string>
 
 #include "demo/Exploracao.hpp"
+#include "demo/Criacao.hpp"
+#include "demo/UI.hpp"
 #include "entities/character/Jogador.hpp"
 #include "entities/map/Cena.hpp"
 #include "database/BancoCena.hpp"
 #include "database/BancoNpcInteracao.hpp"
-#include "database/BancoClassePersonagem.hpp"
 #include "database/BancoItem.hpp"
-#include "Dados.hpp"
 
-
-
-Jogador criarPersonagem(
-    IView& view,
-    IController& ctrl
-)
+static void exibirHeaderCena(IView& view, const Cena& cena)
 {
-    std::string nome;
-
-    view.exibir("Digite o nome do personagem:");
-    nome = ctrl.lerTexto();
-
-    int opcaoClasse;
-
-    view.exibir("+----+-----------+--------------+------------------+--------------------------------------------------+");
-    view.exibir("| ID | Classe    | Dado de Vida | Arma             | Perfil                                           |");
-    view.exibir("+----+-----------+--------------+------------------+--------------------------------------------------+");
-    view.exibir("| 1  | Guerreiro | 1d10         | Espada           | Alto dano, resistente, combate direto            |");
-    view.exibir("| 2  | Mago      | 1d6          | Magia            | Dano mágico elevado, baixa defesa, controle PP   |");
-    view.exibir("| 3  | Arqueiro  | 1d8          | Arco             | Velocidade e precisão, ataques múltiplos         |");
-    view.exibir("| 4  | Tank      | 1d12         | Escudo           | Máxima resistência, dano baseado em Defesa       |"); 
-    view.exibir("+----+-----------+--------------+------------------+--------------------------------------------------+");
-
-    Dados dados;
-
-    std::vector<int> atributos = dados.gerarAtributos();
-
-    view.exibir("Atributos rolados: ");
-
-    for(int atributo : atributos){
-        view.exibir(std::to_string(atributo));
-    }
-
-    view.exibir("+-----------+-----------+-----------+-----------+-----------+");
-    view.exibir("| Classe    | Ataque    | Defesa    | Agilidade | Poder     |");
-    view.exibir("+-----------+-----------+-----------+-----------+----------+");
-    view.exibir("| Guerreiro | "+std::to_string(atributos[0])+"        | "+std::to_string(atributos[1])+"        | "+std::to_string(atributos[2])+"        | "+std::to_string(atributos[3])+"        |");
-    view.exibir("| Mago      | "+std::to_string(atributos[2])+"        | "+std::to_string(atributos[3])+"        | "+std::to_string(atributos[1])+"        | "+std::to_string(atributos[0])+"        |");
-    view.exibir("| Arqueiro  | "+std::to_string(atributos[1])+"        | "+std::to_string(atributos[3])+"        | "+std::to_string(atributos[0])+"        | "+std::to_string(atributos[2])+"        |");
-    view.exibir("| Tank      | "+std::to_string(atributos[1])+"        | "+std::to_string(atributos[0])+"        | "+std::to_string(atributos[3])+"        | "+std::to_string(atributos[2])+"        |");
-    view.exibir("+-----------+----------+-----------+------------+-----------+");
-
-
-    while(true)
-    {
-        view.exibirLinha();
-        view.exibir("Escolha sua classe:");
-        view.exibir("[1] Guerreiro");
-        view.exibir("[2] Mago");
-        view.exibir("[3] Arqueiro");
-        view.exibir("[4] Tank");
-
-        opcaoClasse = ctrl.lerInteiro();
-
-        if(opcaoClasse >= 1 &&
-           opcaoClasse <= 4)
-        {
-            break;
-        }
-
-        view.exibir("Opcao invalida.");
-    }
-
-    switch(opcaoClasse)
-    {
-        case 1:
-            return Jogador(
-                nome,
-                "",
-                "",
-                atributos[0],
-                atributos[1],
-                10.0+(0.5*atributos[1])-5,
-                atributos[3],
-                atributos[2],
-                TipoClasse::Guerreiro,
-                TipoPersonagem::Jogador
-            );
-
-        case 2:
-            return Jogador(
-                nome,
-                "",
-                "",
-                atributos[2],
-                atributos[3],
-                6.0+(0.5*atributos[3])-5,
-                atributos[0],
-                atributos[1],
-                TipoClasse::Mago,
-                TipoPersonagem::Jogador
-            );
-
-        case 3:
-            return Jogador(
-                nome,
-                "",
-                "",
-                atributos[1],
-                atributos[3],
-                8.0+(0.5*atributos[3])-5,
-                atributos[2],
-                atributos[0],
-                TipoClasse::Arqueiro,
-                TipoPersonagem::Jogador
-            );
-
-        default:
-            return Jogador(
-                nome,
-                "",
-                "",
-                atributos[1],
-                atributos[0],
-                12.0+(0.5*atributos[0])-5,
-                atributos[2],
-                atributos[3],
-                TipoClasse::Tanque,
-                TipoPersonagem::Jogador
-            );
-    }
-}
-
-
-static void verificarCombate(
-    IView& view,
-    const Cena& cena
-)
-{
-    if(!cena.pegarTrechoAtual().possuiInimigo())
-    {
-        return;
-    }
-
-    view.exibirLinha();
-    view.exibir("Um inimigo apareceu!");
-    view.exibir("Batalha em desenvolvimento.");
-    view.exibirLinha();
-}
-
-static void avancarCena(
-    IView& view,
-    int& idCenaAtual
-)
-{
-    view.exibirLinha();
-
-    view.exibir(
-        "Chefe da cena encontrado!"
-    );
-
-    view.exibir(
-        "Batalha do chefe em desenvolvimento."
-    );
-
-    view.exibir(
-        "Chefe derrotado!"
-    );
-
-    view.exibirLinha();
-
-    idCenaAtual++;
-}
-
-static bool processarAndar(
-    IView& view,
-    Cena& cena
-)
-{
-    int proximo =
-        cena.pegarTrechoAtual()
-            .pegarProximoTrecho();
-
-    if(proximo == -1)
-    {
-        return false;
-    }
-
-    cena.andar();
-
-    verificarCombate(
+    exibirAsciiArtArquivo(
         view,
-        cena
+        "data/arcanos/" + std::to_string(cena.pegarId()) + ".txt"
     );
-    return true;
+
+    std::string titulo =
+        "  Cena " + std::to_string(cena.pegarId()) +
+        "  ~*~  " + cena.pegarArcano() + "  ";
+    std::string borda = "+" + std::string(titulo.size(), '=') + "+";
+
+    exibirCentrado(view, borda);
+    exibirCentrado(view, "|" + titulo + "|");
+    exibirCentrado(view, borda);
+    view.exibir("");
+    exibirCentrado(view, cena.pegarDescricao());
+    view.exibir("");
 }
 
-static void interagirNpc(
-    IView& view,
-    const Cena& cena
-)
+static void exibirRelatorio(IView& view, Jogador& jogador)
 {
-    int npcId =
-        cena.pegarTrechoAtual()
-        .pegarNPCInteracao();
-
-    if(npcId <= 0)
-    {
-        view.exibir(
-            "Nao ha NPCs neste trecho."
-        );
-
-        return;
-    }
-
-    InfoNPCInteracao npc =
-        BancoNPCInteracao::obterNPC(npcId);
-
-    view.exibirLinha();
-
-    view.exibir(
-        "Nome: " + npc.nome
-    );
-
-    view.exibir(
-        "Descricao: "
-        + npc.descricaoFisica
-    );
-
-    view.exibir(
-        "Fala: " + npc.fala
-    );
-
-    view.exibirLinha();
-}
-
-//---------------------------------------------------------------------------------------------------------------------
-
-
-// Aguarda o usuário pressionar Enter
-static void aguardarEnter(IView& view, IController& ctrl, const std::string& msg) {
-    view.exibir(msg);
-    ctrl.lerTexto();
-}
-
-// Exibe o inventário e oferece ao jogador a opção de usar um item
-[[maybe_unused]]
-static void interagirInventario(IView& view, IController& ctrl, Jogador& jogador) {
-    view.exibir("\n--- Inventário ---");
-    int qtd = jogador.getInventario().quantidadeItens();
-    if (qtd == 0) {
-        view.exibir("O inventário está vazio.");
-        return;
-    }
-    jogador.getInventario().listarItens();
-    view.exibir("Usar item? [índice / -1 para pular]");
-    int idx = ctrl.lerInteiro();
-    if (idx >= 0 && idx < qtd) {
-        jogador.usarItem(idx);
-        view.exibir("Item usado!  HP atual: " + std::to_string(static_cast<int>(jogador.getVidaAtual())));
-    } else if (idx != -1) {
-        view.exibir("Índice inválido. Nenhum item foi usado.");
-    }
-}
-
-// Exibe o relatório de validação ao final da demo
-static void exibirRelatorio(IView& view, Jogador& jogador) {
     view.exibirLinha();
     view.exibir("=== Relatório de Validação ===");
     view.exibir("Personagem  : " + jogador.getNome() +
@@ -287,6 +52,57 @@ static void exibirRelatorio(IView& view, Jogador& jogador) {
     view.exibirLinha();
 }
 
+static void verificarCombate(IView& view, const Cena& cena)
+{
+    if (!cena.pegarTrechoAtual().possuiInimigo())
+        return;
+
+    view.exibirLinha();
+    view.exibir("Um inimigo apareceu!");
+    view.exibir("Batalha em desenvolvimento.");
+    view.exibirLinha();
+}
+
+static void avancarCena(IView& view, int& idCenaAtual)
+{
+    view.exibirLinha();
+    view.exibir("Chefe da cena encontrado!");
+    view.exibir("Batalha do chefe em desenvolvimento.");
+    view.exibir("Chefe derrotado!");
+    view.exibirLinha();
+
+    idCenaAtual++;
+}
+
+static bool processarAndar(IView& view, Cena& cena)
+{
+    if (cena.pegarTrechoAtual().pegarProximoTrecho() == -1)
+        return false;
+
+    cena.andar();
+    verificarCombate(view, cena);
+    return true;
+}
+
+static void interagirNpc(IView& view, const Cena& cena)
+{
+    int npcId = cena.pegarTrechoAtual().pegarNPCInteracao();
+
+    if (npcId <= 0)
+    {
+        view.exibir("Nao ha NPCs neste trecho.");
+        return;
+    }
+
+    InfoNPCInteracao npc = BancoNPCInteracao::obterNPC(npcId);
+
+    view.exibirLinha();
+    view.exibir("Nome: " + npc.nome);
+    view.exibir("Descricao: " + npc.descricaoFisica);
+    view.exibir("Fala: " + npc.fala);
+    view.exibirLinha();
+}
+
 static int loopExploracaoCena(
     IView& view,
     IController& ctrl,
@@ -295,18 +111,14 @@ static int loopExploracaoCena(
 )
 {
     cena.iniciarCena();
-
-    view.exibirLinha();
-    view.exibir("=== NOVA CENA ===");
-    view.exibir("[Entrada] " + cena.pegarDescricao());
-    view.exibirLinha();
+    exibirHeaderCena(view, cena);
 
     if (cena.pegarTrechoAtual().possuiInimigo())
     {
         view.exibir("Um inimigo apareceu!");
         view.exibir("Batalha em desenvolvimento.");
     }
-    bool runAtiva = true;
+
     while (true)
     {
         view.exibirLinha();
@@ -314,7 +126,7 @@ static int loopExploracaoCena(
 
         bool temItens = cena.pegarTrechoAtual().possuiItensRestantes();
 
-        view.exibir("O que deseja fazer?");
+        view.exibir("O que deseja fazer?\n");
         view.exibir("  [1] Vasculhar o local");
         view.exibir("  [2] Interagir com NPCs");
         view.exibir("  [3] Abrir inventário");
@@ -334,7 +146,6 @@ static int loopExploracaoCena(
 
                 view.exibir("Você encontrou: " + preview.pegarNome() +
                             " — " + preview.pegarDescricao());
-
                 view.exibir("Pegar item? [s/n]");
                 std::string resp = ctrl.lerTexto();
 
@@ -357,15 +168,12 @@ static int loopExploracaoCena(
         }
 
         case 2:
-        {
             interagirNpc(view, cena);
             break;
-        }
 
         case 3:
         {
             auto& inv = jogador.getInventario();
-
             view.exibir("\n--- Inventário ---");
 
             if (inv.quantidadeItens() == 0)
@@ -375,7 +183,6 @@ static int loopExploracaoCena(
             else
             {
                 inv.listarItens();
-
                 view.exibir("Usar item? [índice / -1]");
                 int idx = ctrl.lerInteiro();
 
@@ -389,23 +196,13 @@ static int loopExploracaoCena(
         }
 
         case 4:
-        {
             if (!processarAndar(view, cena))
-            {
-                return 2; // acabou a cena
-            }
-
-            
+                return 2;
             break;
-        }
 
         case 5:
-        {
-
-            view.exibir("Encerrando a run");
+            view.exibir("Run encerrada");
             return 0;
-
-        }
 
         default:
             view.exibir("Opção inválida.");
@@ -416,11 +213,10 @@ static int loopExploracaoCena(
 
 void executarExploracao(IView& view, IController& ctrl)
 {
-    
-
     Jogador jogador = criarPersonagem(view, ctrl);
 
     view.exibir("Bem-vindo, " + jogador.getNome());
+    view.exibir("Iniciando jornada... \n");
 
     int idCenaAtual = 1;
 
@@ -431,19 +227,14 @@ void executarExploracao(IView& view, IController& ctrl)
 
         int estado = loopExploracaoCena(view, ctrl, jogador, cena);
 
-    if (estado == 0)
-    {
-    return; // encerra tudo
-    }
+        if (estado == 0)
+            return;
 
-    if (estado == 2)
-    {
-    avancarCena(view, idCenaAtual);
-    }
+        if (estado == 2)
+            avancarCena(view, idCenaAtual);
     }
 
     exibirRelatorio(view, jogador);
-    aguardarEnter(view, ctrl, "Pressione Enter para sair...");
+    view.exibir("Pressione Enter para sair...");
+    ctrl.lerTexto();
 }
-
-
