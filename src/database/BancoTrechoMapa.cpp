@@ -44,7 +44,7 @@ InfoTrechoMapa BancoTrechoMapa::obterTrechoMapa(int id) {
         std::vector<int> itens = {4, 2};
         return InfoTrechoMapa{ 103,
             "O centro da Floresta Geada. Uma tempestade imovavel persiste aqui ha decadas. Device aguarda.",
-            3, itens, true, 101, -1, 102, 1 };
+            3, itens, false, -1, -1, 102, 1 };
     }
 
     // Cena 2: Mantuu - Territorios Militares (LV 3-4)
@@ -64,7 +64,7 @@ InfoTrechoMapa BancoTrechoMapa::obterTrechoMapa(int id) {
         std::vector<int> itens = {13, 11};
         return InfoTrechoMapa{ 203,
             "O salao do trono de Mantuu. Vaelthor, Arauto de Glaron, emerge das sombras draconicas.",
-            6, itens, true, 102, -1, 202, 2 };
+            6, itens, false, -1, -1, 202, 2 };
     }
 
     // Cena 3: Xantares - Portos e Becos (LV 5-6)
@@ -84,7 +84,7 @@ InfoTrechoMapa BancoTrechoMapa::obterTrechoMapa(int id) {
         std::vector<int> itens = {23, 21};
         return InfoTrechoMapa{ 303,
             "Um templo antigo dedicado a Asmodeus, profanado e recosturado como o proprio Malphas.",
-            9, itens, true, 103, -1, 302, 3 };
+            9, itens, false, -1, -1, 302, 3 };
     }
 
     // Cena 4: Kenyrock - Academias de Magia (LV 7-8)
@@ -104,7 +104,7 @@ InfoTrechoMapa BancoTrechoMapa::obterTrechoMapa(int id) {
         std::vector<int> itens = {33, 31};
         return InfoTrechoMapa{ 403,
             "O observatorio arcano de Kenyrock. N'baki D'Itris, Arauto de Azuth, calibra seu Artifice.",
-            12, itens, true, 104, -1, 402, 4 };
+            12, itens, false, -1, -1, 402, 4 };
     }
 
     // Cena 5: Skyprout - Guildas e Minas (LV 9-10)
@@ -124,7 +124,7 @@ InfoTrechoMapa BancoTrechoMapa::obterTrechoMapa(int id) {
         std::vector<int> itens = {43, 41};
         return InfoTrechoMapa{ 503,
             "O nucleo da mina. Livies, Arauto de Lathander, medita entre as pedras que pulsam com vida.",
-            15, itens, true, 105, -1, 502, 5 };
+            15, itens, false, -1, -1, 502, 5 };
     }
 
     // Cena 6: Retorno a Magisk - Servos de Sonath
@@ -144,7 +144,7 @@ InfoTrechoMapa BancoTrechoMapa::obterTrechoMapa(int id) {
         std::vector<int> itens = {53, 51};
         return InfoTrechoMapa{ 603,
             "O templo onde Lilith se sacrificou. Nyriel, Arauto de Eldath, guarda o local em luto silencioso.",
-            18, itens, true, 106, -1, 602, 6 };
+            18, itens, false, -1, -1, 602, 6 };
     }
 
     // Cena 7: Confronto Final - Santuario de Sonath
@@ -164,7 +164,7 @@ InfoTrechoMapa BancoTrechoMapa::obterTrechoMapa(int id) {
         std::vector<int> itens = {63, 61};
         return InfoTrechoMapa{ 703,
             "A camara do trono de Sonath. Um golias de quase 3 metros, um braco corroido, olhos que carregam 500 anos de odio e proposito.",
-            -1, itens, true, 999, -1, 702, 7 };
+            -1, itens, false, -1, -1, 702, 7 };
     }
 
     default:

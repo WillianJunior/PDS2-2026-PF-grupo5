@@ -46,48 +46,48 @@ public:
 TEST_CASE("criarPersonagem - Guerreiro") {
     ViewFake view;
     MockController ctrl;
-    ctrl.pushText("Alric");
+    ctrl.pushText("Ello");
     ctrl.pushInt(1);
 
     Jogador j = criarPersonagem(view, ctrl);
 
-    CHECK(j.getNome() == "Alric");
+    CHECK(j.getNome() == "Ello");
     CHECK(j.getClasse().getTipo() == TipoClasse::Guerreiro);
 }
 
 TEST_CASE("criarPersonagem - Mago") {
     ViewFake view;
     MockController ctrl;
-    ctrl.pushText("Elara");
+    ctrl.pushText("Kovu");
     ctrl.pushInt(2);
 
     Jogador j = criarPersonagem(view, ctrl);
 
-    CHECK(j.getNome() == "Elara");
+    CHECK(j.getNome() == "Kovu");
     CHECK(j.getClasse().getTipo() == TipoClasse::Mago);
 }
 
 TEST_CASE("criarPersonagem - Arqueiro") {
     ViewFake view;
     MockController ctrl;
-    ctrl.pushText("Rowan");
+    ctrl.pushText("Zara");
     ctrl.pushInt(3);
 
     Jogador j = criarPersonagem(view, ctrl);
 
-    CHECK(j.getNome() == "Rowan");
+    CHECK(j.getNome() == "Zara");
     CHECK(j.getClasse().getTipo() == TipoClasse::Arqueiro);
 }
 
 TEST_CASE("criarPersonagem - Tanque") {
     ViewFake view;
     MockController ctrl;
-    ctrl.pushText("Bjorn");
+    ctrl.pushText("Kidra");
     ctrl.pushInt(4);
 
     Jogador j = criarPersonagem(view, ctrl);
 
-    CHECK(j.getNome() == "Bjorn");
+    CHECK(j.getNome() == "Kidra");
     CHECK(j.getClasse().getTipo() == TipoClasse::Tanque);
 }
 
@@ -96,14 +96,14 @@ TEST_CASE("criarPersonagem - Tanque") {
 TEST_CASE("criarPersonagem - classe inválida depois válida") {
     ViewFake view;
     MockController ctrl;
-    ctrl.pushText("Kovu");
+    ctrl.pushText("Damaya");
     ctrl.pushInt(0);   // inválido
     ctrl.pushInt(99);  // inválido
     ctrl.pushInt(2);   // Mago — válido
 
     Jogador j = criarPersonagem(view, ctrl);
 
-    CHECK(j.getNome() == "Kovu");
+    CHECK(j.getNome() == "Damaya");
     CHECK(view.saida.find("invalida") != std::string::npos);
 }
 
@@ -112,7 +112,7 @@ TEST_CASE("criarPersonagem - classe inválida depois válida") {
 TEST_CASE("criarPersonagem - exibe tabela de classes") {
     ViewFake view;
     MockController ctrl;
-    ctrl.pushText("Zara");
+    ctrl.pushText("Liff");
     ctrl.pushInt(3);
 
     criarPersonagem(view, ctrl);

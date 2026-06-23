@@ -17,22 +17,39 @@
 ## Fluxo de Execução (Game Loop)
 
 ```mermaid
-flowchart TD
-    A([main.cpp]) --> B[Jogador escolhe classe\nWarrior / Mage / Archer / Tank]
-    B --> C[BancoCena::obterCena\ncarrega InfoCena por ID]
-    C --> D[Cena\norquestra exploração]
-    D --> E{Evento}
-    E -->|encontro| F[Batalha\ncombate por turnos]
-    E -->|item encontrado| G[Inventario\nadiciona Item]
-    E -->|NPC| H[BancoNpcInteracao\ndiálogo / recompensa]
-    F -->|vitória| I[definirRecompensa\nXP + item]
-    I --> J{Subiu de nível?}
-    J -->|sim| K[Personagem::subirNivel\nRegrasProgresso]
-    J -->|não| D
-    K --> D
-    D -->|cena concluída| L{Última cena?}
-    L -->|não| C
-    L -->|sim — Sonath derrotado| M([FIM — Arcanos])
+flowchart LR
+    A([main.cpp]) --> B[criarPersonagem\n(view / controller)]
+    B --> C[executarExploracao]
+    C --> D[loopExploracaoCena\ninicia cena e exibe header]
+    D --> E{Há inimigo no trecho inicial?}
+
+    E -->|sim| F[verificarCombate\nloopBatalha]
+    E -->|não| G[Menu de exploração]
+    F -->|derrota| H([Fim da run])
+    F -->|vitória| G
+
+    G --> I{Ação do jogador}
+    I -->|Vasculhar| J[sortearItem\nadicionar ao inventário]
+    I -->|Interagir com NPC| K[BancoNpcInteracao\nfala / recompensa]
+    I -->|Abrir inventário| L[usarItem / consultar itens]
+    I -->|Avançar| M{Último trecho da cena?}
+
+    J --> N[Pressionar Enter\ncontinuar]
+    K --> N
+    L --> N
+    N --> G
+
+    M -->|não| O[andar\nverificarCombate]
+    M -->|sim| P[Boss da cena\nloopBatalha]
+    O -->|derrota| H
+    O -->|vitória| G
+
+    P -->|derrota| H
+    P -->|vitória| Q[definirRecompensa\nXP + item + arcano]
+    Q --> R{Última cena?}
+    R -->|não| S[próxima cena]
+    R -->|sim| T([Fim — Sonath derrotado\nArcanos obtidos])
+    S --> D
 ```
 
 ---
@@ -159,7 +176,51 @@ flowchart TD
 
 ---
 
-## Injeção de Dependência em Batalha
+## Detalhamento de Batalha
+### Mapa de fluxo 
+## Mapa de fluxo da classe Batalha
+
+O fluxo abaixo resume como a classe Batalha controla um encontro por turnos, delegando a lógica de cálculo para as regras e para as entidades de personagem.
+
+```mermaid
+flowchart TD
+    A([iniciarBatalha]) --> B[calcular fator de dificuldade]
+    B --> C[atualizarAcoesDisponiveis]
+    C --> D{turno ativo?}
+    D -->|sim| E[Jogador escolhe uma ação]
+    E --> F{tipo de ação}
+
+    F -->|Ataque Simples| G[realizarAcao]
+    F -->|Ataque Rápido| G
+    F -->|Ataque Forte| G
+    F -->|Defesa| H[processarDefesa]
+    F -->|Esquiva| I[processarEsquiva]
+    F -->|Usar Item| J[liberar uso pelo controller/view]
+    F -->|Fugir| K[verificarFuga]
+
+    G --> L[validar acerto / calcular dano]
+    L --> M[aplicar dano e efeitos de arcano]
+    M --> N[processarCondicoesAtivas]
+    H --> O[aplicar dano reduzido ao jogador]
+    I --> O
+    J --> N
+    K --> P{fuga permitida?}
+    P -->|sim| Q[finalizar combate]
+    P -->|não| N
+
+    O --> N
+    N --> R{inimigo derrotado?}
+    R -->|não| S[processarAtaqueInimigo ou pularTurno]
+    R -->|sim| T[definirRecompensa]
+
+    S --> U[incrementar turno]
+    U --> V[atualizarAcoesDisponiveis]
+    V --> D
+
+    T --> W[finalizarBatalha]
+```
+
+### Injeção de Dependências
 
 ```mermaid
 flowchart LR
@@ -202,11 +263,17 @@ classDiagram
         +xpParaSubir(nivel) int
         +bonusProficiencia(nivel) int
     }
+    class RegrasClassePersonagem {
+        +distribuirAtributos(classe, valoresRolados) array<double, 4>
+        +calcularVidaInicial(classe, valorDefesa) double
+        +calcularVidaNovoNivel(classe, valorDefesa, dados) double
+    }
 
     Regras <|-- RegrasBatalha
     Regras <|-- RegrasAtaque
     Regras <|-- RegrasItem
     Regras <|-- RegrasProgresso
+    Regras <|-- RegrasClassePersonagem
 ```
 
 ---
