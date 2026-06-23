@@ -155,6 +155,8 @@ class Personagem {
         double getAgilidade() const;
         /** @return Mana Atual */
         double getManaAtual() const;
+        /** @return Mana Total */
+        double getManaTotal() const;
         /** @return Nivel atual do personagem. */
         int getNivel() const;
         /** @return Experiencia acumulada. */

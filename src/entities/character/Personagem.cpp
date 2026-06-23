@@ -50,6 +50,13 @@ Personagem::Personagem(
         throw std::invalid_argument("Agilidade nao pode ser negativa.");
     if (nivel <= 0)
         throw std::invalid_argument("Nivel deve ser positivo.");
+    
+    if(_tipo == TipoPersonagem::Jogador) {
+        _vidaTotal = 100;
+        _vidaAtual = _vidaTotal;
+        _ppTotal += 40;
+        _ppAtual = _ppTotal;
+    }
 }
 
 void Personagem::receberDano(double dano) {
@@ -112,6 +119,7 @@ double Personagem::getAtaque() const { return _ataque; }
 double Personagem::getDefesa() const { return _defesa; }
 double Personagem::getAgilidade() const { return _agilidade; }
 double Personagem::getManaAtual() const { return _ppAtual; }
+double Personagem::getManaTotal() const { return _ppTotal; }
 int Personagem::getNivel() const { return _nivel; }
 double Personagem::getXp() const { return _xp; }
 TipoPersonagem Personagem::getTipo() const { return _tipo; }
