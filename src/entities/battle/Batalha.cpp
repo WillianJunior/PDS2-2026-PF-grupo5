@@ -246,10 +246,11 @@ void Batalha::realizarAcao(AcaoBatalha acao) {
             double cdAlvo = Regras::calcularCD(_inimigo->getAgilidade());
             double dano = 0;
 
-            if (_player->temArcano(TipoArcano::Mente))
+            if (_player->temArcano(TipoArcano::Mente)) {
                 custoPP *= 0.75;
+            }
 
-                _player->gastarMana(custoPP);
+            _player->gastarMana(custoPP);
 
             if(ataque.efeito.timing == TimingEfeito::AntesDoAcerto 
                 && ataque.efeito.hit <= numeroDeHits) {

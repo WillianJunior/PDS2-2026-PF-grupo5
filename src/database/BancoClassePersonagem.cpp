@@ -48,6 +48,7 @@ std::array<Ataque,3> BancoClassePersonagem::defineAtaques(TipoClasse tipo) {
                 "Fraco porém não gasta mana.",
                 TipoAtaque::Simples,
                 0,
+                {},
             };
 
             ataques[1] = {
@@ -81,6 +82,7 @@ std::array<Ataque,3> BancoClassePersonagem::defineAtaques(TipoClasse tipo) {
                 "Fraco porém não gasta mana.",
                 TipoAtaque::Simples,
                 0,
+                {},
             };
 
             ataques[1] = {
@@ -114,6 +116,7 @@ std::array<Ataque,3> BancoClassePersonagem::defineAtaques(TipoClasse tipo) {
                 "Fraco porém não gasta mana.",
                 TipoAtaque::Simples,
                 0,
+                {},
             };
 
             ataques[1] = {
@@ -147,6 +150,7 @@ std::array<Ataque,3> BancoClassePersonagem::defineAtaques(TipoClasse tipo) {
                 "Fraco porém não gasta mana.",
                 TipoAtaque::Simples,
                 0,
+                {},
             };
 
             ataques[1] = {
@@ -227,6 +231,7 @@ std::array<Ataque, 4> BancoClassePersonagem::getAtaquesFortesPossiveis(TipoClass
                 "Uma chuva de flechas de alta variância.",
                 TipoAtaque::Forte,
                 40,
+                {},
             };
 
             ataquesFortes[3] = {
@@ -318,6 +323,7 @@ std::array<Ataque, 4> BancoClassePersonagem::getAtaquesFortesPossiveis(TipoClass
                 "O guerreiro abandona qualquer postura defensiva e desfere tudo de uma vez.",
                 TipoAtaque::Forte,
                 45,
+                {},
             };
         break;
 
@@ -328,6 +334,7 @@ std::array<Ataque, 4> BancoClassePersonagem::getAtaquesFortesPossiveis(TipoClass
                 "Uma explosão mágica que afeta toda a área.",
                 TipoAtaque::Forte,
                 40,
+                {},
             };
 
             ataquesFortes[1] = {
@@ -356,6 +363,7 @@ std::array<Ataque, 4> BancoClassePersonagem::getAtaquesFortesPossiveis(TipoClass
                 "O feitiço mais econômico do Mago.",
                 TipoAtaque::Forte,
                 20,
+                {},
             };
 
             ataquesFortes[3] = {
@@ -447,6 +455,7 @@ std::array<Ataque, 4> BancoClassePersonagem::getAtaquesFortesPossiveis(TipoClass
                 "O Tanque abaixa o escudo e absorve o próximo impacto, usando o golpe para se impulsionar.",
                 TipoAtaque::Forte,
                 35,
+                {},
             };
         break;
     }
