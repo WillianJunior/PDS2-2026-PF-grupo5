@@ -1,35 +1,48 @@
 /**
- * @file DemoUI.hpp
- * @brief Funções auxiliares para exibição de elementos visuais da demo.
+ * @file UI.hpp
+ * @brief Funções auxiliares para exibição e animações de terminal da demo.
  */
 
 #ifndef DEMO_UI_HPP
 #define DEMO_UI_HPP
 
 #include <string>
+#include <vector>
 #include "utils/IView.hpp"
 
+// ─────────────────────────────────────────────────────────────────────────────
+// Exibição básica (via IView)
+// ─────────────────────────────────────────────────────────────────────────────
 
-/**
- * @brief Exibe um texto centralizado na interface de visualização.
- *
- * Calcula o espaçamento necessário para posicionar o texto de forma
- * centralizada em relação à largura definida pela implementação.
- *
- * @param view Interface responsável pela exibição das mensagens.
- * @param texto Texto a ser exibido.
- */
+/** Exibe texto centralizado na largura do terminal. */
 void exibirCentrado(IView& view, const std::string& texto);
 
-/**
- * @brief Exibe uma arte ASCII armazenada em um arquivo.
- *
- * Lê o conteúdo do arquivo informado e o exibe linha por linha
- * utilizando a interface de visualização.
- *
- * @param view Interface responsável pela exibição das mensagens.
- * @param caminho Caminho para o arquivo contendo a arte ASCII.
- */
+/** Exibe arte ASCII de um arquivo, centralizada. */
 void exibirAsciiArtArquivo(IView& view, const std::string& caminho);
+
+// ─────────────────────────────────────────────────────────────────────────────
+// Animações (escrevem diretamente em stdout para controle preciso)
+// ─────────────────────────────────────────────────────────────────────────────
+
+/** Efeito máquina de escrever: imprime texto caractere a caractere. */
+void digitarAnimado(const std::string& texto, int delayMs = 20);
+
+/**
+ * Revela arte ASCII de um arquivo em espiral no sentido horário,
+ * substituindo caracteres progressivamente (técnica de loading bar 2-D).
+ */
+void revelarAsciiHorario(const std::string& caminho, int delayMs = 10);
+
+/** Aguarda qualquer tecla sem exigir Enter (modo raw). */
+void pressioneQualquerTecla(const std::string& msg = "\n  [ Pressione qualquer tecla para continuar... ]\n");
+
+/** Limpa o terminal via ANSI. */
+void limparTela();
+
+/**
+ * Gera 4 atributos via 4d6kh3, exibindo animação de rolagem.
+ * @return Vetor com os 4 valores finais, em ordem decrescente.
+ */
+std::vector<int> animarGeracaoAtributos();
 
 #endif

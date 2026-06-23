@@ -1,4 +1,4 @@
-# Dark Age - The Arcanum Quest
+# The Dark Age - The Arcanum Quest
 
 **Grupo 5** - RPG Turn-Based Game  
 **Disciplina:** Programação e Desenvolvimento de Software II - UFMG  

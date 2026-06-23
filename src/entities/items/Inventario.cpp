@@ -17,6 +17,11 @@
 // Construtor e destrutor
 Inventario::Inventario() : _inicio(nullptr), _quantidade(0) {}
 
+Inventario::Inventario(Inventario&& other) noexcept
+    : _inicio(std::move(other._inicio)), _quantidade(other._quantidade) {
+    other._quantidade = 0;
+}
+
 // Destrutor usa o padrão: unique_ptr encadeia a destruição dos nós.
 // Com capacidade máxima de 8 itens, não há risco de stack overflow.
 Inventario::~Inventario() = default;

@@ -1,6 +1,6 @@
 /**
- * @file DemoCriacao.hpp
- * @brief Declarações relacionadas à criação de personagens para a demo.
+ * @file Criacao.hpp
+ * @brief Declarações relacionadas à criação/carregamento de personagens.
  */
 
 #ifndef DEMO_CRIACAO_HPP
@@ -10,18 +10,14 @@
 #include "utils/IController.hpp"
 #include "entities/character/Jogador.hpp"
 
-
 /**
- * @brief Cria um personagem a partir das informações fornecidas pelo usuário.
+ * @brief Exibe intro, sistema de saves e cria ou carrega um personagem.
  *
- * Conduz o processo de criação do personagem, coletando os dados
- * necessários e retornando uma instância de jogador configurada.
- *
- * @param view Interface responsável pela exibição das mensagens.
- * @param ctrl Interface responsável pela leitura das entradas do usuário.
- *
- * @return Jogador criado e configurado.
+ * @param view       Interface de exibição.
+ * @param ctrl       Interface de input.
+ * @param cenaInicial [out] ID da cena em que o jogador deve começar (1 se novo).
+ * @return Jogador pronto para uso.
  */
-Jogador criarPersonagem(IView& view, IController& ctrl);
+Jogador criarPersonagem(IView& view, IController& ctrl, int& cenaInicial);
 
 #endif

@@ -10,4 +10,4 @@ public:
     virtual int lerInteiro() = 0;
 };
 
-#endif
+#endif // ICONTROLLER_HPP

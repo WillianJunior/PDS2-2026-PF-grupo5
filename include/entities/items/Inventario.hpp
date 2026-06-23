@@ -39,56 +39,18 @@ private:
     static const int _capacidadeMax = 8; ///< Capacidade máxima do inventário.
 
 public:
-    /**
-     * @brief Construtor padrão da classe Inventario.
-     */
     Inventario();
-
-    /**
-     * @brief Destrutor da classe Inventario.
-     */
     ~Inventario();
 
-    /**
-     * @brief Tenta adicionar um item ao primeiro slot disponível.
-     * @param item Unique pointer para o item; o Inventario assume a posse.
-     * @throw InventarioCheioException quando a quantidade de itens atinge a capacidade máxima permitida (8).
-     */
+    /** @brief Move constructor (necessário porque há destrutor declarado). */
+    Inventario(Inventario&& other) noexcept;
+
     void adicionarItem(std::unique_ptr<Item> item);
-
-    /**
-     * @brief Realiza o uso de um item em um personagem alvo.
-     * @param posicao Índice do item no inventário.
-     * @param personagem Referência do personagem que receberá o efeito.
-     */
     void usarItem(int posicao, Personagem& personagem);
-
-    /**
-     * @brief Remove permanentemente um item do inventário.
-     * @param posicao Índice do item a ser removido.
-     */
-    void removerItem(int posicao); 
-
-    /**
-     * @brief Verifica se a capacidade máxima foi atingida.
-     * @return true se cheio, false caso contrário.
-     */
+    void removerItem(int posicao);
     bool estaCheio() const;
-
-    /**
-     * @brief Retorna o número atual de itens armazenados.
-     * @return Inteiro representando a quantidade.
-     */
     int quantidadeItens() const;
-
-    /**
-     * @brief Exibe no console a lista de itens e suas descrições.
-     */
     void listarItens() const;
-
-    /**
-     * @brief Finaliza as operações do inventário e limpa a interface.
-     */
     void fecharInventario();
 };
 

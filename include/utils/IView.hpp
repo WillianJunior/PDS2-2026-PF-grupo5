@@ -10,4 +10,4 @@ public:
     virtual void exibirLinha() const = 0;
 };
 
-#endif
+#endif // IVIEW_HPP

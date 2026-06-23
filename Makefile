@@ -9,7 +9,7 @@ BUILD   := build
 BIN     := bin
 
 # Nome do executável
-TARGET  := $(BIN)/The_Dark_Age_-_The_Arcanum_Quest
+TARGET  := $(BIN)/The Dark Age - The Arcanum Quest
 
 # Arquivos fonte e objetos (busca recursiva real via find)
 SOURCES      := $(shell find $(SRC) -name '*.cpp')

@@ -458,24 +458,80 @@ static int loopExploracaoCena(
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
+// ─────────────────────────────────────────────────────────────────────────────
+// Dialogos pos-boss — Ruffen guia o jogador para a proxima regiao
+// ─────────────────────────────────────────────────────────────────────────────
+
+static void dialogoPosBoss(IView &view, IController &ctrl, int cenaId)
+{
+    view.exibirLinha();
+    switch (cenaId) {
+    case 1:
+        view.exibir("  RUFFEN: \"Bem feito! O poder de Talos e seu.");
+        view.exibir("           Mas a Legiao nao recua. Va ate Mantuu.");
+        view.exibir("           Vaelthor, arauto de Glaron, comanda as forcas draconicas la!\"");
+        break;
+    case 2:
+        view.exibir("  RUFFEN: \"Os Elementos sao seus. Mas Xantares arde em caos.");
+        view.exibir("           Malphas, arauto de Asmodeus, semeia destruicao pelos portos.");
+        view.exibir("           Va -- antes que seja tarde!\"");
+        break;
+    case 3:
+        view.exibir("  RUFFEN: \"O Caos foi dominado. As academias de Kenyrock precisam de voce.");
+        view.exibir("           N'baki D'Itris, arauto de Azuth, usa os segredos arcanos como arma.");
+        view.exibir("           Nao perca tempo!\"");
+        break;
+    case 4:
+        view.exibir("  RUFFEN: \"A Mente e sua. Mas Skyprout pulsa com energia sombria.");
+        view.exibir("           Livies, arauto de Lathander, medita entre as pedras.");
+        view.exibir("           Ela esta preparando algo. Impeca-a!\"");
+        break;
+    case 5:
+        view.exibir("  RUFFEN: \"Cinco arcanos. Sonath ja se move.");
+        view.exibir("           Volte a Magisk. Nyriel, arauto de Eldath, guarda algo la.");
+        view.exibir("           Chegou a hora.\"");
+        break;
+    default: break;
+    }
+    view.exibirLinha();
+    aguardarEnter(view, ctrl, "\n[Pressione Enter para continuar...]");
+}
+
+static void confrontoRuffen(IView &view, IController &ctrl)
+{
+    view.exibirLinha();
+    view.exibir("  [ Templo das Sombras -- apos a queda de Nyriel ]");
+    view.exibir("");
+    view.exibir("  Uma figura bloqueia o caminho para o santuario de Sonath. Ruffen.");
+    view.exibir("");
+    view.exibir("  RUFFEN: \"O principe foi convencido por mim.");
+    view.exibir("           Eu precisava que alguem reunisse os arcanos.\"");
+    view.exibir("  RUFFEN: \"Agora voce os tem. E eu precisarei deles.\"");
+    view.exibir("");
+    view.exibir("  [1] Enfrentar Ruffen");
+    view.exibir("  [2] Deixa-lo passar e seguir em frente");
+    view.exibirLinha();
+    int op = ctrl.lerInteiro();
+    if (op == 1) {
+        view.exibir("  A batalha foi brutal. Ruffen recuou -- por ora.");
+    } else {
+        view.exibir("  Voce deixa Ruffen para tras. O santuario de Sonath aguarda.");
+    }
+    view.exibirLinha();
+    aguardarEnter(view, ctrl, "\n[Pressione Enter para continuar...]");
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
 // Ponto de entrada da demo
 // ─────────────────────────────────────────────────────────────────────────────
 
 void executarExploracao(IView &view, IController &ctrl)
 {
-    Jogador jogador = criarPersonagem(view, ctrl);
+    int cenaInicial = 1;
+    Jogador jogador = criarPersonagem(view, ctrl, cenaInicial);
     Dados dados;
 
-    view.exibir("Bem-vindo, " + jogador.getNome());
-    view.exibir("Iniciando jornada... \n");
-
-    exibirAsciiArtArquivo(
-        view,
-        "data/descricoes/inicial.txt");
-
-    aguardarEnter(view, ctrl, "\n[Pressione Enter para continuar...]");
-
-    int idCenaAtual = 1;
+    int idCenaAtual = cenaInicial;
 
     while (idCenaAtual <= 7)
     {
@@ -487,8 +543,13 @@ void executarExploracao(IView &view, IController &ctrl)
         if (estado == 0)
             return;
 
-        if (estado == 2)
+        if (estado == 2) {
+            if (idCenaAtual >= 1 && idCenaAtual <= 5)
+                dialogoPosBoss(view, ctrl, idCenaAtual);
+            else if (idCenaAtual == 6)
+                confrontoRuffen(view, ctrl);
             idCenaAtual++;
+        }
     }
 
     exibirRelatorio(view, jogador);
