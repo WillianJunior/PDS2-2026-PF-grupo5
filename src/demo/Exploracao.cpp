@@ -32,10 +32,24 @@ Jogador criarPersonagem(
     view.exibir("| 4  | Tank      | 1d12         | Escudo           | Máxima resistência, dano baseado em Defesa       |"); 
     view.exibir("+----+-----------+--------------+------------------+--------------------------------------------------+");
 
-    //iniciar e mostrar atributos
-    //tabela classe atributo e coeficientes
+    Dados dados;
 
-    //arrumar o switch case com os atributos e vida
+    std::vector<int> atributos = dados.gerarAtributos();
+
+    view.exibir("Atributos rolados: ");
+
+    for(int atributo : atributos){
+        view.exibir(std::to_string(atributo));
+    }
+
+    view.exibir("+-----------+-----------+-----------+-----------+-----------+");
+    view.exibir("| Classe    | Ataque    | Defesa    | Agilidade | Poder     |");
+    view.exibir("+-----------+-----------+-----------+-----------+----------+");
+    view.exibir("| Guerreiro | "+std::to_string(atributos[0])+"        | "+std::to_string(atributos[1])+"        | "+std::to_string(atributos[2])+"        | "+std::to_string(atributos[3])+"        |");
+    view.exibir("| Mago      | "+std::to_string(atributos[2])+"        | "+std::to_string(atributos[3])+"        | "+std::to_string(atributos[1])+"        | "+std::to_string(atributos[0])+"        |");
+    view.exibir("| Arqueiro  | "+std::to_string(atributos[1])+"        | "+std::to_string(atributos[3])+"        | "+std::to_string(atributos[0])+"        | "+std::to_string(atributos[2])+"        |");
+    view.exibir("| Tank      | "+std::to_string(atributos[1])+"        | "+std::to_string(atributos[0])+"        | "+std::to_string(atributos[3])+"        | "+std::to_string(atributos[2])+"        |");
+    view.exibir("+-----------+----------+-----------+------------+-----------+");
 
 
     while(true)
@@ -65,11 +79,11 @@ Jogador criarPersonagem(
                 nome,
                 "",
                 "",
-                0.0,
-                0.0,
-                0.0,
-                0.0,
-                0.0,
+                atributos[0],
+                atributos[1],
+                10.0+(0.5*atributos[1])-5,
+                atributos[3],
+                atributos[2],
                 TipoClasse::Guerreiro,
                 TipoPersonagem::Jogador
             );
@@ -79,11 +93,11 @@ Jogador criarPersonagem(
                 nome,
                 "",
                 "",
-                0.0,
-                0.0,
-                0.0,
-                0.0,
-                0.0,
+                atributos[2],
+                atributos[3],
+                6.0+(0.5*atributos[3])-5,
+                atributos[0],
+                atributos[1],
                 TipoClasse::Mago,
                 TipoPersonagem::Jogador
             );
@@ -93,11 +107,11 @@ Jogador criarPersonagem(
                 nome,
                 "",
                 "",
-                0.0,
-                0.0,
-                0.0,
-                0.0,
-                0.0,
+                atributos[1],
+                atributos[3],
+                8.0+(0.5*atributos[3])-5,
+                atributos[2],
+                atributos[0],
                 TipoClasse::Arqueiro,
                 TipoPersonagem::Jogador
             );
@@ -107,11 +121,11 @@ Jogador criarPersonagem(
                 nome,
                 "",
                 "",
-                0.0,
-                0.0,
-                0.0,
-                0.0,
-                0.0,
+                atributos[1],
+                atributos[0],
+                12.0+(0.5*atributos[0])-5,
+                atributos[2],
+                atributos[3],
                 TipoClasse::Tanque,
                 TipoPersonagem::Jogador
             );
@@ -273,7 +287,7 @@ static void exibirRelatorio(IView& view, Jogador& jogador) {
     view.exibirLinha();
 }
 
-static bool loopExploracaoCena(
+static int loopExploracaoCena(
     IView& view,
     IController& ctrl,
     Jogador& jogador,
@@ -292,7 +306,7 @@ static bool loopExploracaoCena(
         view.exibir("Um inimigo apareceu!");
         view.exibir("Batalha em desenvolvimento.");
     }
-
+    bool runAtiva = true;
     while (true)
     {
         view.exibirLinha();
@@ -305,6 +319,7 @@ static bool loopExploracaoCena(
         view.exibir("  [2] Interagir com NPCs");
         view.exibir("  [3] Abrir inventário");
         view.exibir("  [4] Avançar");
+        view.exibir("  [5] Encerrar");
 
         int opcao = ctrl.lerInteiro();
 
@@ -377,12 +392,19 @@ static bool loopExploracaoCena(
         {
             if (!processarAndar(view, cena))
             {
-                return false; // acabou a cena
+                return 2; // acabou a cena
             }
 
-            view.exibirLinha();
-            view.exibir("[Novo trecho] " + cena.pegarTrechoAtual().pegarDescricao());
+            
             break;
+        }
+
+        case 5:
+        {
+
+            view.exibir("Encerrando a run");
+            return 0;
+
         }
 
         default:
@@ -394,18 +416,9 @@ static bool loopExploracaoCena(
 
 void executarExploracao(IView& view, IController& ctrl)
 {
-    Jogador jogador(
-        "Alric",
-        "Um guerreiro experiente das Florestas de Edhen.",
-        "Pelo Arcano, lutarei, uai!",
-        12.0,   // ataque
-        8.0,    // defesa
-        100.0,  // vidaTotal
-        40.0,   // ppTotal
-        10.0,   // agilidade
-        TipoClasse::Guerreiro,
-        TipoPersonagem::Jogador
-    );
+    
+
+    Jogador jogador = criarPersonagem(view, ctrl);
 
     view.exibir("Bem-vindo, " + jogador.getNome());
 
@@ -416,12 +429,17 @@ void executarExploracao(IView& view, IController& ctrl)
         InfoCena dados = BancoCena::obterCena(idCenaAtual);
         Cena cena(dados, jogador);
 
-        bool continua = loopExploracaoCena(view, ctrl, jogador, cena);
+        int estado = loopExploracaoCena(view, ctrl, jogador, cena);
 
-        if (!continua)
-        {
-            avancarCena(view, idCenaAtual);
-        }
+    if (estado == 0)
+    {
+    return; // encerra tudo
+    }
+
+    if (estado == 2)
+    {
+    avancarCena(view, idCenaAtual);
+    }
     }
 
     exibirRelatorio(view, jogador);
