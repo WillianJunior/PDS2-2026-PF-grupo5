@@ -1,7 +1,7 @@
 /**
- * @file Exploracao.hpp
- * @brief Declaração da funcionalidade de exploração do jogo.
- */
+* @file Exploracao.hpp
+* @brief Declaração da funcionalidade de exploração do jogo.
+*/
 
 #ifndef EXPLORACAO_HPP
 #define EXPLORACAO_HPP
