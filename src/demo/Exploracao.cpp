@@ -5,7 +5,119 @@
 #include "entities/map/Cena.hpp"
 #include "database/BancoCena.hpp"
 #include "database/BancoNpcInteracao.hpp"
+#include "database/BancoClassePersonagem.hpp"
 #include "database/BancoItem.hpp"
+#include "Dados.hpp"
+
+
+
+Jogador criarPersonagem(
+    IView& view,
+    IController& ctrl
+)
+{
+    std::string nome;
+
+    view.exibir("Digite o nome do personagem:");
+    nome = ctrl.lerTexto();
+
+    int opcaoClasse;
+
+    view.exibir("+----+-----------+--------------+------------------+--------------------------------------------------+");
+    view.exibir("| ID | Classe    | Dado de Vida | Arma             | Perfil                                           |");
+    view.exibir("+----+-----------+--------------+------------------+--------------------------------------------------+");
+    view.exibir("| 1  | Guerreiro | 1d10         | Espada           | Alto dano, resistente, combate direto            |");
+    view.exibir("| 2  | Mago      | 1d6          | Magia            | Dano mágico elevado, baixa defesa, controle PP   |");
+    view.exibir("| 3  | Arqueiro  | 1d8          | Arco             | Velocidade e precisão, ataques múltiplos         |");
+    view.exibir("| 4  | Tank      | 1d12         | Escudo           | Máxima resistência, dano baseado em Defesa       |"); 
+    view.exibir("+----+-----------+--------------+------------------+--------------------------------------------------+");
+
+    //iniciar e mostrar atributos
+    //tabela classe atributo e coeficientes
+
+    //arrumar o switch case com os atributos e vida
+
+
+    while(true)
+    {
+        view.exibirLinha();
+        view.exibir("Escolha sua classe:");
+        view.exibir("[1] Guerreiro");
+        view.exibir("[2] Mago");
+        view.exibir("[3] Arqueiro");
+        view.exibir("[4] Tank");
+
+        opcaoClasse = ctrl.lerInteiro();
+
+        if(opcaoClasse >= 1 &&
+           opcaoClasse <= 4)
+        {
+            break;
+        }
+
+        view.exibir("Opcao invalida.");
+    }
+
+    switch(opcaoClasse)
+    {
+        case 1:
+            return Jogador(
+                nome,
+                "",
+                "",
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                TipoClasse::Guerreiro,
+                TipoPersonagem::Jogador
+            );
+
+        case 2:
+            return Jogador(
+                nome,
+                "",
+                "",
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                TipoClasse::Mago,
+                TipoPersonagem::Jogador
+            );
+
+        case 3:
+            return Jogador(
+                nome,
+                "",
+                "",
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                TipoClasse::Arqueiro,
+                TipoPersonagem::Jogador
+            );
+
+        default:
+            return Jogador(
+                nome,
+                "",
+                "",
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                TipoClasse::Tanque,
+                TipoPersonagem::Jogador
+            );
+    }
+}
+
 
 static void verificarCombate(
     IView& view,
