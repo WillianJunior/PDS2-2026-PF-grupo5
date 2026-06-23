@@ -1,98 +1,122 @@
 #include "doctest.h"
 
-#include "demo/Criacao.hpp"
-#include "demo/UI.hpp"
-#include "InputController.hpp"
-
-#include <sstream>
+#include <queue>
 #include <string>
-#include <iostream>
+
+#include "demo/Criacao.hpp"
+
+namespace {
 
 class ViewFake : public IView {
 public:
-    mutable std::string output;
+    mutable std::string saida;
 
     void exibir(const std::string& msg) const override {
-        output += msg + "\n";
+        saida += msg + "\n";
     }
 
     void exibirLinha() const override {
-        output += "-----\n";
+        saida += std::string(55, '-') + "\n";
     }
 };
 
-TEST_CASE("criarPersonagem - fluxo normal") {
+class MockController : public IController {
+    std::queue<int>         _ints;
+    std::queue<std::string> _textos;
+
+public:
+    void pushInt(int v)              { _ints.push(v); }
+    void pushText(const std::string& s) { _textos.push(s); }
+
+    int lerInteiro() override {
+        if (_ints.empty()) return -1;
+        int v = _ints.front(); _ints.pop(); return v;
+    }
+
+    std::string lerTexto() override {
+        if (_textos.empty()) return "";
+        std::string s = _textos.front(); _textos.pop(); return s;
+    }
+};
+
+} // namespace
+
+// ─── Testes de classe ────────────────────────────────────────────────────────
+
+TEST_CASE("criarPersonagem - Guerreiro") {
     ViewFake view;
-
-    std::stringstream input;
-    input << "Ello\n"; // nome
-    input << "1\n";    // guerreiro
-
-    auto oldCin = std::cin.rdbuf(input.rdbuf());
-
-    InputController ctrl;
+    MockController ctrl;
+    ctrl.pushText("Alric");
+    ctrl.pushInt(1);
 
     Jogador j = criarPersonagem(view, ctrl);
 
-    CHECK(j.getNome() == "Ello");
-
-    std::cin.rdbuf(oldCin);
+    CHECK(j.getNome() == "Alric");
+    CHECK(j.getClasse().getTipo() == TipoClasse::Guerreiro);
 }
 
-TEST_CASE("criarPersonagem - classe invalida depois valida") {
+TEST_CASE("criarPersonagem - Mago") {
     ViewFake view;
+    MockController ctrl;
+    ctrl.pushText("Elara");
+    ctrl.pushInt(2);
 
-    std::stringstream input;
-    input << "Kovu\n";
-    input << "99\n"; 
-    input << "2\n";  
+    Jogador j = criarPersonagem(view, ctrl);
 
-    auto oldCin = std::cin.rdbuf(input.rdbuf());
+    CHECK(j.getNome() == "Elara");
+    CHECK(j.getClasse().getTipo() == TipoClasse::Mago);
+}
 
-    InputController ctrl;
+TEST_CASE("criarPersonagem - Arqueiro") {
+    ViewFake view;
+    MockController ctrl;
+    ctrl.pushText("Rowan");
+    ctrl.pushInt(3);
+
+    Jogador j = criarPersonagem(view, ctrl);
+
+    CHECK(j.getNome() == "Rowan");
+    CHECK(j.getClasse().getTipo() == TipoClasse::Arqueiro);
+}
+
+TEST_CASE("criarPersonagem - Tanque") {
+    ViewFake view;
+    MockController ctrl;
+    ctrl.pushText("Bjorn");
+    ctrl.pushInt(4);
+
+    Jogador j = criarPersonagem(view, ctrl);
+
+    CHECK(j.getNome() == "Bjorn");
+    CHECK(j.getClasse().getTipo() == TipoClasse::Tanque);
+}
+
+// ─── Escolhas inválidas antes da válida ─────────────────────────────────────
+
+TEST_CASE("criarPersonagem - classe inválida depois válida") {
+    ViewFake view;
+    MockController ctrl;
+    ctrl.pushText("Kovu");
+    ctrl.pushInt(0);   // inválido
+    ctrl.pushInt(99);  // inválido
+    ctrl.pushInt(2);   // Mago — válido
 
     Jogador j = criarPersonagem(view, ctrl);
 
     CHECK(j.getNome() == "Kovu");
-
-    std::cin.rdbuf(oldCin);
+    CHECK(view.saida.find("invalida") != std::string::npos);
 }
 
-TEST_CASE("criarPersonagem - multiplas tentativas invalidas") {
+// ─── Verificação de UI ───────────────────────────────────────────────────────
+
+TEST_CASE("criarPersonagem - exibe tabela de classes") {
     ViewFake view;
+    MockController ctrl;
+    ctrl.pushText("Zara");
+    ctrl.pushInt(3);
 
-    std::stringstream input;
-    input << "Kidra\n";
-    input << "0\n";
-    input << "-1\n";
-    input << "abc\n"; 
-    input << "4\n";
+    criarPersonagem(view, ctrl);
 
-    auto oldCin = std::cin.rdbuf(input.rdbuf());
-
-    InputController ctrl;
-
-    Jogador j = criarPersonagem(view, ctrl);
-
-    CHECK(j.getNome() == "Kidra");
-
-    std::cin.rdbuf(oldCin);
-}
-
-TEST_CASE("criarPersonagem - executa UI completa") {
-    ViewFake view;
-
-    std::stringstream input;
-    input << "Zara\n";
-    input << "3\n";
-
-    auto oldCin = std::cin.rdbuf(input.rdbuf());
-
-    InputController ctrl;
-
-    Jogador j = criarPersonagem(view, ctrl);
-
-    CHECK(view.output.find("Classe") != std::string::npos);
-
-    std::cin.rdbuf(oldCin);
+    CHECK(view.saida.find("Classe") != std::string::npos);
+    CHECK(view.saida.find("Guerreiro") != std::string::npos);
 }
