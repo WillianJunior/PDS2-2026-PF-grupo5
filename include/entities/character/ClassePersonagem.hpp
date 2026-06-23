@@ -22,6 +22,27 @@ enum class TipoAtaque {
 };
 
 /**
+ * @enum TimingEfeito
+ * @brief Define se um efeito é aplicado antes ou depois do ataque.
+ */
+enum class TimingEfeito {
+    AntesDoAcerto,
+    DepoisDoAcerto
+};
+
+/**
+ * @struct Ataque
+ * @brief Estrutura que armazena os dados do efeito que um ataque possui.
+ */
+struct EfeitoAtaque {
+    TimingEfeito timing = TimingEfeito::AntesDoAcerto; //< Quando o efeito é considerado
+    Condicao condicao;                                 //< Condição que o efeito causa
+    int chance = 0;                                    //< Probabilidade do Efeito ser causado
+    int hit = 1;                                       //< Qual hit o efeito deve ser considerado
+    bool afetaProprio = false;                         //< Efeito afeta o próprio personagem.
+};
+
+/**
  * @struct Ataque
  * @brief Estrutura que armazena os dados brutos de um golpe específico.
  */
@@ -31,9 +52,8 @@ struct Ataque {
     std::string descricao; ///< Descrição do ataque.
     TipoAtaque tipo;       ///< Categoria (Simples, Rapido ou Forte).
     double custoPP;        ///< Custo de Mana (Pontos de Poder) para execução.
-//    Condicao efeito;       ///< Efeito que o ataque aplica ao ser usado.
+    EfeitoAtaque efeito;   ///< Efeito que o ataque aplica ao ser usado.
 };
-
 /**
  * @enum TipoClasse
  * @brief Identificadores para os tipos de heróis disponíveis.

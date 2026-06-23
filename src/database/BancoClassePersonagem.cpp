@@ -56,6 +56,18 @@ std::array<Ataque,3> BancoClassePersonagem::defineAtaques(TipoClasse tipo) {
                 "Saca e solta duas flechas em sequência.",
                 TipoAtaque::Rapido,
                 10,
+                {
+                    TimingEfeito::AntesDoAcerto,
+                    {
+                        TipoCondicao::ModAtributo,
+                        "Enfraquecido",
+                        0,
+                        20,
+                        Atributo::Defesa,
+                    },
+                    100,
+                    2,
+                },
             };
 
             ataques[2] = 
@@ -77,6 +89,18 @@ std::array<Ataque,3> BancoClassePersonagem::defineAtaques(TipoClasse tipo) {
                 "Uma sequência veloz espada-cotovelo.",
                 TipoAtaque::Rapido,
                 15,
+                {
+                    TimingEfeito::DepoisDoAcerto,
+                    {
+                        TipoCondicao::ModAtributo,
+                        "Enfraquecido",
+                        1,
+                        1,
+                        Atributo::Agilidade,
+                    },
+                    100,
+                    2,
+                },
             };
 
             ataques[2] = 
@@ -98,6 +122,18 @@ std::array<Ataque,3> BancoClassePersonagem::defineAtaques(TipoClasse tipo) {
                 "Um feitiço simples e certeiro que não precisa de foco.",
                 TipoAtaque::Rapido,
                 15,
+                {
+                    TimingEfeito::AntesDoAcerto,
+                    {
+                        TipoCondicao::CemPorcentoAcerto,
+                        "Vulnerável",
+                        0,
+                        0,
+                        Atributo::Nenhum,
+                    },
+                    100,
+                    1,
+                },
             };
     
             ataques[2] = 
@@ -119,6 +155,18 @@ std::array<Ataque,3> BancoClassePersonagem::defineAtaques(TipoClasse tipo) {
                 "Carregar com o escudo na frente, empurrando o inimigo.",
                 TipoAtaque::Rapido,
                 15,
+                {
+                    TimingEfeito::DepoisDoAcerto,
+                    {
+                        TipoCondicao::Paralisado,
+                        "Paralisado",
+                        1,
+                        0,
+                        Atributo::Nenhum,
+                    },
+                    50,
+                    1,
+                },
             };
 
             ataques[2] = 
@@ -139,6 +187,18 @@ std::array<Ataque, 4> BancoClassePersonagem::getAtaquesFortesPossiveis(TipoClass
                 "A flecha detona ao impactar, espalhando fogo nos pés do inimigo.",
                 TipoAtaque::Forte,
                 30,
+                {
+                    TimingEfeito::DepoisDoAcerto,
+                    {
+                        TipoCondicao::ModAtributo,
+                        "Enfraquecido",
+                        2,
+                        2,
+                        Atributo::Agilidade,
+                    },
+                    100,
+                    1,
+                },
             };
 
             ataquesFortes[1] = {
@@ -147,6 +207,18 @@ std::array<Ataque, 4> BancoClassePersonagem::getAtaquesFortesPossiveis(TipoClass
                 "Um disparo calculado que não pode errar.",
                 TipoAtaque::Forte,
                 35,
+                {
+                    TimingEfeito::AntesDoAcerto,
+                    {
+                        TipoCondicao::CemPorcentoAcerto,
+                        "Vulnerável",
+                        0,
+                        0,
+                        Atributo::Nenhum,
+                    },
+                    100,
+                    1,
+                },
             };
             
             ataquesFortes[2] = {
@@ -163,6 +235,18 @@ std::array<Ataque, 4> BancoClassePersonagem::getAtaquesFortesPossiveis(TipoClass
                 "Uma única flecha disparada com precisão absoluta.",
                 TipoAtaque::Forte,
                 40,
+                {
+                    TimingEfeito::AntesDoAcerto,
+                    {
+                        TipoCondicao::CemPorcentoAcerto,
+                        "Vulnerável",
+                        0,
+                        0,
+                        Atributo::Nenhum,
+                    },
+                    100,
+                    1,
+                },
             };
         break;
           
@@ -173,6 +257,19 @@ std::array<Ataque, 4> BancoClassePersonagem::getAtaquesFortesPossiveis(TipoClass
                 "O guerreiro entra em estado de fúria total.",
                 TipoAtaque::Forte,
                 30,
+                {
+                    TimingEfeito::AntesDoAcerto,
+                    {
+                        TipoCondicao::Berserk,
+                        "Fúria Berserker",
+                        2,
+                        1,
+                        Atributo::Nenhum,
+                    },
+                    100,
+                    1,
+                    true,
+                },
             };
             
             ataquesFortes[1] = {
@@ -181,6 +278,18 @@ std::array<Ataque, 4> BancoClassePersonagem::getAtaquesFortesPossiveis(TipoClass
                 "Um impacto pesado que compromete a armadura do inimigo.",
                 TipoAtaque::Forte,
                 25,
+               {
+                    TimingEfeito::DepoisDoAcerto,
+                    {
+                        TipoCondicao::ModAtributo,
+                        "Enfraquecido",
+                        2,
+                        2,
+                        Atributo::Agilidade,
+                    },
+                    100,
+                    1,
+                },
             };
 
             ataquesFortes[2] = {
@@ -189,6 +298,18 @@ std::array<Ataque, 4> BancoClassePersonagem::getAtaquesFortesPossiveis(TipoClass
                 "Um golpe preciso que atravessa toda armadura.",
                 TipoAtaque::Forte,
                 25,
+               {
+                    TimingEfeito::AntesDoAcerto,
+                    {
+                        TipoCondicao::ModAtributo,
+                        "Exposto",
+                        0,
+                        1000,
+                        Atributo::Defesa,
+                    },
+                    100,
+                    1,
+                },
             };
 
             ataquesFortes[3] = {
@@ -215,6 +336,18 @@ std::array<Ataque, 4> BancoClassePersonagem::getAtaquesFortesPossiveis(TipoClass
                 "Um raio elétrico concentrado.",
                 TipoAtaque::Forte,
                 35,
+                {
+                    TimingEfeito::DepoisDoAcerto,
+                    {
+                        TipoCondicao::Paralisado,
+                        "Paralisado",
+                        1,
+                        0,
+                        Atributo::Nenhum,
+                    },
+                    50,
+                    1,
+                },
             };
 
             ataquesFortes[2] = {
@@ -231,6 +364,18 @@ std::array<Ataque, 4> BancoClassePersonagem::getAtaquesFortesPossiveis(TipoClass
                 "Colapso de energia mágica diretamente no inimigo, contorna qualquer barreira física.",
                 TipoAtaque::Forte,
                 50,
+                {
+                    TimingEfeito::AntesDoAcerto,
+                    {
+                        TipoCondicao::ModAtributo,
+                        "Exposto",
+                        0,
+                        1000,
+                        Atributo::Defesa,
+                    },
+                    100,
+                    1,
+                },
             };
         break;
 
@@ -241,6 +386,18 @@ std::array<Ataque, 4> BancoClassePersonagem::getAtaquesFortesPossiveis(TipoClass
                 "O escudo é usado como arma de impacto.",
                 TipoAtaque::Forte,
                 25,
+                {
+                    TimingEfeito::DepoisDoAcerto,
+                    {
+                        TipoCondicao::Atordoado,
+                        "Atordoado",
+                        1,
+                        0,
+                        Atributo::Nenhum,
+                    },
+                    100,
+                    1,
+                },
             };
 
             ataquesFortes[1] = {
@@ -249,6 +406,18 @@ std::array<Ataque, 4> BancoClassePersonagem::getAtaquesFortesPossiveis(TipoClass
                 "Um golpe pesado no chão que desequilibra o inimigo e fractura sua armadura.",
                 TipoAtaque::Forte,
                 25,
+               {
+                    TimingEfeito::DepoisDoAcerto,
+                    {
+                        TipoCondicao::ModAtributo,
+                        "Enfraquecido",
+                        3,
+                        3,
+                        Atributo::Defesa,
+                    },
+                    100,
+                    1,
+                },
             };
 
             ataquesFortes[2] = {
@@ -257,6 +426,19 @@ std::array<Ataque, 4> BancoClassePersonagem::getAtaquesFortesPossiveis(TipoClass
                 "O Tanque assume postura totalmente reativa.",
                 TipoAtaque::Forte,
                 30,
+                {
+                    TimingEfeito::DepoisDoAcerto,
+                    {
+                        TipoCondicao::ModAtributo,
+                        "Postura Defensiva",
+                        1,
+                        3,
+                        Atributo::Defesa,
+                    },
+                    100,
+                    1,
+                    true,
+                },
             };
 
             ataquesFortes[3] = {
