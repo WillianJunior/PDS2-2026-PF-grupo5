@@ -256,6 +256,8 @@ static ResultadoBatalha loopBatalha(
     view.exibir(inimigo.getNome() + " foi derrotado!");
     batalha.definirRecompensa(cena);
     batalha.finalizarBatalha();
+    jogador.recuperarVida(jogador.getVidaTotal());
+    jogador.recuperarMana(jogador.getManaTotal());
     return ResultadoBatalha::Vitoria;
 }
 
