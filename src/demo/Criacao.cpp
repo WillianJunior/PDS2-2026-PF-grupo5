@@ -3,6 +3,7 @@
 
 #include "demo/Criacao.hpp"
 #include "demo/UI.hpp"
+#include "core/rules/RegrasClassePersonagem.hpp"
 #include "Dados.hpp"
 
 Jogador criarPersonagem(IView& view, IController& ctrl)
@@ -59,34 +60,24 @@ Jogador criarPersonagem(IView& view, IController& ctrl)
         view.exibir("Opcao invalida.");
     }
 
-    switch (opcaoClasse)
-    {
-    case 1:
-        return Jogador(nome, "", "",
-            atributos[0], atributos[1],
-            10.0 + (0.5 * atributos[1]) - 5,
-            atributos[3], atributos[2],
-            TipoClasse::Guerreiro, TipoPersonagem::Jogador);
+    static const TipoClasse opcaoParaClasse[] = {
+        TipoClasse::Guerreiro,
+        TipoClasse::Mago,
+        TipoClasse::Arqueiro,
+        TipoClasse::Tanque
+    };
 
-    case 2:
-        return Jogador(nome, "", "",
-            atributos[2], atributos[3],
-            6.0 + (0.5 * atributos[3]) - 5,
-            atributos[0], atributos[1],
-            TipoClasse::Mago, TipoPersonagem::Jogador);
+    TipoClasse classe = opcaoParaClasse[opcaoClasse - 1];
+    auto attr = RegrasClassePersonagem::distribuirAtributos(classe, atributos);
 
-    case 3:
-        return Jogador(nome, "", "",
-            atributos[1], atributos[3],
-            8.0 + (0.5 * atributos[3]) - 5,
-            atributos[2], atributos[0],
-            TipoClasse::Arqueiro, TipoPersonagem::Jogador);
-
-    default:
-        return Jogador(nome, "", "",
-            atributos[1], atributos[0],
-            12.0 + (0.5 * atributos[0]) - 5,
-            atributos[2], atributos[3],
-            TipoClasse::Tanque, TipoPersonagem::Jogador);
-    }
+    return Jogador(
+        nome, "", "",
+        attr[0],
+        attr[1],
+        RegrasClassePersonagem::calcularVidaInicial(classe, attr[1]),
+        attr[2],
+        attr[3],
+        classe,
+        TipoPersonagem::Jogador
+    );
 }
