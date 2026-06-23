@@ -142,7 +142,7 @@ static void mostrarCutscene()
     limparTela();
     std::ifstream f("data/descricoes/capitulo1.txt");
     if (!f.is_open()) {
-        digitarAnimado("\n  Antes do tempo, havia apenas o vazio...\n\n", 24);
+        digitarAnimado("\n  Antes do tempo, havia apenas o vazio...\n\n", 10);
         pressioneQualquerTecla();
         return;
     }
@@ -151,7 +151,7 @@ static void mostrarCutscene()
         if (!linha.empty() && linha.back() == '\r') linha.pop_back();
         bool isSep = (linha.find("==") != std::string::npos ||
                       linha.find("Capitulo") != std::string::npos);
-        digitarAnimado(linha + "\n", isSep ? 7 : 16);
+        digitarAnimado(linha + "\n", isSep ? 5 : 12);
         if (linha.empty())
             std::this_thread::sleep_for(std::chrono::milliseconds(300));
     }
