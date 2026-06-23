@@ -62,7 +62,11 @@ private:
     RegrasBatalha* _regras;                  // ← novo: regras de combate
     std::vector<Condicao> _condicoesPlayer;  // ← novo: condições ativas no player
     std::vector<Condicao> _condicoesInimigo; // ← novo: condições ativas no inimigo
-    
+    std::vector<std::string> _log;           ///< Eventos narrativos do turno atual.
+
+    /** Acrescenta uma mensagem ao log do turno. */
+    void _registrar(const std::string& msg);
+
     /**
      * @brief Calcula a variabilidade de uma ação baseada em sorte.
      * @details A fórmula base é $$Atributo \times [0.8, 1.2]$$.
@@ -195,6 +199,12 @@ public:
     int getTurno() const { return _turnoAtual; }
     double getFatorDificuldade() const { return _fatorDificuldade; }
     const std::vector<AcaoBatalha>& getAcoesDisponiveis() const { return _acoesDisponiveis; }
+
+    /** @return Eventos narrativos acumulados desde o último limparLog(). */
+    const std::vector<std::string>& getLog() const;
+
+    /** Descarta todos os eventos do log (chamar antes de cada ação na demo). */
+    void limparLog();
 };
 
 #endif
