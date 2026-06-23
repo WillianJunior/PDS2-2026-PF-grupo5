@@ -545,3 +545,24 @@ void Batalha::processarCondicoesAtivas() {
 bool Batalha::verificarFuga() {
     return RegrasBatalha::FugirDisponivel(_player->getNivel(), _fatorDificuldade);
 }
+
+/**
+ * Aplica o ataque do inimigo ao player sem nenhuma redução defensiva.
+ * Usado pela camada demo após ações ofensivas (o inimigo sempre contra-ataca).
+ */
+void Batalha::processarAtaqueInimigo() {
+    double dano = calcularVariabilidade(_inimigo->getAtaque());
+    if (dano > 0)
+        _player->receberDano(dano);
+}
+
+/**
+ * Avança o turno quando o player está Paralisado (nenhuma ação disponível).
+ * O inimigo ataca normalmente, condições são processadas e o turno avança.
+ */
+void Batalha::pularTurno() {
+    processarAtaqueInimigo();
+    processarCondicoesAtivas();
+    _turnoAtual++;
+    atualizarAcoesDisponiveis();
+}

@@ -176,6 +176,20 @@ public:
      */
     bool verificarFuga();
 
+    /**
+     * @brief Aplica o ataque do inimigo ao player sem redução defensiva.
+     * Chamado pelo loop de batalha da camada demo após ações ofensivas do player
+     * (AtaqueSimples, AtaqueRapido, AtaqueForte, UsarItem).
+     * Para Defesa e Esquiva, o contra-ataque já está embutido em realizarAcao().
+     */
+    void processarAtaqueInimigo();
+
+    /**
+     * @brief Avança o turno quando o player está Paralisado (sem ações disponíveis).
+     * Aplica ataque integral do inimigo, processa condições e incrementa o turno.
+     * @see Regras.md — Seção 2.5 (Paralisado)
+     */
+    void pularTurno();
 
     // Getters
     int getTurno() const { return _turnoAtual; }

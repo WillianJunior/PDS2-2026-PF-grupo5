@@ -8,13 +8,69 @@
 #include "database/BancoCena.hpp"
 #include "database/BancoNpcInteracao.hpp"
 #include "database/BancoItem.hpp"
+#include "database/BancoInimigo.hpp"
+#include "entities/battle/Batalha.hpp"
+#include "core/Dados.hpp"
+#include "utils/TipoArcanoEnum.hpp"
 
-static void exibirHeaderCena(IView& view, const Cena& cena)
+// ─────────────────────────────────────────────────────────────────────────────
+// Tipos locais
+// ─────────────────────────────────────────────────────────────────────────────
+
+enum class ResultadoBatalha
+{
+    Vitoria,
+    Derrota,
+    Fuga
+};
+
+// ─────────────────────────────────────────────────────────────────────────────
+// Tabelas de mapeamento (cena → boss / arcano)
+// ─────────────────────────────────────────────────────────────────────────────
+
+static int bossIdParaCena(int cenaId)
+{
+    if (cenaId == 7)
+        return 999;      // Sonath — boss final
+    return 100 + cenaId; // 101 … 106 → Arautos por fase
+}
+
+static TipoArcano arcanoParaCena(int cenaId)
+{
+    switch (cenaId)
+    {
+    case 1:
+        return TipoArcano::Alma;
+    case 2:
+        return TipoArcano::Elementos;
+    case 3:
+        return TipoArcano::Caos;
+    case 4:
+        return TipoArcano::Mente;
+    case 5:
+        return TipoArcano::Vida;
+    case 6:
+        return TipoArcano::Natureza;
+    default:
+        return TipoArcano::Nenhum; // cena 7: boss final, sem arcano novo
+    }
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// Helpers de UI
+// ─────────────────────────────────────────────────────────────────────────────
+
+static void aguardarEnter(IView &view, IController &ctrl, const std::string &msg)
+{
+    view.exibir(msg);
+    ctrl.lerTexto();
+}
+
+static void exibirHeaderCena(IView &view, const Cena &cena)
 {
     exibirAsciiArtArquivo(
         view,
-        "data/arcanos/" + std::to_string(cena.pegarId()) + ".txt"
-    );
+        "data/arcanos/" + std::to_string(cena.pegarId()) + ".txt");
 
     std::string titulo =
         "  Cena " + std::to_string(cena.pegarId()) +
@@ -29,7 +85,7 @@ static void exibirHeaderCena(IView& view, const Cena& cena)
     view.exibir("");
 }
 
-static void exibirRelatorio(IView& view, Jogador& jogador)
+static void exibirRelatorio(IView &view, Jogador &jogador)
 {
     view.exibirLinha();
     view.exibir("=== Relatório de Validação ===");
@@ -52,45 +108,182 @@ static void exibirRelatorio(IView& view, Jogador& jogador)
     view.exibirLinha();
 }
 
-static void verificarCombate(IView& view, const Cena& cena)
+static std::string labelAcao(AcaoBatalha acao)
+{
+    switch (acao)
+    {
+    case AcaoBatalha::AtaqueSimples:
+        return "Ataque Simples";
+    case AcaoBatalha::AtaqueRapido:
+        return "Ataque Rápido  (custa PP)";
+    case AcaoBatalha::AtaqueForte:
+        return "Ataque Forte   (custa PP)";
+    case AcaoBatalha::Defesa:
+        return "Defender";
+    case AcaoBatalha::Esquiva:
+        return "Esquivar";
+    case AcaoBatalha::UsarItem:
+        return "Usar Item";
+    case AcaoBatalha::Fugir:
+        return "Fugir";
+    }
+    return "???";
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// Loop de batalha
+// ─────────────────────────────────────────────────────────────────────────────
+
+/**
+ * Executa um combate completo entre jogador e inimigo.
+ *
+ * Fluxo por turno:
+ *  1. Exibe estado (HP/PP de ambos).
+ *  2. Se paralisado → pularTurno() (inimigo ataca, condições avançam).
+ *  3. Lê ação do player via ctrl.
+ *  4. Fugir: finaliza e retorna Fuga.
+ *  5. UsarItem: aplica item inline, depois realizarAcao + processarAtaqueInimigo.
+ *  6. Defesa / Esquiva: o contra-ataque do inimigo já está embutido em realizarAcao.
+ *  7. Ataques: realizarAcao → processarAtaqueInimigo (se inimigo ainda vivo).
+ */
+static ResultadoBatalha loopBatalha(
+    IView &view,
+    IController &ctrl,
+    Jogador &jogador,
+    Personagem &inimigo,
+    Dados &dados,
+    Cena &cena)
+{
+    Batalha batalha(&jogador, &inimigo, dados);
+    batalha.iniciarBatalha();
+
+    view.exibirLinha();
+    view.exibir("=== BATALHA ===");
+    view.exibir(inimigo.getNome() + ": \"" + inimigo.getFala() + "\"");
+    view.exibirLinha();
+
+    while (jogador.estaVivo() && inimigo.estaVivo())
+    {
+        view.exibirLinha();
+        view.exibir("[ Turno " + std::to_string(batalha.getTurno()) + " ]");
+        view.exibir("Seu HP : " + std::to_string(static_cast<int>(jogador.getVidaAtual())) + " / " + std::to_string(static_cast<int>(jogador.getVidaTotal())) + "   PP: " + std::to_string(static_cast<int>(jogador.getManaAtual())));
+        view.exibir(inimigo.getNome() + " HP: " + std::to_string(static_cast<int>(inimigo.getVidaAtual())) + " / " + std::to_string(static_cast<int>(inimigo.getVidaTotal())));
+
+        const auto &acoes = batalha.getAcoesDisponiveis();
+
+        // Paralisado: sem ações, inimigo ataca e turno avança
+        if (acoes.empty())
+        {
+            view.exibir("Você está paralisado! Turno perdido.");
+            batalha.pularTurno();
+            continue;
+        }
+
+        view.exibir("O que deseja fazer?");
+        for (int i = 0; i < static_cast<int>(acoes.size()); ++i)
+            view.exibir("  [" + std::to_string(i + 1) + "] " + labelAcao(acoes[i]));
+
+        int escolha = ctrl.lerInteiro();
+        if (escolha < 1 || escolha > static_cast<int>(acoes.size()))
+        {
+            view.exibir("Opção inválida.");
+            continue;
+        }
+
+        AcaoBatalha acao = acoes[escolha - 1];
+
+        if (acao == AcaoBatalha::Fugir)
+        {
+            batalha.realizarAcao(AcaoBatalha::Fugir);
+            view.exibir("Você fugiu da batalha!");
+            batalha.finalizarBatalha();
+            return ResultadoBatalha::Fuga;
+        }
+
+        if (acao == AcaoBatalha::UsarItem)
+        {
+            auto &inv = jogador.getInventario();
+            if (inv.quantidadeItens() == 0)
+            {
+                view.exibir("Inventário vazio! Escolha outra ação.");
+                continue; // não consome turno
+            }
+            inv.listarItens();
+            view.exibir("Índice do item (ou -1 para cancelar):");
+            int idxItem = ctrl.lerInteiro();
+            if (idxItem < 0 || idxItem >= inv.quantidadeItens())
+            {
+                view.exibir("Cancelado.");
+                continue; // não consome turno
+            }
+            jogador.usarItem(idxItem);
+            view.exibir("Item usado!");
+            batalha.realizarAcao(AcaoBatalha::UsarItem);
+            if (inimigo.estaVivo())
+                batalha.processarAtaqueInimigo();
+        }
+        else if (acao == AcaoBatalha::Defesa || acao == AcaoBatalha::Esquiva)
+        {
+            // Contra-ataque do inimigo já embutido em realizarAcao para essas ações
+            batalha.realizarAcao(acao);
+        }
+        else
+        {
+            // Ataque Simples / Rápido / Forte: player ataca; inimigo contra-ataca depois
+            batalha.realizarAcao(acao);
+            if (inimigo.estaVivo())
+                batalha.processarAtaqueInimigo();
+        }
+    }
+
+    if (!jogador.estaVivo())
+    {
+        view.exibirLinha();
+        view.exibir("Você foi derrotado...");
+        batalha.finalizarBatalha();
+        return ResultadoBatalha::Derrota;
+    }
+
+    view.exibirLinha();
+    view.exibir(inimigo.getNome() + " foi derrotado!");
+    batalha.definirRecompensa(cena);
+    batalha.finalizarBatalha();
+    return ResultadoBatalha::Vitoria;
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// Eventos de exploração
+// ─────────────────────────────────────────────────────────────────────────────
+
+/**
+ * Verifica e executa batalha com inimigo comum do trecho atual.
+ * Retorna false se o jogador foi derrotado (run encerra).
+ */
+static bool verificarCombate(
+    IView &view, IController &ctrl,
+    Jogador &jogador, Cena &cena, Dados &dados)
 {
     if (!cena.pegarTrechoAtual().possuiInimigo())
-        return;
+        return true;
+
+    int inimigoId = cena.pegarTrechoAtual().pegarIdInimigo();
+    Personagem inimigo = BancoInimigo::obterInimigo(inimigoId);
 
     view.exibirLinha();
-    view.exibir("Um inimigo apareceu!");
-    view.exibir("Batalha em desenvolvimento.");
+    view.exibir("Um inimigo apareceu: " + inimigo.getNome() + "!");
     view.exibirLinha();
+
+    ResultadoBatalha res = loopBatalha(view, ctrl, jogador, inimigo, dados, cena);
+    return (res != ResultadoBatalha::Derrota);
 }
 
-static void avancarCena(IView& view, int& idCenaAtual)
-{
-    view.exibirLinha();
-    view.exibir("Chefe da cena encontrado!");
-    view.exibir("Batalha do chefe em desenvolvimento.");
-    view.exibir("Chefe derrotado!");
-    view.exibirLinha();
-
-    idCenaAtual++;
-}
-
-static bool processarAndar(IView& view, Cena& cena)
-{
-    if (cena.pegarTrechoAtual().pegarProximoTrecho() == -1)
-        return false;
-
-    cena.andar();
-    verificarCombate(view, cena);
-    return true;
-}
-
-static void interagirNpc(IView& view, const Cena& cena)
+static void interagirNpc(IView &view, const Cena &cena)
 {
     int npcId = cena.pegarTrechoAtual().pegarNPCInteracao();
 
     if (npcId <= 0)
     {
-        view.exibir("Nao ha NPCs neste trecho.");
+        view.exibir("Não há NPCs neste trecho.");
         return;
     }
 
@@ -98,26 +291,33 @@ static void interagirNpc(IView& view, const Cena& cena)
 
     view.exibirLinha();
     view.exibir("Nome: " + npc.nome);
-    view.exibir("Descricao: " + npc.descricaoFisica);
+    view.exibir("Descrição: " + npc.descricaoFisica);
     view.exibir("Fala: " + npc.fala);
     view.exibirLinha();
 }
 
+// ─────────────────────────────────────────────────────────────────────────────
+// Loop de exploração por cena
+// ─────────────────────────────────────────────────────────────────────────────
+
+/**
+ * Retorna:
+ *   0 → player derrotado ou encerramento voluntário (run termina)
+ *   2 → boss da cena derrotado (avançar para próxima cena)
+ */
 static int loopExploracaoCena(
-    IView& view,
-    IController& ctrl,
-    Jogador& jogador,
-    Cena& cena
-)
+    IView &view,
+    IController &ctrl,
+    Jogador &jogador,
+    Cena &cena,
+    Dados &dados)
 {
     cena.iniciarCena();
     exibirHeaderCena(view, cena);
 
-    if (cena.pegarTrechoAtual().possuiInimigo())
-    {
-        view.exibir("Um inimigo apareceu!");
-        view.exibir("Batalha em desenvolvimento.");
-    }
+    // Verifica inimigo no trecho inicial
+    if (!verificarCombate(view, ctrl, jogador, cena, dados))
+        return 0;
 
     while (true)
     {
@@ -164,16 +364,18 @@ static int loopExploracaoCena(
             {
                 view.exibir("Nada para vasculhar aqui.");
             }
+            aguardarEnter(view, ctrl, "\n[Pressione Enter para continuar...]");
             break;
         }
 
         case 2:
             interagirNpc(view, cena);
+            aguardarEnter(view, ctrl, "\n[Pressione Enter para continuar...]");
             break;
 
         case 3:
         {
-            auto& inv = jogador.getInventario();
+            auto &inv = jogador.getInventario();
             view.exibir("\n--- Inventário ---");
 
             if (inv.quantidadeItens() == 0)
@@ -191,47 +393,102 @@ static int loopExploracaoCena(
                     jogador.usarItem(idx);
                     view.exibir("Item usado!");
                 }
+                else if (idx != -1)
+                {
+                    view.exibir("Índice inválido.");
+                }
+                else
+                {
+                    view.exibir("Inventário fechado. Nenhum item utilizado.");
+                }
             }
+            aguardarEnter(view, ctrl, "\n[Pressione Enter para continuar...]");
             break;
         }
 
         case 4:
-            if (!processarAndar(view, cena))
+        {
+            if (cena.pegarTrechoAtual().pegarProximoTrecho() == -1)
+            {
+                // Trecho final da cena — batalha do boss
+                int bossId = bossIdParaCena(cena.pegarId());
+                Personagem boss = BancoInimigo::obterInimigo(bossId);
+
+                view.exibirLinha();
+                view.exibir("Um inimigo poderoso barra o seu caminho! A fuga não é possível.");
+
+                aguardarEnter(view, ctrl, "\n[Pressione Enter para continuar...]");
+
+                view.exibir(boss.getDescricao());
+                view.exibirLinha();
+
+                ResultadoBatalha res = loopBatalha(view, ctrl, jogador, boss, dados, cena);
+
+                if (res == ResultadoBatalha::Derrota)
+                    return 0;
+
+                // Boss derrotado: concede arcano e avança cena
+                TipoArcano arcano = arcanoParaCena(cena.pegarId());
+                if (arcano != TipoArcano::Nenhum)
+                {
+                    jogador.adicionarArcano(arcano);
+                    view.exibir("Arcano concedido: " + cena.pegarArcano() + "!");
+                }
+
                 return 2;
+            }
+
+            cena.andar();
+
+            if (!verificarCombate(view, ctrl, jogador, cena, dados))
+                return 0;
+
             break;
+        }
 
         case 5:
-            view.exibir("Run encerrada");
+            view.exibir("Run encerrada.");
             return 0;
 
         default:
-            view.exibir("Opção inválida.");
+            view.exibir("Opção inválida. Tente novamente");
             break;
         }
     }
 }
 
-void executarExploracao(IView& view, IController& ctrl)
+// ─────────────────────────────────────────────────────────────────────────────
+// Ponto de entrada da demo
+// ─────────────────────────────────────────────────────────────────────────────
+
+void executarExploracao(IView &view, IController &ctrl)
 {
     Jogador jogador = criarPersonagem(view, ctrl);
+    Dados dados;
 
     view.exibir("Bem-vindo, " + jogador.getNome());
     view.exibir("Iniciando jornada... \n");
+
+    exibirAsciiArtArquivo(
+        view,
+        "data/descricoes/inicial.txt");
+
+    aguardarEnter(view, ctrl, "\n[Pressione Enter para continuar...]");
 
     int idCenaAtual = 1;
 
     while (idCenaAtual <= 7)
     {
-        InfoCena dados = BancoCena::obterCena(idCenaAtual);
-        Cena cena(dados, jogador);
+        InfoCena dadosCena = BancoCena::obterCena(idCenaAtual);
+        Cena cena(dadosCena, jogador);
 
-        int estado = loopExploracaoCena(view, ctrl, jogador, cena);
+        int estado = loopExploracaoCena(view, ctrl, jogador, cena, dados);
 
         if (estado == 0)
             return;
 
         if (estado == 2)
-            avancarCena(view, idCenaAtual);
+            idCenaAtual++;
     }
 
     exibirRelatorio(view, jogador);
