@@ -15,10 +15,10 @@
 #include "utils/TipoArcanoEnum.hpp"
 #include "entities/battle/Condicao.hpp"
 
-static Personagem makePlayer(int nivel = 5) {
+static Personagem makePlayer(int nivel = 5, TipoClasse tipo = TipoClasse::Guerreiro) {
     return Personagem("Heroi", "desc", "fala",
         20.0, 15.0, 200.0, 100.0, 12.0,
-        TipoClasse::Guerreiro, TipoPersonagem::Jogador, nivel);
+        tipo, TipoPersonagem::Jogador, nivel);
 }
 
 static Personagem makeInimigo(int nivel = 1) {
@@ -344,4 +344,38 @@ TEST_CASE("Batalha - Atordoado remove AtaqueRapido e AtaqueForte") {
     }
     CHECK(!temRapido);
     CHECK(!temForte);
+}
+
+TEST_CASE("Batalha - Ataque causa Condicao apenas se acerta") {
+    Personagem player = makePlayer(5, TipoClasse::Arqueiro);
+    Personagem inimigo = makeInimigo(20);
+    Dados dados(65);
+    Batalha b(&player, &inimigo, dados);
+    b.iniciarBatalha();
+
+    b.realizarAcao(AcaoBatalha::AtaqueForte);
+    
+    bool found = false;
+    for (const auto& c : inimigo.getCondicoesAtivas()) {
+        if (c.tipo == TipoCondicao::ModAtributo) {
+            found = true; 
+            CHECK(c.nomeCustom == "Enfraquecido");
+        }
+    }
+    CHECK(found);
+}
+
+TEST_CASE("Batalha - Ataque Rapido com Condicao Instantanea") {
+    Personagem player = makePlayer(5, TipoClasse::Arqueiro);
+    Personagem inimigo = makeInimigo(1);
+    Dados dados(20);
+    Batalha b(&player, &inimigo, dados);
+    b.iniciarBatalha();
+
+    b.realizarAcao(AcaoBatalha::AtaqueRapido);
+    
+    bool found = false;
+    for (const auto& c : inimigo.getCondicoesAtivas())
+        if (c.tipo == TipoCondicao::ModAtributo) found = true;
+    CHECK(!found);
 }
