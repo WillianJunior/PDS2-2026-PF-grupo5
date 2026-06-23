@@ -5,15 +5,21 @@
 #include "controllers/InputController.hpp"
 #include "demo/Exploracao.hpp"
 
-int main() {
-    try {
+int main()
+{
+    try
+    {
         TerminalView view;
         InputController ctrl;
         executarExploracao(view, ctrl);
-    } catch (const std::exception& e) {
+    }
+    catch (const std::exception &e)
+    {
         std::cerr << "Erro fatal: " << e.what() << '\n';
         return 1;
-    } catch (...) {
+    }
+    catch (...)
+    {
         std::cerr << "Erro fatal desconhecido.\n";
         return 1;
     }
