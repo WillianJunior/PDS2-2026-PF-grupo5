@@ -68,8 +68,13 @@ double Batalha::calcularVariabilidade(double valorBase) {
  * Se vantagem = true, rola 2d20 e usa o maior (Regras.md §2.5 — Berserk).
  * Se gastaPP = true, soma Bônus de Proficiência (Regras.md §3.2).
  */
-bool Batalha::verificarAcerto(double coefAtaque, int nivel,
+bool Batalha::verificarAcerto(Personagem* alvo, double coefAtaque, int nivel,
                                bool gastaPP, bool vantagem, double cdAlvo) {
+    for (const auto& c : alvo->getCondicoesAtivas()) {
+        if (c.tipo == TipoCondicao::CemPorcentoAcerto)
+            return true;
+    }
+
     int r1 = _dados.rolar(1, 20);
     int r2 = vantagem ? _dados.rolar(1, 20) : r1;
     int rolagem = std::max(r1, r2);
@@ -179,84 +184,167 @@ void Batalha::realizarAcao(AcaoBatalha acao) {
     // ── Ataque Simples ────────────────────────────────────────────────────
     case AcaoBatalha::AtaqueSimples: {
         const Ataque& ataque = _player->getClasse().getAtaque(TipoAtaque::Simples);
-        double coef  = Regras::calcularCoeficiente(_player->getAtaque());
-        double cdAlvo = Regras::calcularCD(_inimigo->getAgilidade());
+        const DadosAtaque& dadosAtaque = BancoDadosAtaque::getDadosAtaque(ataque.id); 
+        int numeroDeHits = 0;
 
-        if (verificarAcerto(coef, _player->getNivel(), /*gastaPP=*/false, vantagem, cdAlvo)) {
-            double dano = RegrasAtaque::calcularDano(*_player, ataque);
+        for(int i = 0; i < dadosAtaque.numeroDeExecucoes; i++) {
+            double coef  = Regras::calcularCoeficiente(_player->getAtaque());
+            double cdAlvo = Regras::calcularCD(_inimigo->getAgilidade());
+            double dano = 0;
 
-            if (_player->temArcano(TipoArcano::Elementos))
-                dano *= 1.20;
 
-            dano = calcularVariabilidade(dano);
-            if (dano < 0) dano = 0;
+                if(ataque.efeito.timing == TimingEfeito::AntesDoAcerto 
+                    && ataque.efeito.hit <= numeroDeHits) {
+                    if (_dados.rolar(1, 100) <= ataque.efeito.chance) {
+                        if(ataque.efeito.afetaProprio)
+                            aplicarCondicao(ataque.efeito.condicao, true);
+                        else
+                            aplicarCondicao(ataque.efeito.condicao, false);
+                    }
+                }
 
-            _inimigo->receberDano(dano);
+                if (verificarAcerto(_inimigo, coef, _player->getNivel(), /*gastaPP=*/false, vantagem, cdAlvo)) {
+                    dano = RegrasAtaque::calcularDano(*_player, ataque);
+                    numeroDeHits++;
+                    if (_player->temArcano(TipoArcano::Elementos))
+                        dano *= 1.20;
 
-            if (_player->temArcano(TipoArcano::Caos))
-                _player->recuperarVida(dano * 0.25);
+                    dano = calcularVariabilidade(dano);
+                    
+                    if (dano < 0) dano = 0;
+
+                    _inimigo->receberDano(dano);
+                    
+                    if (_player->temArcano(TipoArcano::Caos))
+                        _player->recuperarVida(dano * 0.25);
+                }
+
+                if(ataque.efeito.timing == TimingEfeito::DepoisDoAcerto
+                    && ataque.efeito.hit <= numeroDeHits) {
+                    if (_dados.rolar(1, 100) <= ataque.efeito.chance) {
+                        if(ataque.efeito.afetaProprio)
+                            aplicarCondicao(ataque.efeito.condicao, true);
+                        else
+                            aplicarCondicao(ataque.efeito.condicao, false);
+                    }
+                }
         }
+        processarCondicoesAtivas();
         break;
     }
 
     // ── Ataque Rápido ─────────────────────────────────────────────────────
     case AcaoBatalha::AtaqueRapido: {
         const Ataque& ataque = _player->getClasse().getAtaque(TipoAtaque::Rapido);
+        const DadosAtaque& dadosAtaque = BancoDadosAtaque::getDadosAtaque(ataque.id);
         double custoPP = ataque.custoPP;
+        int numeroDeHits = 0;
 
-        if (_player->temArcano(TipoArcano::Mente))
-            custoPP *= 0.75;
+        for(int i = 0; i < dadosAtaque.numeroDeExecucoes; i++) {
+            // Rápido usa Agilidade no acerto (Regras.md §2.3)
+            double coef   = Regras::calcularCoeficiente(_player->getAgilidade());
+            double cdAlvo = Regras::calcularCD(_inimigo->getAgilidade());
+            double dano = 0;
 
-        _player->gastarMana(custoPP);
+            if (_player->temArcano(TipoArcano::Mente))
+                custoPP *= 0.75;
 
-        // Rápido usa Agilidade no acerto (Regras.md §2.3)
-        double coef   = Regras::calcularCoeficiente(_player->getAgilidade());
-        double cdAlvo = Regras::calcularCD(_inimigo->getAgilidade());
+                _player->gastarMana(custoPP);
 
-        if (verificarAcerto(coef, _player->getNivel(), /*gastaPP=*/true, vantagem, cdAlvo)) {
-            double dano = RegrasAtaque::calcularDano(*_player, ataque);
+            if(ataque.efeito.timing == TimingEfeito::AntesDoAcerto 
+                && ataque.efeito.hit <= numeroDeHits) {
+                if (_dados.rolar(1, 100) <= ataque.efeito.chance) {
+                    if(ataque.efeito.afetaProprio)
+                        aplicarCondicao(ataque.efeito.condicao, true);
+                    else
+                        aplicarCondicao(ataque.efeito.condicao, false);
+                }
+            }
 
-            if (_player->temArcano(TipoArcano::Elementos))
-                dano *= 1.20;
+            if (verificarAcerto(_inimigo, coef, _player->getNivel(), /*gastaPP=*/false, vantagem, cdAlvo)) {
+                    dano = RegrasAtaque::calcularDano(*_player, ataque);
+                    numeroDeHits++;
+                    if (_player->temArcano(TipoArcano::Elementos))
+                        dano *= 1.20;
 
-            dano = calcularVariabilidade(dano);
-            if (dano < 0) dano = 0;
+                    dano = calcularVariabilidade(dano);
+                    
+                    if (dano < 0) dano = 0;
 
-            _inimigo->receberDano(dano);
+                    _inimigo->receberDano(dano);
+                    
+                    if (_player->temArcano(TipoArcano::Caos))
+                        _player->recuperarVida(dano * 0.25);
+                }
 
-            if (_player->temArcano(TipoArcano::Caos))
-                _player->recuperarVida(dano * 0.25);
+                if(ataque.efeito.timing == TimingEfeito::DepoisDoAcerto
+                    && ataque.efeito.hit <= numeroDeHits) {
+                    if (_dados.rolar(1, 100) <= ataque.efeito.chance) {
+                        if(ataque.efeito.afetaProprio)
+                            aplicarCondicao(ataque.efeito.condicao, true);
+                        else
+                            aplicarCondicao(ataque.efeito.condicao, false);
+                    }
+                }
         }
+        processarCondicoesAtivas();
         break;
     }
 
     // ── Ataque Forte ──────────────────────────────────────────────────────
     case AcaoBatalha::AtaqueForte: {
         const Ataque& ataque = _player->getClasse().getAtaque(TipoAtaque::Forte);
+        const DadosAtaque& dadosAtaque = BancoDadosAtaque::getDadosAtaque(ataque.id);
         double custoPP = ataque.custoPP;
+        int numeroDeHits = 0;
 
-        if (_player->temArcano(TipoArcano::Mente))
+        for(int i = 0; i < dadosAtaque.numeroDeExecucoes; i++) {
+            double coef   = Regras::calcularCoeficiente(_player->getAtaque());
+            double cdAlvo = Regras::calcularCD(_inimigo->getAgilidade());
+            double dano = 0;
+
+            if (_player->temArcano(TipoArcano::Mente))
             custoPP *= 0.75;
 
-        _player->gastarMana(custoPP);
+            _player->gastarMana(custoPP);
 
-        double coef   = Regras::calcularCoeficiente(_player->getAtaque());
-        double cdAlvo = Regras::calcularCD(_inimigo->getAgilidade());
+            if(ataque.efeito.timing == TimingEfeito::AntesDoAcerto 
+                && ataque.efeito.hit <= numeroDeHits) {
+                if (_dados.rolar(1, 100) <= ataque.efeito.chance) {
+                    if(ataque.efeito.afetaProprio)
+                        aplicarCondicao(ataque.efeito.condicao, true);
+                    else
+                        aplicarCondicao(ataque.efeito.condicao, false);
+                }
+            }
 
-        if (verificarAcerto(coef, _player->getNivel(), /*gastaPP=*/true, vantagem, cdAlvo)) {
-            double dano = RegrasAtaque::calcularDano(*_player, ataque);
+            if (verificarAcerto(_inimigo, coef, _player->getNivel(), /*gastaPP=*/false, vantagem, cdAlvo)) {
+                    dano = RegrasAtaque::calcularDano(*_player, ataque);
+                    numeroDeHits++;
+                    if (_player->temArcano(TipoArcano::Elementos))
+                        dano *= 1.20;
 
-            if (_player->temArcano(TipoArcano::Elementos))
-                dano *= 1.20;
+                    dano = calcularVariabilidade(dano);
+                    
+                    if (dano < 0) dano = 0;
 
-            dano = calcularVariabilidade(dano);
-            if (dano < 0) dano = 0;
+                    _inimigo->receberDano(dano);
+                    
+                    if (_player->temArcano(TipoArcano::Caos))
+                        _player->recuperarVida(dano * 0.25);
+                }
 
-            _inimigo->receberDano(dano);
-
-            if (_player->temArcano(TipoArcano::Caos))
-                _player->recuperarVida(dano * 0.25);
+                if(ataque.efeito.timing == TimingEfeito::DepoisDoAcerto
+                    && ataque.efeito.hit <= numeroDeHits) {
+                    if (_dados.rolar(1, 100) <= ataque.efeito.chance) {
+                        if(ataque.efeito.afetaProprio)
+                            aplicarCondicao(ataque.efeito.condicao, true);
+                        else
+                            aplicarCondicao(ataque.efeito.condicao, false);
+                    }
+                }
         }
+        processarCondicoesAtivas();
         break;
     }
 

@@ -80,7 +80,7 @@ private:
      * @param cdAlvo     CD do alvo a ser superada.
      * @return true se a rolagem superar (não apenas igualar) a CD.
      */
-    bool verificarAcerto(double coefAtaque, int nivel,
+    bool verificarAcerto(Personagem* alvo, double coefAtaque, int nivel,
                         bool gastaPP, bool vantagem, double cdAlvo);
 
     /**
