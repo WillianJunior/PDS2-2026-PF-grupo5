@@ -1,4 +1,4 @@
-# Dark Age - The Arcanum Quest
+# The Dark Age - The Arcanum Quest
 
 **Grupo 5** - RPG Turn-Based Game  
 **Disciplina:** Programação e Desenvolvimento de Software II - UFMG  
@@ -8,13 +8,22 @@
 
 ## Sumário
 
-1. [Integrantes](#integrantes-do-grupo)
-2. [Descrição do Projeto](#descrição-do-projeto)
-3. [Motivação](#motivação)
-4. [Objetivos e Funcionalidades](#objetivos)
-5. [Visão Geral do Jogo](#visão-geral-do-jogo)
-6. [Como Compilar e Testar](#como-compilar-e-testar)
-7. [Estrutura de Diretórios](#estrutura-de-diretórios)
+- [The Dark Age - The Arcanum Quest](#the-dark-age---the-arcanum-quest)
+  - [Sumário](#sumário)
+  - [Integrantes do Grupo](#integrantes-do-grupo)
+  - [Descrição do Projeto](#descrição-do-projeto)
+  - [Motivação](#motivação)
+  - [Objetivos](#objetivos)
+  - [Visão Geral do Jogo](#visão-geral-do-jogo)
+    - [Classes de Personagem](#classes-de-personagem)
+    - [Atributos](#atributos)
+    - [Itens (Inventário — máx. 8 slots)](#itens-inventário--máx-8-slots)
+    - [Arcanos (Poderes dos Deuses)](#arcanos-poderes-dos-deuses)
+    - [Sistema de Batalha](#sistema-de-batalha)
+    - [Inimigos](#inimigos)
+  - [Como Compilar e Testar](#como-compilar-e-testar)
+  - [Estrutura de Diretórios](#estrutura-de-diretórios)
+  - [Licença](#licença)
 
 ---
 

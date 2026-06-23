@@ -159,7 +159,51 @@ flowchart TD
 
 ---
 
-## Injeção de Dependência em Batalha
+## Detalhamento de Batalha
+### Mapa de fluxo 
+## Mapa de fluxo da classe Batalha
+
+O fluxo abaixo resume como a classe Batalha controla um encontro por turnos, delegando a lógica de cálculo para as regras e para as entidades de personagem.
+
+```mermaid
+flowchart TD
+    A([iniciarBatalha]) --> B[calcular fator de dificuldade]
+    B --> C[atualizarAcoesDisponiveis]
+    C --> D{turno ativo?}
+    D -->|sim| E[Jogador escolhe uma ação]
+    E --> F{tipo de ação}
+
+    F -->|Ataque Simples| G[realizarAcao]
+    F -->|Ataque Rápido| G
+    F -->|Ataque Forte| G
+    F -->|Defesa| H[processarDefesa]
+    F -->|Esquiva| I[processarEsquiva]
+    F -->|Usar Item| J[liberar uso pelo controller/view]
+    F -->|Fugir| K[verificarFuga]
+
+    G --> L[validar acerto / calcular dano]
+    L --> M[aplicar dano e efeitos de arcano]
+    M --> N[processarCondicoesAtivas]
+    H --> O[aplicar dano reduzido ao jogador]
+    I --> O
+    J --> N
+    K --> P{fuga permitida?}
+    P -->|sim| Q[finalizar combate]
+    P -->|não| N
+
+    O --> N
+    N --> R{inimigo derrotado?}
+    R -->|não| S[processarAtaqueInimigo ou pularTurno]
+    R -->|sim| T[definirRecompensa]
+
+    S --> U[incrementar turno]
+    U --> V[atualizarAcoesDisponiveis]
+    V --> D
+
+    T --> W[finalizarBatalha]
+```
+
+### Injeção de Dependências
 
 ```mermaid
 flowchart LR
