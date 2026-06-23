@@ -142,7 +142,7 @@ static void mostrarCutscene()
     limparTela();
     std::ifstream f("data/descricoes/capitulo1.txt");
     if (!f.is_open()) {
-        digitarAnimado("\n  Antes do tempo, havia apenas o vazio...\n\n", 18);
+        digitarAnimado("\n  Antes do tempo, havia apenas o vazio...\n\n", 24);
         pressioneQualquerTecla();
         return;
     }
@@ -151,7 +151,7 @@ static void mostrarCutscene()
         if (!linha.empty() && linha.back() == '\r') linha.pop_back();
         bool isSep = (linha.find("==") != std::string::npos ||
                       linha.find("Capitulo") != std::string::npos);
-        digitarAnimado(linha + "\n", isSep ? 5 : 12);
+        digitarAnimado(linha + "\n", isSep ? 7 : 16);
         if (linha.empty())
             std::this_thread::sleep_for(std::chrono::milliseconds(300));
     }
@@ -321,11 +321,11 @@ static void dialogoAberturaRuffen(const std::string& charName)
     std::this_thread::sleep_for(std::chrono::milliseconds(300));
 
     auto fala = [](const std::string& texto, int delay = 18) {
-        digitarAnimado(texto + "\n", delay);
+        digitarAnimado(texto + "\n", delay * 4 / 3);
         std::this_thread::sleep_for(std::chrono::milliseconds(350));
     };
 
-    digitarAnimado("\n  [ Magisk -- Floresta Geada ]\n\n", 12);
+    digitarAnimado("\n  [ Magisk -- Floresta Geada ]\n\n", 16);
     std::this_thread::sleep_for(std::chrono::milliseconds(500));
 
     fala("  Um homem de cabelos grisalhos e olhos cansados se aproxima.");
@@ -344,7 +344,7 @@ static void dialogoAberturaRuffen(const std::string& charName)
     fala("          Va ate a Floresta Geada e impeca o primeiro deles!\"\n");
 
     std::this_thread::sleep_for(std::chrono::milliseconds(400));
-    digitarAnimado("\n  [ Floresta Geada -- as margens de Magisk ]\n\n", 12);
+    digitarAnimado("\n  [ Floresta Geada -- as margens de Magisk ]\n\n", 16);
     fala("  Device, Arauto de Talos, aguarda em algum lugar la dentro.\n");
 
     pressioneQualquerTecla();
