@@ -48,6 +48,14 @@ Batalha::Batalha(
 Batalha::~Batalha() {}
 
 // ─────────────────────────────────────────────────────────────────────────────
+// Log narrativo
+// ─────────────────────────────────────────────────────────────────────────────
+
+void Batalha::_registrar(const std::string& msg) { _log.push_back(msg); }
+const std::vector<std::string>& Batalha::getLog() const { return _log; }
+void Batalha::limparLog() { _log.clear(); }
+
+// ─────────────────────────────────────────────────────────────────────────────
 // Privados — cálculos auxiliares
 // ─────────────────────────────────────────────────────────────────────────────
 
@@ -153,6 +161,10 @@ void Batalha::iniciarBatalha() {
     atualizarAcoesDisponiveis();
 }
 
+// ─────────────────────────────────────────────────────────────────────────────
+// Helper de log para ataques do player (método privado inline)
+// ─────────────────────────────────────────────────────────────────────────────
+
 /**
  * Executa a ação escolhida pelo player neste turno.
  *
@@ -184,50 +196,70 @@ void Batalha::realizarAcao(AcaoBatalha acao) {
     // ── Ataque Simples ────────────────────────────────────────────────────
     case AcaoBatalha::AtaqueSimples: {
         const Ataque& ataque = _player->getClasse().getAtaque(TipoAtaque::Simples);
-        const DadosAtaque& dadosAtaque = BancoDadosAtaque::getDadosAtaque(ataque.id); 
+        const DadosAtaque& dadosAtaque = BancoDadosAtaque::getDadosAtaque(ataque.id);
         int numeroDeHits = 0;
 
-        for(int i = 0; i < dadosAtaque.numeroDeExecucoes; i++) {
-            double coef  = Regras::calcularCoeficiente(_player->getAtaque());
+        for (int i = 0; i < dadosAtaque.numeroDeExecucoes; i++) {
+            double coef   = Regras::calcularCoeficiente(_player->getAtaque());
             double cdAlvo = Regras::calcularCD(_inimigo->getAgilidade());
-            double dano = 0;
+            double dano   = 0;
 
-
-                if(ataque.efeito.timing == TimingEfeito::AntesDoAcerto 
+            if (ataque.efeito.timing == TimingEfeito::AntesDoAcerto
                     && ataque.efeito.hit <= numeroDeHits) {
-                    if (_dados.rolar(1, 100) <= ataque.efeito.chance) {
-                        if(ataque.efeito.afetaProprio)
-                            aplicarCondicao(ataque.efeito.condicao, true);
-                        else
-                            aplicarCondicao(ataque.efeito.condicao, false);
-                    }
+                if (_dados.rolar(1, 100) <= ataque.efeito.chance) {
+                    if (ataque.efeito.afetaProprio)
+                        aplicarCondicao(ataque.efeito.condicao, true);
+                    else
+                        aplicarCondicao(ataque.efeito.condicao, false);
                 }
+            }
 
-                if (verificarAcerto(_inimigo, coef, _player->getNivel(), /*gastaPP=*/false, vantagem, cdAlvo)) {
-                    dano = RegrasAtaque::calcularDano(*_player, ataque);
-                    numeroDeHits++;
-                    if (_player->temArcano(TipoArcano::Elementos))
-                        dano *= 1.20;
+            bool acertou = verificarAcerto(_inimigo, coef, _player->getNivel(),
+                                           /*gastaPP=*/false, vantagem, cdAlvo);
+            bool comElementos = false;
+            double curaChao   = 0.0;
 
-                    dano = calcularVariabilidade(dano);
-                    
-                    if (dano < 0) dano = 0;
-
-                    _inimigo->receberDano(dano);
-                    
-                    if (_player->temArcano(TipoArcano::Caos))
-                        _player->recuperarVida(dano * 0.25);
+            if (acertou) {
+                dano = RegrasAtaque::calcularDano(*_player, ataque);
+                numeroDeHits++;
+                if (_player->temArcano(TipoArcano::Elementos)) {
+                    dano *= 1.20;
+                    comElementos = true;
                 }
+                dano = calcularVariabilidade(dano);
+                if (dano < 0) dano = 0;
 
-                if(ataque.efeito.timing == TimingEfeito::DepoisDoAcerto
+                _inimigo->receberDano(dano);
+
+                if (_player->temArcano(TipoArcano::Caos)) {
+                    curaChao = dano * 0.25;
+                    _player->recuperarVida(curaChao);
+                }
+            }
+
+            if (!acertou) {
+                _registrar("Golpe " + std::to_string(i + 1) +
+                           ": você errou o ataque contra " + _inimigo->getNome() + ".");
+            } else {
+                std::string _msg = "Golpe " + std::to_string(i + 1) +
+                                   ": você acertou " + _inimigo->getNome() +
+                                   " causando " + std::to_string(static_cast<int>(dano)) + " de dano!";
+                if (comElementos) _msg += " (Elementos: +20%)";
+                _registrar(_msg);
+                if (curaChao > 0)
+                    _registrar("  Arcano do Caos: você recuperou " +
+                               std::to_string(static_cast<int>(curaChao)) + " PV.");
+            }
+
+            if (ataque.efeito.timing == TimingEfeito::DepoisDoAcerto
                     && ataque.efeito.hit <= numeroDeHits) {
-                    if (_dados.rolar(1, 100) <= ataque.efeito.chance) {
-                        if(ataque.efeito.afetaProprio)
-                            aplicarCondicao(ataque.efeito.condicao, true);
-                        else
-                            aplicarCondicao(ataque.efeito.condicao, false);
-                    }
+                if (_dados.rolar(1, 100) <= ataque.efeito.chance) {
+                    if (ataque.efeito.afetaProprio)
+                        aplicarCondicao(ataque.efeito.condicao, true);
+                    else
+                        aplicarCondicao(ataque.efeito.condicao, false);
                 }
+            }
         }
         processarCondicoesAtivas();
         break;
@@ -237,56 +269,76 @@ void Batalha::realizarAcao(AcaoBatalha acao) {
     case AcaoBatalha::AtaqueRapido: {
         const Ataque& ataque = _player->getClasse().getAtaque(TipoAtaque::Rapido);
         const DadosAtaque& dadosAtaque = BancoDadosAtaque::getDadosAtaque(ataque.id);
-        double custoPP = ataque.custoPP;
+        double custoPP   = ataque.custoPP;
         int numeroDeHits = 0;
 
-        for(int i = 0; i < dadosAtaque.numeroDeExecucoes; i++) {
+        for (int i = 0; i < dadosAtaque.numeroDeExecucoes; i++) {
             // Rápido usa Agilidade no acerto (Regras.md §2.3)
             double coef   = Regras::calcularCoeficiente(_player->getAgilidade());
             double cdAlvo = Regras::calcularCD(_inimigo->getAgilidade());
-            double dano = 0;
+            double dano   = 0;
 
-            if (_player->temArcano(TipoArcano::Mente)) {
+            if (_player->temArcano(TipoArcano::Mente))
                 custoPP *= 0.75;
-            }
 
             _player->gastarMana(custoPP);
 
-            if(ataque.efeito.timing == TimingEfeito::AntesDoAcerto 
-                && ataque.efeito.hit <= numeroDeHits) {
+            if (ataque.efeito.timing == TimingEfeito::AntesDoAcerto
+                    && ataque.efeito.hit <= numeroDeHits) {
                 if (_dados.rolar(1, 100) <= ataque.efeito.chance) {
-                    if(ataque.efeito.afetaProprio)
+                    if (ataque.efeito.afetaProprio)
                         aplicarCondicao(ataque.efeito.condicao, true);
                     else
                         aplicarCondicao(ataque.efeito.condicao, false);
                 }
             }
 
-            if (verificarAcerto(_inimigo, coef, _player->getNivel(), /*gastaPP=*/false, vantagem, cdAlvo)) {
-                    dano = RegrasAtaque::calcularDano(*_player, ataque);
-                    numeroDeHits++;
-                    if (_player->temArcano(TipoArcano::Elementos))
-                        dano *= 1.20;
+            bool acertou = verificarAcerto(_inimigo, coef, _player->getNivel(),
+                                           /*gastaPP=*/false, vantagem, cdAlvo);
+            bool comElementos = false;
+            double curaChao   = 0.0;
 
-                    dano = calcularVariabilidade(dano);
-                    
-                    if (dano < 0) dano = 0;
-
-                    _inimigo->receberDano(dano);
-                    
-                    if (_player->temArcano(TipoArcano::Caos))
-                        _player->recuperarVida(dano * 0.25);
+            if (acertou) {
+                dano = RegrasAtaque::calcularDano(*_player, ataque);
+                numeroDeHits++;
+                if (_player->temArcano(TipoArcano::Elementos)) {
+                    dano *= 1.20;
+                    comElementos = true;
                 }
+                dano = calcularVariabilidade(dano);
+                if (dano < 0) dano = 0;
 
-                if(ataque.efeito.timing == TimingEfeito::DepoisDoAcerto
+                _inimigo->receberDano(dano);
+
+                if (_player->temArcano(TipoArcano::Caos)) {
+                    curaChao = dano * 0.25;
+                    _player->recuperarVida(curaChao);
+                }
+            }
+
+            if (!acertou) {
+                _registrar("Golpe " + std::to_string(i + 1) +
+                           ": você errou o ataque contra " + _inimigo->getNome() + ".");
+            } else {
+                std::string _msg = "Golpe " + std::to_string(i + 1) +
+                                   ": você acertou " + _inimigo->getNome() +
+                                   " causando " + std::to_string(static_cast<int>(dano)) + " de dano!";
+                if (comElementos) _msg += " (Elementos: +20%)";
+                _registrar(_msg);
+                if (curaChao > 0)
+                    _registrar("  Arcano do Caos: você recuperou " +
+                               std::to_string(static_cast<int>(curaChao)) + " PV.");
+            }
+
+            if (ataque.efeito.timing == TimingEfeito::DepoisDoAcerto
                     && ataque.efeito.hit <= numeroDeHits) {
-                    if (_dados.rolar(1, 100) <= ataque.efeito.chance) {
-                        if(ataque.efeito.afetaProprio)
-                            aplicarCondicao(ataque.efeito.condicao, true);
-                        else
-                            aplicarCondicao(ataque.efeito.condicao, false);
-                    }
+                if (_dados.rolar(1, 100) <= ataque.efeito.chance) {
+                    if (ataque.efeito.afetaProprio)
+                        aplicarCondicao(ataque.efeito.condicao, true);
+                    else
+                        aplicarCondicao(ataque.efeito.condicao, false);
                 }
+            }
         }
         processarCondicoesAtivas();
         break;
@@ -296,54 +348,75 @@ void Batalha::realizarAcao(AcaoBatalha acao) {
     case AcaoBatalha::AtaqueForte: {
         const Ataque& ataque = _player->getClasse().getAtaque(TipoAtaque::Forte);
         const DadosAtaque& dadosAtaque = BancoDadosAtaque::getDadosAtaque(ataque.id);
-        double custoPP = ataque.custoPP;
+        double custoPP   = ataque.custoPP;
         int numeroDeHits = 0;
 
-        for(int i = 0; i < dadosAtaque.numeroDeExecucoes; i++) {
+        for (int i = 0; i < dadosAtaque.numeroDeExecucoes; i++) {
             double coef   = Regras::calcularCoeficiente(_player->getAtaque());
             double cdAlvo = Regras::calcularCD(_inimigo->getAgilidade());
-            double dano = 0;
+            double dano   = 0;
 
             if (_player->temArcano(TipoArcano::Mente))
-            custoPP *= 0.75;
+                custoPP *= 0.75;
 
             _player->gastarMana(custoPP);
 
-            if(ataque.efeito.timing == TimingEfeito::AntesDoAcerto 
-                && ataque.efeito.hit <= numeroDeHits) {
+            if (ataque.efeito.timing == TimingEfeito::AntesDoAcerto
+                    && ataque.efeito.hit <= numeroDeHits) {
                 if (_dados.rolar(1, 100) <= ataque.efeito.chance) {
-                    if(ataque.efeito.afetaProprio)
+                    if (ataque.efeito.afetaProprio)
                         aplicarCondicao(ataque.efeito.condicao, true);
                     else
                         aplicarCondicao(ataque.efeito.condicao, false);
                 }
             }
 
-            if (verificarAcerto(_inimigo, coef, _player->getNivel(), /*gastaPP=*/false, vantagem, cdAlvo)) {
-                    dano = RegrasAtaque::calcularDano(*_player, ataque);
-                    numeroDeHits++;
-                    if (_player->temArcano(TipoArcano::Elementos))
-                        dano *= 1.20;
+            bool acertou = verificarAcerto(_inimigo, coef, _player->getNivel(),
+                                           /*gastaPP=*/false, vantagem, cdAlvo);
+            bool comElementos = false;
+            double curaChao   = 0.0;
 
-                    dano = calcularVariabilidade(dano);
-                    
-                    if (dano < 0) dano = 0;
-
-                    _inimigo->receberDano(dano);
-                    
-                    if (_player->temArcano(TipoArcano::Caos))
-                        _player->recuperarVida(dano * 0.25);
+            if (acertou) {
+                dano = RegrasAtaque::calcularDano(*_player, ataque);
+                numeroDeHits++;
+                if (_player->temArcano(TipoArcano::Elementos)) {
+                    dano *= 1.20;
+                    comElementos = true;
                 }
+                dano = calcularVariabilidade(dano);
+                if (dano < 0) dano = 0;
 
-                if(ataque.efeito.timing == TimingEfeito::DepoisDoAcerto
+                _inimigo->receberDano(dano);
+
+                if (_player->temArcano(TipoArcano::Caos)) {
+                    curaChao = dano * 0.25;
+                    _player->recuperarVida(curaChao);
+                }
+            }
+
+            if (!acertou) {
+                _registrar("Golpe " + std::to_string(i + 1) +
+                           ": você errou o ataque contra " + _inimigo->getNome() + ".");
+            } else {
+                std::string _msg = "Golpe " + std::to_string(i + 1) +
+                                   ": você acertou " + _inimigo->getNome() +
+                                   " causando " + std::to_string(static_cast<int>(dano)) + " de dano!";
+                if (comElementos) _msg += " (Elementos: +20%)";
+                _registrar(_msg);
+                if (curaChao > 0)
+                    _registrar("  Arcano do Caos: você recuperou " +
+                               std::to_string(static_cast<int>(curaChao)) + " PV.");
+            }
+
+            if (ataque.efeito.timing == TimingEfeito::DepoisDoAcerto
                     && ataque.efeito.hit <= numeroDeHits) {
-                    if (_dados.rolar(1, 100) <= ataque.efeito.chance) {
-                        if(ataque.efeito.afetaProprio)
-                            aplicarCondicao(ataque.efeito.condicao, true);
-                        else
-                            aplicarCondicao(ataque.efeito.condicao, false);
-                    }
+                if (_dados.rolar(1, 100) <= ataque.efeito.chance) {
+                    if (ataque.efeito.afetaProprio)
+                        aplicarCondicao(ataque.efeito.condicao, true);
+                    else
+                        aplicarCondicao(ataque.efeito.condicao, false);
                 }
+            }
         }
         processarCondicoesAtivas();
         break;
@@ -387,10 +460,21 @@ void Batalha::realizarAcao(AcaoBatalha acao) {
 void Batalha::processarDefesa() {
     double ataqueInimigo = calcularVariabilidade(_inimigo->getAtaque());
     double fator = RegrasBatalha::ProcessarDefesa(_player->getDefesa(), ataqueInimigo);
-    double danoRecebido = ataqueInimigo * fator;
+    double danoRecebido  = ataqueInimigo * fator;
 
     if (danoRecebido > 0)
         _player->receberDano(danoRecebido);
+
+    const std::string& nome = _inimigo->getNome();
+    if (fator == 0.0) {
+        _registrar(nome + " atacou — bloqueio total! Nenhum dano recebido.");
+    } else if (fator <= 0.75) {
+        _registrar(nome + " atacou! Defesa reduziu o dano para "
+                   + std::to_string(static_cast<int>(danoRecebido)) + ".");
+    } else {
+        _registrar(nome + " atacou com força total! Você recebeu "
+                   + std::to_string(static_cast<int>(danoRecebido)) + " de dano.");
+    }
 }
 
 /**
@@ -402,13 +486,24 @@ void Batalha::processarDefesa() {
  */
 void Batalha::processarEsquiva() {
     double ataqueInimigo = calcularVariabilidade(_inimigo->getAtaque());
-    int bonus = Regras::bonusProficiencia(_player->getNivel());
-    double agiComBonus = _player->getAgilidade() + static_cast<double>(bonus);
-    double fator = RegrasBatalha::ProcessarEsquiva(agiComBonus, ataqueInimigo);
-    double danoRecebido = ataqueInimigo * fator;
+    int    bonus         = Regras::bonusProficiencia(_player->getNivel());
+    double agiComBonus   = _player->getAgilidade() + static_cast<double>(bonus);
+    double fator         = RegrasBatalha::ProcessarEsquiva(agiComBonus, ataqueInimigo);
+    double danoRecebido  = ataqueInimigo * fator;
 
     if (danoRecebido > 0)
         _player->receberDano(danoRecebido);
+
+    const std::string& nome = _inimigo->getNome();
+    if (fator == 0.0) {
+        _registrar(nome + " atacou — esquiva perfeita! Nenhum dano recebido.");
+    } else if (fator <= 0.5) {
+        _registrar(nome + " atacou! Esquiva parcial — você recebeu "
+                   + std::to_string(static_cast<int>(danoRecebido)) + " de dano.");
+    } else {
+        _registrar(nome + " atacou! Esquiva falhou — você recebeu "
+                   + std::to_string(static_cast<int>(danoRecebido)) + " de dano.");
+    }
 }
 
 /**
@@ -463,11 +558,29 @@ void Batalha::aplicarCondicao(const Condicao& condicao, bool noPlayer) {
     // Arcano da Alma: imunidade a Paralisado
     if (noPlayer
         && _player->temArcano(TipoArcano::Alma)
-        && condicao.tipo == TipoCondicao::Paralisado)
+        && condicao.tipo == TipoCondicao::Paralisado) {
+        _registrar("Arcano da Alma: imunidade a Paralisado ativada!");
         return;
+    }
 
     alvo->aplicarCondicao(condicao);
     vetor.push_back(condicao);
+
+    std::string nomeCondicao = condicao.nomeCustom.empty()
+        ? [&]() -> std::string {
+            switch (condicao.tipo) {
+                case TipoCondicao::Berserk:           return "Berserk";
+                case TipoCondicao::ModAtributo:       return "Modifica Atributo";
+                case TipoCondicao::CemPorcentoAcerto: return "100% Acerto";
+                case TipoCondicao::Paralisado:        return "Paralisado";
+                case TipoCondicao::Atordoado:         return "Atordoado";
+                case TipoCondicao::Envenenado:        return "Envenenado";
+                default:                              return "Condição";
+            }
+        }()
+        : condicao.nomeCustom;
+
+    _registrar(alvo->getNome() + " sofreu: " + nomeCondicao + "!");
 }
 
 /**
@@ -492,6 +605,8 @@ void Batalha::processarCondicoesAtivas() {
     if (_player->temArcano(TipoArcano::Vida)) {
         double regen = static_cast<double>(_dados.rolar(1, 4)) * 1.5;
         _player->recuperarVida(regen);
+        _registrar("Arcano da Vida: você regenerou "
+                   + std::to_string(static_cast<int>(regen)) + " PV.");
     }
 
     // ── Helper: processa um vetor de condições de um combatente ──────────
@@ -501,12 +616,22 @@ void Batalha::processarCondicoesAtivas() {
 
             // Efeito por turno
             switch (c.tipo) {
-                case TipoCondicao::Berserk:
-                    pers->receberDano(static_cast<double>(_dados.rolar(1, 4)));
+                case TipoCondicao::Berserk: {
+                    double dano = static_cast<double>(_dados.rolar(1, 4));
+                    pers->receberDano(dano);
+                    _registrar("Fúria Berserk: " + pers->getNome() + " sofreu "
+                               + std::to_string(static_cast<int>(dano)) + " de dano!");
                     break;
-                case TipoCondicao::Envenenado:
-                    pers->receberDano(static_cast<double>(_dados.rolar(2, 6)));
+                }
+                case TipoCondicao::Envenenado: {
+                    double dano = static_cast<double>(_dados.rolar(2, 6));
+                    pers->receberDano(dano);
+                    std::string nomeEfeito = c.nomeCustom.empty() ? "veneno" : c.nomeCustom;
+                    _registrar(pers->getNome() + " sofreu "
+                               + std::to_string(static_cast<int>(dano))
+                               + " de dano por " + nomeEfeito + "!");
                     break;
+                }
                 default: break;
             }
 
@@ -525,6 +650,22 @@ void Batalha::processarCondicoesAtivas() {
                         break;
                     }
                 }
+
+                std::string nomeCondicao = c.nomeCustom.empty()
+                    ? [&]() -> std::string {
+                        switch (c.tipo) {
+                            case TipoCondicao::Berserk:           return "Berserk";
+                            case TipoCondicao::ModAtributo:       return "Modifica Atributo";
+                            case TipoCondicao::CemPorcentoAcerto: return "100% Acerto";
+                            case TipoCondicao::Paralisado:        return "Paralisado";
+                            case TipoCondicao::Atordoado:         return "Atordoado";
+                            case TipoCondicao::Envenenado:        return "Envenenado";
+                            default:                              return "Condição";
+                        }
+                    }()
+                    : c.nomeCustom;
+
+                _registrar("A condição " + nomeCondicao + " expirou em " + pers->getNome() + ".");
                 vetor.erase(vetor.begin() + i);
             }
         }
@@ -554,6 +695,8 @@ void Batalha::processarAtaqueInimigo() {
     double dano = calcularVariabilidade(_inimigo->getAtaque());
     if (dano > 0)
         _player->receberDano(dano);
+    _registrar(_inimigo->getNome() + " atacou e causou "
+               + std::to_string(static_cast<int>(dano)) + " de dano em você!");
 }
 
 /**

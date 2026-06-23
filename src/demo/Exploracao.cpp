@@ -175,7 +175,10 @@ static ResultadoBatalha loopBatalha(
         if (acoes.empty())
         {
             view.exibir("Você está paralisado! Turno perdido.");
+            batalha.limparLog();
             batalha.pularTurno();
+            for (const auto& msg : batalha.getLog())
+                view.exibir("  > " + msg);
             continue;
         }
 
@@ -199,6 +202,8 @@ static ResultadoBatalha loopBatalha(
             batalha.finalizarBatalha();
             return ResultadoBatalha::Fuga;
         }
+
+        batalha.limparLog();
 
         if (acao == AcaoBatalha::UsarItem)
         {
@@ -234,6 +239,9 @@ static ResultadoBatalha loopBatalha(
             if (inimigo.estaVivo())
                 batalha.processarAtaqueInimigo();
         }
+
+        for (const auto& msg : batalha.getLog())
+            view.exibir("  > " + msg);
     }
 
     if (!jogador.estaVivo())
