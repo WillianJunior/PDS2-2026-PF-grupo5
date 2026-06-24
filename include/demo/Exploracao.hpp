@@ -8,7 +8,12 @@
 
 #include "utils/IView.hpp"
 #include "utils/IController.hpp"
+#include "demo/ConfigExploracao.hpp"
 
+/** Executa a demo completa com comportamento de produção (lore + pauses). */
 void executarExploracao(IView& view, IController& ctrl);
 
-#endif // EXPLORACAO_HPP
+/** Executa a demo com flags de configuração explícitas (útil para testes). */
+void executarExploracao(IView& view, IController& ctrl, const ConfigExploracao& cfg);
+
+#endif

@@ -84,7 +84,7 @@ Item BancoItem::obterItem(int cenaId, int itemId)
     // Pocao de Forca: Ataque +4, 3 turnos | Regras.md §5.3
     case 3:
         return criarPocaoAtaque(1, "Pocao de Forca",
-            "Aumenta o Ataque em +4 por 3 turnos.", 7);
+            "Aumenta o Ataque em +4 por 3 turnos.", 4);
     // Cristal de Agressao: Berserk 3 turnos | Regras.md §5.4
     case 4:
         return criarCristal(1, "Cristal de Agressao",
@@ -111,14 +111,14 @@ Item BancoItem::obterItem(int cenaId, int itemId)
     // Comidas: categoria Cogumelo → ±2d8 | Regras.md §5.2
     case 20:
         return criarComidaPositiva(3, "Cogumelo Medicinal",
-            "Cogumelo simples de aroma suave.", 2, 10);
+            "Cogumelo simples de aroma suave.", 2, 8);
     case 21:
         return criarComidaNegativa(3, "Cogumelo Vermelho com Pintinhas",
             "Cogumelo de cor vivida e aspecto suspeito.", 2, 8);
     // Pocao de Velocidade: Agilidade +4, 3 turnos | Regras.md §5.3
     case 22:
         return criarPocaoVelocidade(3, "Pocao de Velocidade",
-            "Aumenta a Agilidade em +4 por 3 turnos.", 6);
+            "Aumenta a Agilidade em +4 por 3 turnos.", 4);
     // Cristal de Veneno: envenena alvo 3 turnos (-2d6/turno) | Regras.md §5.4
     case 23:
         return criarCristal(3, "Cristal de Veneno",
@@ -135,7 +135,7 @@ Item BancoItem::obterItem(int cenaId, int itemId)
     // Pocao de Mana: Poder +4, 4 turnos | Regras.md §5.3
     case 32:
         return criarPocaoMana(4, "Pocao de Mana",
-            "Aumenta o Poder em +4 por 4 turnos.", 9);
+            "Aumenta o Poder em +4 por 4 turnos.", 4);
     // Cristal de Velocidade: +3 iniciativa e +2 CD nos 2 primeiros turnos | Regras.md §5.4
     case 33:
         return criarCristal(4, "Cristal de Velocidade",
@@ -145,7 +145,7 @@ Item BancoItem::obterItem(int cenaId, int itemId)
     // Comidas: categoria Cogumelo/Erva → ±2d8 | Regras.md §5.2
     case 40:
         return criarComidaPositiva(5, "Raiz Curativa",
-            "Raiz amarga com propriedades medicinais.", 3, 9);
+            "Raiz amarga com propriedades medicinais.", 2, 8);
     case 41:
         return criarComidaNegativa(5, "Raiz Podre",
             "Raiz deteriorada com cheiro forte.", 2, 8);
@@ -169,7 +169,7 @@ Item BancoItem::obterItem(int cenaId, int itemId)
     // Pocao de Escudo: Defesa +4, 4 turnos | Regras.md §5.3 (mesmo bônus, nome tematico)
     case 52:
         return criarPocaoDefesa(6, "Pocao de Escudo",
-            "Aumenta a Defesa em +4 por 4 turnos.", 10);
+            "Aumenta a Defesa em +4 por 4 turnos.", 4);
     // Cristal Sombrio: variante tematica do Cristal de Agressao | Regras.md §5.4
     case 53:
         return criarCristal(6, "Cristal Sombrio",
@@ -179,7 +179,7 @@ Item BancoItem::obterItem(int cenaId, int itemId)
     // Comidas: categoria Fruta → ±1d6 | Regras.md §5.2
     case 60:
         return criarComidaPositiva(7, "Amoras Silvestres",
-            "Amoras docinhas encontradas na entrada do santuario.", 1, 10);
+            "Amoras docinhas encontradas na entrada do santuario.", 1, 6);
     case 61:
         return criarComidaNegativa(7, "Goiaba com Bicho",
             "Tinha mais bicho que goiaba.", 1, 6);

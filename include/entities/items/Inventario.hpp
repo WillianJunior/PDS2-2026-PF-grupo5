@@ -12,6 +12,8 @@
 #include "Item.hpp"
 #include "../character/Personagem.hpp"
 
+class IView; // forward declaration — evita include pesado no header
+
 /**
  * @class InventarioCheioException
  * @brief Lançada quando uma tentativa de adição de um item excede a capacidade máxima do inventário.
@@ -51,6 +53,7 @@ public:
     bool estaCheio() const;
     int quantidadeItens() const;
     void listarItens() const;
+    void listarItens(IView& view) const; // roteia exibição pelo IView (testável)
     void fecharInventario();
 };
 

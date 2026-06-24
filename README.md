@@ -6,9 +6,26 @@
 
 ---
 
+## Comandos do Makefile
+
+| Comando | Descrição |
+|---|---|
+| `make` ou `make all` | Compila os arquivos fonte em `src/` e gera o executável em `bin/` |
+| `make run` | Compila o projeto (se necessário) e executa o programa completo (com cutscene, lore e pausas) |
+| `make run-no-lore` | Executa o programa pulando toda a narrativa pós-boss e o confronto de Ruffen (passa `--skip-lore`) |
+| `make run ARGS="--skip-lore --skip-enter"` | Executa sem lore e sem pausas de "Pressione Enter" |
+| `make compile_tests` | Compila os arquivos de teste em `tests/` junto com os fontes (exceto `main.cpp`), com instrumentação de cobertura (gcovr) (`--coverage`) |
+| `make test` | Executa `compile_tests` e roda os testes; falhas nos testes não interrompem o processo |
+| `make coverage` | Executa os testes e gera relatório de cobertura no terminal via `gcovr` (independente se testes passam ou falham); também gera relatório HTML detalhado em `docs/coverage/index.html` |
+| `make test_coverage` | Executa `make test` e `make coverage` em sequência, exibindo a porcentagem de testes passados e gerando o relatório HTML de cobertura |
+| `make clean` | Remove os diretórios `build/` e `bin/`, o binário `exec_tests` e os arquivos de cobertura (`.gcda`, `.gcno`, `docs/coverage/`) |
+
+---
+
 ## Sumário
 
 - [The Dark Age - The Arcanum Quest](#the-dark-age---the-arcanum-quest)
+  - [Comandos do Makefile](#comandos-do-makefile)
   - [Sumário](#sumário)
   - [Integrantes do Grupo](#integrantes-do-grupo)
   - [Descrição do Projeto](#descrição-do-projeto)
@@ -121,6 +138,15 @@ Batalhas são por turnos - age primeiro quem tem maior **agilidade**. Em cada tu
 ```bash
 # Compilar o projeto
 make
+
+# Executar o jogo completo (com cutscene e lore)
+make run
+
+# Executar sem narrativa pós-boss (útil para demos rápidas)
+make run-no-lore
+
+# Executar sem lore e sem pausas de Enter
+make run ARGS="--skip-lore --skip-enter"
 
 # Executar todos os testes
 make test

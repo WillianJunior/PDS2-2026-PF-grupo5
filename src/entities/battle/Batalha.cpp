@@ -152,7 +152,7 @@ void Batalha::atualizarAcoesDisponiveis() {
 void Batalha::iniciarBatalha() {
     _turnoAtual       = 1;
     _progressoBatalha = 0;
-    _fatorDificuldade = std::round(_inimigo->getNivel() * 2.0) / 2.0;
+    _fatorDificuldade = _inimigo->getNivel() / 2.0;
     
     // Garante que o ND não seja menor que 0.125 (mínimo da tabela)
     if (_fatorDificuldade < 0.125)

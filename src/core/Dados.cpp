@@ -70,7 +70,7 @@ int Dados::rolar4d6() {
 std::vector<int> Dados::gerarAtributos() {
     std::vector<int> atributos;
     for (int i = 0; i < 4; i++)
-        atributos.push_back(rolar(6,11));
+        atributos.push_back(rolar4d6());
 
     // Ordena em ordem DECRESCENTE para distribuição por classe
     std::sort(atributos.begin(), atributos.end(), std::greater<int>());

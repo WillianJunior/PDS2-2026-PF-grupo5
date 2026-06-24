@@ -10,6 +10,7 @@
 
 #include "demo/Criacao.hpp"
 #include "demo/UI.hpp"
+#include "demo/ConfigExploracao.hpp"
 #include "core/rules/RegrasClassePersonagem.hpp"
 #include "utils/TipoArcanoEnum.hpp"
 
@@ -137,8 +138,9 @@ static std::string nomeArcano(int id)
 // Cutscene (Capitulo 1)
 // ─────────────────────────────────────────────────────────────────────────────
 
-static void mostrarCutscene()
+static void mostrarCutscene(const ConfigExploracao& cfg = {})
 {
+    if (cfg.skipEnter) return;
     limparTela();
     std::ifstream f("data/descricoes/capitulo1.txt");
     if (!f.is_open()) {
@@ -159,11 +161,12 @@ static void mostrarCutscene()
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
-// Tela de titulo com reveal do cranio
+// Tela de titulo
 // ─────────────────────────────────────────────────────────────────────────────
 
-static void mostrarTitulo(IView& view)
+static void mostrarTitulo(IView& view, const ConfigExploracao& cfg = {})
 {
+    if (cfg.skipEnter) return;
     limparTela();
     revelarAsciiHorario("data/arcanos/7.txt", 10);
     std::this_thread::sleep_for(std::chrono::milliseconds(600));
@@ -194,8 +197,9 @@ static void imprimirLinhaSave(int slot, const SaveData& s)
 }
 
 // Retorna 1-3 = slot carregado, 0 = novo jogo
-static int menuSaves(IView&)
+static int menuSaves(IView&, const ConfigExploracao& cfg = {})
 {
+    if (cfg.skipEnter) return 0; // testes: sempre nova jornada, sem stdin
     limparTela();
     std::cout << "\n";
     std::cout << "  +================================================+\n";
@@ -236,10 +240,11 @@ static Jogador construirJogador(const std::string& charName,
 // ─────────────────────────────────────────────────────────────────────────────
 
 static Jogador criarNovoPersonagem(IView& view, IController& ctrl,
-                                    int& cenaInicial, int& slotEscolhido)
+                                    int& cenaInicial, int& slotEscolhido,
+                                    const ConfigExploracao& cfg = {})
 {
     (void)view;
-    limparTela();
+    if (!cfg.skipEnter) limparTela();
 
     std::cout << "\n  Como voce se chama, aventureiro?\n  > " << std::flush;
     std::string playerName = ctrl.lerTexto();
@@ -249,9 +254,15 @@ static Jogador criarNovoPersonagem(IView& view, IController& ctrl,
     std::string charName = ctrl.lerTexto();
     if (charName.empty()) charName = playerName;
 
-    limparTela();
-    std::cout << "\n  Bem-vindo, " << playerName << ".\n";
-    std::vector<int> rolados = animarGeracaoAtributos();
+    if (!cfg.skipEnter) limparTela();
+    std::vector<int> rolados;
+    if (cfg.skipEnter) {
+        // Testes: atributos fixos sem animação nem sleep
+        rolados = {14, 12, 10, 8};
+    } else {
+        std::cout << "\n  Bem-vindo, " << playerName << ".\n";
+        rolados = animarGeracaoAtributos();
+    }
 
     // Tabela de distribuicao
     std::cout << "  Como os atributos ficam por classe:\n\n";
@@ -291,14 +302,19 @@ static Jogador criarNovoPersonagem(IView& view, IController& ctrl,
               << "  Agilidade: " << (int)attr[3]
               << "  Poder: " << (int)attr[2] << "\n\n";
 
-    std::cout << "  Confirmar? [s/n] " << std::flush;
-    std::string resp = ctrl.lerTexto();
-    if (!resp.empty() && (resp[0] == 'n' || resp[0] == 'N'))
-        return criarNovoPersonagem(view, ctrl, cenaInicial, slotEscolhido);
+    if (!cfg.skipEnter) {
+        std::cout << "  Confirmar? [s/n] " << std::flush;
+        std::string resp = ctrl.lerTexto();
+        if (!resp.empty() && (resp[0] == 'n' || resp[0] == 'N'))
+            return criarNovoPersonagem(view, ctrl, cenaInicial, slotEscolhido, cfg);
+    }
 
-    std::cout << "\n  Em qual slot deseja salvar? [1/2/3]\n  > " << std::flush;
-    int slot = ctrl.lerInteiro();
-    if (slot < 1 || slot > NUM_SLOTS) slot = 1;
+    int slot = 1;
+    if (!cfg.skipEnter) {
+        std::cout << "\n  Em qual slot deseja salvar? [1/2/3]\n  > " << std::flush;
+        slot = ctrl.lerInteiro();
+        if (slot < 1 || slot > NUM_SLOTS) slot = 1;
+    }
     slotEscolhido = slot;
 
     SaveData s;
@@ -312,11 +328,13 @@ static Jogador criarNovoPersonagem(IView& view, IController& ctrl,
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
-// Dialogo de abertura — Ruffen em Magisk
+// Dialogo de abertura: Ruffen em Magisk
 // ─────────────────────────────────────────────────────────────────────────────
 
-static void dialogoAberturaRuffen(const std::string& charName)
+static void dialogoAberturaRuffen(const std::string& charName,
+                                   const ConfigExploracao& cfg = {})
 {
+    if (cfg.skipEnter) return;
     limparTela();
     std::this_thread::sleep_for(std::chrono::milliseconds(300));
 
@@ -356,15 +374,20 @@ static void dialogoAberturaRuffen(const std::string& charName)
 
 Jogador criarPersonagem(IView& view, IController& ctrl, int& cenaInicial)
 {
-    mostrarCutscene();
-    mostrarTitulo(view);
-    limparTela();
+    return criarPersonagem(view, ctrl, cenaInicial, ConfigExploracao{});
+}
+
+Jogador criarPersonagem(IView& view, IController& ctrl, int& cenaInicial,
+                        const ConfigExploracao& cfg)
+{
+    mostrarCutscene(cfg);
+    mostrarTitulo(view, cfg);
+    if (!cfg.skipEnter) limparTela();
 
     int slotEscolhido = 0;
-    int slotCarregado = menuSaves(view);
+    int slotCarregado = menuSaves(view, cfg);
 
     if (slotCarregado > 0) {
-        // Carrega save
         SaveData s = lerSave(slotCarregado);
         TipoClasse classe = classesPorId[s.classeId - 1];
         std::array<double,4> attr = {s.atk, s.def, s.poder, s.agi};
@@ -377,9 +400,8 @@ Jogador criarPersonagem(IView& view, IController& ctrl, int& cenaInicial)
         return j;
     }
 
-    // Novo personagem
-    Jogador j = criarNovoPersonagem(view, ctrl, cenaInicial, slotEscolhido);
+    Jogador j = criarNovoPersonagem(view, ctrl, cenaInicial, slotEscolhido, cfg);
     if (cenaInicial == 1)
-        dialogoAberturaRuffen(j.getNome());
+        dialogoAberturaRuffen(j.getNome(), cfg);
     return j;
 }

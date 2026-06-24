@@ -12,6 +12,9 @@
 #include <unistd.h>
 
 #include "demo/UI.hpp"
+#include "entities/map/Cena.hpp"
+#include "entities/character/Jogador.hpp"
+#include "entities/items/Inventario.hpp"
 
 static int larguraTerminal()
 {
@@ -129,6 +132,75 @@ void revelarAsciiHorario(const std::string& caminho, int delayMs)
         }
     }
 }
+
+// ─────────────────────────────────────────────────────────────────────────────
+// Helpers de exploração
+// ─────────────────────────────────────────────────────────────────────────────
+
+void aguardarEnter(IView& view, IController& ctrl,
+                   const std::string& msg,
+                   const ConfigExploracao& cfg)
+{
+    if (cfg.skipEnter) return;
+    view.exibir(msg);
+    ctrl.lerTexto();
+}
+
+void exibirHeaderCena(IView& view, const Cena& cena)
+{
+    exibirAsciiArtArquivo(view,
+        "data/arcanos/" + std::to_string(cena.pegarId()) + ".txt");
+
+    std::string titulo =
+        "  Cena " + std::to_string(cena.pegarId()) +
+        "  ~*~  " + cena.pegarArcano() + "  ";
+    std::string borda = "+" + std::string(titulo.size(), '=') + "+";
+
+    exibirCentrado(view, borda);
+    exibirCentrado(view, "|" + titulo + "|");
+    exibirCentrado(view, borda);
+    view.exibir("");
+    exibirCentrado(view, cena.pegarDescricao());
+    view.exibir("");
+}
+
+void exibirRelatorio(IView& view, Jogador& jogador)
+{
+    view.exibirLinha();
+    view.exibir("=== Relatório de Validação ===");
+    view.exibir("Personagem  : " + jogador.getNome() +
+                " (" + jogador.getClasse().getNome() + ")");
+    view.exibir("Nível       : " + std::to_string(jogador.getNivel()) +
+                " | XP: " + std::to_string(static_cast<int>(jogador.getXp())));
+    view.exibir("HP          : " + std::to_string(static_cast<int>(jogador.getVidaAtual())) +
+                " / " + std::to_string(static_cast<int>(jogador.getVidaTotal())));
+
+    view.exibir("\n--- Inventário final ---");
+    int qtd = jogador.getInventario().quantidadeItens();
+    if (qtd == 0)
+        view.exibir("Inventário vazio.");
+    else
+        jogador.getInventario().listarItens(view);
+
+    view.exibirLinha();
+    view.exibir("Fim da demo c:");
+    view.exibirLinha();
+}
+
+void exibirDialogo(IView& view, const std::string& caminho)
+{
+    std::ifstream f(caminho);
+    if (!f.is_open()) return;
+    std::string linha;
+    while (std::getline(f, linha)) {
+        if (!linha.empty() && linha.back() == '\r') linha.pop_back();
+        view.exibir("  " + linha);
+    }
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// Animações
+// ─────────────────────────────────────────────────────────────────────────────
 
 std::vector<int> animarGeracaoAtributos()
 {

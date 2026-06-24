@@ -4,6 +4,16 @@
 #include <string>
 
 #include "demo/Exploracao.hpp"
+#include "demo/ConfigExploracao.hpp"
+
+// Todos os testes usam ConfigExploracao{skipLore=true, skipEnter=true} para evitar
+// leituras diretas de stdin/TTY em Criacao.cpp (cutscene, título, menu de saves,
+// confirmações e diálogos de animação).
+// Para testes de CondutorBatalha isolados, ver testeCondutorBatalha.cpp.
+
+static ConfigExploracao cfgTeste() {
+    return ConfigExploracao{true, true}; // skipLore=true, skipEnter=true
+}
 
 namespace {
 
@@ -69,46 +79,44 @@ static void pushAtaques(MockController& ctrl, int n) {
 TEST_CASE("executarExploracao - encerramento imediato Guerreiro") {
     ViewFake view;
     MockController ctrl;
-    ctrl.pushText("Alric"); ctrl.pushInt(1);
-    ctrl.pushText("");
+    ctrl.pushText("Alric"); ctrl.pushText("Alric"); ctrl.pushInt(1);
     ctrl.pushInt(5);
 
-    executarExploracao(view, ctrl);
+    executarExploracao(view, ctrl, cfgTeste());
 
-    CHECK(view.encontrou("Alric"));
+    // "Alric" é escrito em stdout (Criacao), não via IView
+    // verificamos que o loop iniciou (header de cena) e encerrou corretamente
+    CHECK(view.encontrou("O que deseja fazer"));
     CHECK(view.encontrou("Run encerrada"));
 }
 
 TEST_CASE("executarExploracao - encerramento imediato Mago") {
     ViewFake view;
     MockController ctrl;
-    ctrl.pushText("Elara"); ctrl.pushInt(2);
-    ctrl.pushText("");
+    ctrl.pushText("Elara"); ctrl.pushText("Elara"); ctrl.pushInt(2);
     ctrl.pushInt(5);
 
-    executarExploracao(view, ctrl);
+    executarExploracao(view, ctrl, cfgTeste());
     CHECK(view.encontrou("Run encerrada"));
 }
 
 TEST_CASE("executarExploracao - encerramento imediato Arqueiro") {
     ViewFake view;
     MockController ctrl;
-    ctrl.pushText("Rowan"); ctrl.pushInt(3);
-    ctrl.pushText("");
+    ctrl.pushText("Rowan"); ctrl.pushText("Rowan"); ctrl.pushInt(3);
     ctrl.pushInt(5);
 
-    executarExploracao(view, ctrl);
+    executarExploracao(view, ctrl, cfgTeste());
     CHECK(view.encontrou("Run encerrada"));
 }
 
 TEST_CASE("executarExploracao - encerramento imediato Tanque") {
     ViewFake view;
     MockController ctrl;
-    ctrl.pushText("Bjorn"); ctrl.pushInt(4);
-    ctrl.pushText("");
+    ctrl.pushText("Bjorn"); ctrl.pushText("Bjorn"); ctrl.pushInt(4);
     ctrl.pushInt(5);
 
-    executarExploracao(view, ctrl);
+    executarExploracao(view, ctrl, cfgTeste());
     CHECK(view.encontrou("Run encerrada"));
 }
 
@@ -124,32 +132,26 @@ TEST_CASE("executarExploracao - todas as opções do loop (trecho 101)") {
     ViewFake view;
     MockController ctrl;
 
-    ctrl.pushText("Alric"); ctrl.pushInt(1);
-    ctrl.pushText("");
+    ctrl.pushText("Alric"); ctrl.pushText("Alric"); ctrl.pushInt(1);
 
     // Trecho 101 - loop principal
     ctrl.pushInt(99);       // inválido (default)
 
     ctrl.pushInt(1);        // vasculhar (tem item)
     ctrl.pushText("s");
-    ctrl.pushText("");      // enter
 
     ctrl.pushInt(1);        // vasculhar (sem itens restantes)
-    ctrl.pushText("");
 
     ctrl.pushInt(2);        // interagirNpc (npcId=1)
-    ctrl.pushText("");
 
     ctrl.pushInt(3);        // inventário (item presente, usar idx=0)
     ctrl.pushInt(0);
-    ctrl.pushText("");
 
     ctrl.pushInt(3);        // inventário (vazio)
-    ctrl.pushText("");
 
     ctrl.pushInt(5);        // Encerrar
 
-    executarExploracao(view, ctrl);
+    executarExploracao(view, ctrl, cfgTeste());
 
     CHECK(view.encontrou("Opção inválida"));
     CHECK(view.encontrou("adicionado ao inventário"));
@@ -167,27 +169,23 @@ TEST_CASE("executarExploracao - descarte de item e caminhos de inventário") {
     ViewFake view;
     MockController ctrl;
 
-    ctrl.pushText("Lyra"); ctrl.pushInt(3); // Arqueiro
-    ctrl.pushText("");
+    ctrl.pushText("Lyra"); ctrl.pushText("Lyra"); ctrl.pushInt(3); // Arqueiro
 
     // Vasculhar -> toma item (para testar inventário com item)
-    ctrl.pushInt(1); ctrl.pushText("s"); ctrl.pushText("");
+    ctrl.pushInt(1); ctrl.pushText("s");
 
     // Inventário -> idx inválido (5 >= qtd=1)
-    ctrl.pushInt(3); ctrl.pushInt(5); ctrl.pushText("");
+    ctrl.pushInt(3); ctrl.pushInt(5);
 
     // Inventário -> fechar (idx=-1)
-    ctrl.pushInt(3); ctrl.pushInt(-1); ctrl.pushText("");
+    ctrl.pushInt(3); ctrl.pushInt(-1);
 
     // Vasculhar de novo (sem itens, pois item foi tomado)
-    ctrl.pushInt(1); ctrl.pushText("");
+    ctrl.pushInt(1);
 
-    // Descarta o próximo item usando um trecho diferente não é viável;
-    // cobrimos 'n' tentando novamente após recarregar (impossível neste trecho).
-    // Usa opção 5 para encerrar.
     ctrl.pushInt(5);
 
-    executarExploracao(view, ctrl);
+    executarExploracao(view, ctrl, cfgTeste());
 
     CHECK(view.encontrou("adicionado ao inventário"));
     CHECK(view.encontrou("Índice inválido"));
@@ -200,13 +198,12 @@ TEST_CASE("executarExploracao - vasculhar e descartar ('n')") {
     ViewFake view;
     MockController ctrl;
 
-    ctrl.pushText("Nara"); ctrl.pushInt(4); // Tanque
-    ctrl.pushText("");
+    ctrl.pushText("Nara"); ctrl.pushText("Nara"); ctrl.pushInt(4); // Tanque
 
-    ctrl.pushInt(1); ctrl.pushText("n"); ctrl.pushText(""); // descartar
+    ctrl.pushInt(1); ctrl.pushText("n"); // descartar
     ctrl.pushInt(5); // Encerrar
 
-    executarExploracao(view, ctrl);
+    executarExploracao(view, ctrl, cfgTeste());
 
     CHECK(view.encontrou("Você deixou o item para trás"));
     CHECK(view.encontrou("Run encerrada"));
@@ -224,14 +221,13 @@ TEST_CASE("executarExploracao - batalha com AtaqueSimples") {
     ViewFake view;
     MockController ctrl;
 
-    ctrl.pushText("Brann"); ctrl.pushInt(4); // Tanque (mais HP)
-    ctrl.pushText("");
+    ctrl.pushText("Brann"); ctrl.pushText("Brann"); ctrl.pushInt(4); // Tanque (mais HP)
 
     ctrl.pushInt(4);          // avançar -> trecho 102 (inimigo!)
     pushAtaques(ctrl, 20);    // AtaqueSimples até acabar a batalha
     ctrl.pushInt(5);          // Encerrar se sobreviver
 
-    executarExploracao(view, ctrl);
+    executarExploracao(view, ctrl, cfgTeste());
 
     // A batalha foi iniciada (verificarCombate encontrou inimigo)
     CHECK(view.encontrou("Um inimigo apareceu"));
@@ -242,8 +238,7 @@ TEST_CASE("executarExploracao - batalha com opção inválida depois AtaqueSimpl
     ViewFake view;
     MockController ctrl;
 
-    ctrl.pushText("Gorak"); ctrl.pushInt(4); // Tanque
-    ctrl.pushText("");
+    ctrl.pushText("Gorak"); ctrl.pushText("Gorak"); ctrl.pushInt(4); // Tanque
 
     ctrl.pushInt(4);       // avançar -> trecho 102 (inimigo!)
 
@@ -251,7 +246,7 @@ TEST_CASE("executarExploracao - batalha com opção inválida depois AtaqueSimpl
     pushAtaques(ctrl, 20); // resolve batalha
     ctrl.pushInt(5);       // Encerrar se sobreviver
 
-    executarExploracao(view, ctrl);
+    executarExploracao(view, ctrl, cfgTeste());
 
     CHECK(view.encontrou("Um inimigo apareceu"));
     CHECK(view.encontrou("Opção inválida"));
@@ -261,8 +256,7 @@ TEST_CASE("executarExploracao - batalha: UsarItem vazio") {
     ViewFake view;
     MockController ctrl;
 
-    ctrl.pushText("Vex"); ctrl.pushInt(4); // Tanque
-    ctrl.pushText("");
+    ctrl.pushText("Vex"); ctrl.pushText("Vex"); ctrl.pushInt(4); // Tanque
 
     ctrl.pushInt(4);        // avançar -> trecho 102 (inimigo, sem itens no inv)
 
@@ -270,7 +264,7 @@ TEST_CASE("executarExploracao - batalha: UsarItem vazio") {
     pushAtaques(ctrl, 20);  // resolve batalha
     ctrl.pushInt(5);
 
-    executarExploracao(view, ctrl);
+    executarExploracao(view, ctrl, cfgTeste());
 
     CHECK(view.encontrou("Um inimigo apareceu"));
     CHECK(view.encontrou("Inventário vazio! Escolha outra ação"));
@@ -280,11 +274,10 @@ TEST_CASE("executarExploracao - batalha: UsarItem cancelar e usar") {
     ViewFake view;
     MockController ctrl;
 
-    ctrl.pushText("Bjorn"); ctrl.pushInt(4); // Tanque
-    ctrl.pushText("");
+    ctrl.pushText("Bjorn"); ctrl.pushText("Bjorn"); ctrl.pushInt(4); // Tanque
 
     // Pega item no trecho 101
-    ctrl.pushInt(1); ctrl.pushText("s"); ctrl.pushText("");
+    ctrl.pushInt(1); ctrl.pushText("s");
 
     ctrl.pushInt(4);        // avançar -> trecho 102 (inimigo! tem item no inv)
 
@@ -295,7 +288,7 @@ TEST_CASE("executarExploracao - batalha: UsarItem cancelar e usar") {
     pushAtaques(ctrl, 20);  // resolve batalha (inimigo contra-ataca após item)
     ctrl.pushInt(5);
 
-    executarExploracao(view, ctrl);
+    executarExploracao(view, ctrl, cfgTeste());
 
     CHECK(view.encontrou("Um inimigo apareceu"));
     // Cancelado OU item usado deve ter aparecido
@@ -307,8 +300,7 @@ TEST_CASE("executarExploracao - batalha: ações Defesa e Esquiva") {
     ViewFake view;
     MockController ctrl;
 
-    ctrl.pushText("Gorak"); ctrl.pushInt(4); // Tanque
-    ctrl.pushText("");
+    ctrl.pushText("Gorak"); ctrl.pushText("Gorak"); ctrl.pushInt(4); // Tanque
 
     ctrl.pushInt(4); // avançar -> trecho 102 (inimigo!)
 
@@ -318,7 +310,7 @@ TEST_CASE("executarExploracao - batalha: ações Defesa e Esquiva") {
     pushAtaques(ctrl, 20);
     ctrl.pushInt(5); // Encerrar
 
-    executarExploracao(view, ctrl);
+    executarExploracao(view, ctrl, cfgTeste());
 
     CHECK(view.encontrou("Um inimigo apareceu"));
     // Chegou ao menos ao ponto de ler a ação - sem exceção
@@ -329,8 +321,7 @@ TEST_CASE("executarExploracao - batalha: AtaqueRapido e AtaqueForte") {
     ViewFake view;
     MockController ctrl;
 
-    ctrl.pushText("Lyra"); ctrl.pushInt(3); // Arqueiro (tem PP)
-    ctrl.pushText("");
+    ctrl.pushText("Lyra"); ctrl.pushText("Lyra"); ctrl.pushInt(3); // Arqueiro (tem PP)
 
     ctrl.pushInt(4); // avançar -> trecho 102
 
@@ -339,7 +330,70 @@ TEST_CASE("executarExploracao - batalha: AtaqueRapido e AtaqueForte") {
     pushAtaques(ctrl, 20);
     ctrl.pushInt(5);
 
-    executarExploracao(view, ctrl);
+    executarExploracao(view, ctrl, cfgTeste());
+
+    CHECK(view.encontrou("Um inimigo apareceu"));
+    CHECK(true);
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// Novos testes — cobertura adicional
+// ─────────────────────────────────────────────────────────────────────────────
+
+TEST_CASE("executarExploracao - múltiplas opções inválidas consecutivas no loop") {
+    ViewFake view;
+    MockController ctrl;
+
+    ctrl.pushText("Kira"); ctrl.pushText("Kira"); ctrl.pushInt(1); // Guerreiro
+
+    ctrl.pushInt(0);    // inválido
+    ctrl.pushInt(-1);   // inválido
+    ctrl.pushInt(99);   // inválido
+    ctrl.pushInt(6);    // inválido (fora do intervalo 1-5)
+    ctrl.pushInt(5);    // Encerrar
+
+    executarExploracao(view, ctrl, cfgTeste());
+
+    int count = 0;
+    for (const auto& l : view.linhas)
+        if (l.find("Opção inválida") != std::string::npos) count++;
+    CHECK(count >= 3);
+    CHECK(view.encontrou("Run encerrada"));
+}
+
+TEST_CASE("executarExploracao - batalha: Guerreiro usa AtaqueRapido e AtaqueForte") {
+    ViewFake view;
+    MockController ctrl;
+
+    ctrl.pushText("Thane"); ctrl.pushText("Thane"); ctrl.pushInt(1); // Guerreiro
+
+    ctrl.pushInt(4); // avançar -> trecho 102 (inimigo!)
+
+    ctrl.pushInt(2); // AtaqueRapido
+    ctrl.pushInt(3); // AtaqueForte
+    pushAtaques(ctrl, 20);
+    ctrl.pushInt(5);
+
+    executarExploracao(view, ctrl, cfgTeste());
+
+    CHECK(view.encontrou("Um inimigo apareceu"));
+    CHECK(true);
+}
+
+TEST_CASE("executarExploracao - batalha: Mago usa AtaqueRapido e AtaqueForte") {
+    ViewFake view;
+    MockController ctrl;
+
+    ctrl.pushText("Sora"); ctrl.pushText("Sora"); ctrl.pushInt(2); // Mago
+
+    ctrl.pushInt(4); // avançar -> trecho 102 (inimigo!)
+
+    ctrl.pushInt(2); // AtaqueRapido
+    ctrl.pushInt(3); // AtaqueForte
+    pushAtaques(ctrl, 20);
+    ctrl.pushInt(5);
+
+    executarExploracao(view, ctrl, cfgTeste());
 
     CHECK(view.encontrou("Um inimigo apareceu"));
     CHECK(true);

@@ -13,6 +13,7 @@
 #include "entities/items/Inventario.hpp"
 #include "entities/character/Personagem.hpp"
 #include "core/rules/RegrasItem.hpp"
+#include "utils/IView.hpp"
 
 // Construtor e destrutor
 Inventario::Inventario() : _inicio(nullptr), _quantidade(0) {}
@@ -90,12 +91,26 @@ bool Inventario::estaCheio() const { return _quantidade >= _capacidadeMax; }
 int Inventario::quantidadeItens() const { return _quantidade; }
 
 // Listagem e interface
+
+// Utilizado pela demo simples. Talvez possa ser removido
 void Inventario::listarItens() const {
     No* atual = _inicio.get();
     int i = 0;
     while (atual != nullptr) {
         std::cout << i << ": " << atual->_item->pegarNome()
                   << " — " << atual->_item->pegarDescricao() << "\n";
+        atual = atual->_proximo.get();
+        i++;
+    }
+}
+
+// Polimorfismo para demo exploração 
+void Inventario::listarItens(IView& view) const {
+    No* atual = _inicio.get();
+    int i = 0;
+    while (atual != nullptr) {
+        view.exibir(std::to_string(i) + ": " + atual->_item->pegarNome()
+                    + " — " + atual->_item->pegarDescricao());
         atual = atual->_proximo.get();
         i++;
     }

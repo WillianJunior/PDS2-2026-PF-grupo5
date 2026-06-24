@@ -24,4 +24,8 @@ docs/doxygen/latex/
 *.gcda
 *.gcno
 exec_tests
+exec_tests.log
 docs/coverage/
+
+# Saves
+data/saves/

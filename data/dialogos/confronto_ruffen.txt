@@ -1,0 +1,7 @@
+[ Templo das Sombras -- apos a queda de Nyriel ]
+
+Uma figura bloqueia o caminho para o santuario de Sonath. Ruffen.
+
+RUFFEN: "O principe foi convencido por mim.
+         Eu precisava que alguem reunisse os arcanos."
+RUFFEN: "Agora voce os tem. E eu precisarei deles."

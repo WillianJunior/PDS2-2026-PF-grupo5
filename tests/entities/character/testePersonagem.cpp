@@ -43,7 +43,7 @@ TEST_CASE("Construtor de Personagem")  {
     CHECK(p.getAtaque() == 17);
     CHECK(p.getDefesa() == 20);
     CHECK(p.getVidaAtual() == 100);
-    CHECK(p.getManaAtual() == 50);
+    CHECK(p.getManaAtual() == 90);
     CHECK(p.getAgilidade() == 20);
     CHECK(p.getClasse().getTipo() == TipoClasse::Guerreiro);
     CHECK(p.getTipo() == TipoPersonagem::Jogador);

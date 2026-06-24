@@ -35,9 +35,16 @@ $(BUILD)/%.o: $(SRC)/%.cpp
 	@mkdir -p $(dir $@)
 	$(CXX) $(CXXFLAGS) $(ALL_INCLUDES) -c $< -o $@
 
+# Variável para argumentos extras (ex: make run ARGS="--skip-lore --skip-enter")
+ARGS ?=
+
 # Comando para executar o programa
 run: all
-	@./$(TARGET)
+	@./$(TARGET) $(ARGS)
+
+# Atalho para rodar sem lore (útil para demos rápidas e apresentações)
+run-no-lore: all
+	@./$(TARGET) --skip-lore
 
 # Compilação dos testes com flags de cobertura
 compile_tests:
@@ -74,4 +81,4 @@ test_coverage: coverage
 clean:
 	rm -rf $(BUILD) $(BIN) exec_tests *.gcda *.gcno docs/coverage
 
-.PHONY: all run compile_tests test coverage test_coverage clean
+.PHONY: all run run-no-lore compile_tests test coverage test_coverage clean
