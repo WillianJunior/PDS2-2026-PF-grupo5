@@ -195,7 +195,11 @@ public:
      */
     void pularTurno();
 
-    bool verificarManaSuficiente(TipoAtaque tipo);
+    /**
+     * @brief Verifica se o jogador possui mana suficiente para performar o ataque.
+     * @return true se o jogador possui mana suficiente.
+     */
+    bool temManaSuficiente(TipoAtaque tipo);
 
     // Getters
     int getTurno() const { return _turnoAtual; }

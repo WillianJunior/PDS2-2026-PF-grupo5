@@ -131,7 +131,7 @@ ResultadoBatalha CondutorBatalha::executar()
         }
         else if (acao == AcaoBatalha::AtaqueRapido) 
         {
-            if(batalha.verificarManaSuficiente(TipoAtaque::Rapido)) {
+            if(batalha.temManaSuficiente(TipoAtaque::Rapido)) {
                 batalha.realizarAcao(acao);
             }
             else
@@ -139,7 +139,7 @@ ResultadoBatalha CondutorBatalha::executar()
         }
         else if (acao == AcaoBatalha::AtaqueForte) 
         {
-            if(batalha.verificarManaSuficiente(TipoAtaque::Forte)) {
+            if(batalha.temManaSuficiente(TipoAtaque::Forte)) {
                 batalha.realizarAcao(acao);
             }
             else

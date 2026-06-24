@@ -573,6 +573,6 @@ void Batalha::pularTurno() {
     atualizarAcoesDisponiveis();
 }
 
-bool Batalha::verificarManaSuficiente(TipoAtaque tipo) {
+bool Batalha::temManaSuficiente(TipoAtaque tipo) {
     return _player->getManaAtual() >= _player->getClasse().getAtaque(tipo).custoPP ;
 }
