@@ -140,7 +140,7 @@ static std::string nomeArcano(int id)
 
 static void mostrarCutscene(const ConfigExploracao& cfg = {})
 {
-    if (cfg.skipEnter) return;
+    if (cfg.skipLore) return;
     limparTela();
     std::ifstream f("data/descricoes/capitulo1.txt");
     if (!f.is_open()) {
