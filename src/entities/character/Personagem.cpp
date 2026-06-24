@@ -52,7 +52,7 @@ Personagem::Personagem(
         throw std::invalid_argument("Nivel deve ser positivo.");
     
     if(_tipo == TipoPersonagem::Jogador) {
-        _vidaTotal = 100;
+        _vidaTotal += 80;
         _vidaAtual = _vidaTotal;
         _ppTotal += 40;
         _ppAtual = _ppTotal;
