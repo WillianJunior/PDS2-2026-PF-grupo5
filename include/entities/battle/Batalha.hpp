@@ -195,6 +195,8 @@ public:
      */
     void pularTurno();
 
+    bool verificarManaSuficiente(TipoAtaque tipo);
+
     // Getters
     int getTurno() const { return _turnoAtual; }
     double getFatorDificuldade() const { return _fatorDificuldade; }

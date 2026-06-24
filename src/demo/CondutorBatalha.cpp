@@ -16,13 +16,15 @@ CondutorBatalha::CondutorBatalha(IView& view, IController& ctrl,
       _cfg(cfg)
 {}
 
-std::string CondutorBatalha::_labelAcao(AcaoBatalha acao)
-{
+std::string CondutorBatalha::_labelAcao(AcaoBatalha acao, Jogador& jogador)
+{    
+    int manaAtaqueRapido = jogador.getClasse().getAtaque(TipoAtaque::Rapido).custoPP;
+    int manaAtaqueForte = jogador.getClasse().getAtaque(TipoAtaque::Forte).custoPP;
     switch (acao)
     {
     case AcaoBatalha::AtaqueSimples: return "Ataque Simples";
-    case AcaoBatalha::AtaqueRapido:  return "Ataque Rápido  (custa PP)";
-    case AcaoBatalha::AtaqueForte:   return "Ataque Forte   (custa PP)";
+    case AcaoBatalha::AtaqueRapido:  return "Ataque Rápido  (custa: "   + std::to_string(manaAtaqueRapido) +   " de PP)";
+    case AcaoBatalha::AtaqueForte:   return "Ataque Forte   (custa: "   + std::to_string(manaAtaqueForte)  +   " de PP)";
     case AcaoBatalha::Defesa:        return "Defender";
     case AcaoBatalha::Esquiva:       return "Esquivar";
     case AcaoBatalha::UsarItem:      return "Usar Item";
@@ -81,7 +83,7 @@ ResultadoBatalha CondutorBatalha::executar()
 
         _view.exibir("O que deseja fazer?");
         for (int i = 0; i < static_cast<int>(acoes.size()); ++i)
-            _view.exibir("  [" + std::to_string(i + 1) + "] " + _labelAcao(acoes[i]));
+            _view.exibir("  [" + std::to_string(i + 1) + "] " + _labelAcao(acoes[i], _jogador));
 
         int escolha = _ctrl.lerInteiro();
         if (escolha < 1 || escolha > static_cast<int>(acoes.size()))
@@ -121,20 +123,32 @@ ResultadoBatalha CondutorBatalha::executar()
             _jogador.usarItem(idxItem);
             _view.exibir("Item usado!");
             batalha.realizarAcao(AcaoBatalha::UsarItem);
-            if (_inimigo.estaVivo())
-                batalha.processarAtaqueInimigo();
         }
         else if (acao == AcaoBatalha::Defesa || acao == AcaoBatalha::Esquiva)
         {
-            // Contra-ataque do inimigo já embutido em realizarAcao para essas ações
+            // Contra-ataque do inimigo já embutido em realizarAcao
             batalha.realizarAcao(acao);
+        }
+        else if (acao == AcaoBatalha::AtaqueRapido) 
+        {
+            if(batalha.verificarManaSuficiente(TipoAtaque::Rapido)) {
+                batalha.realizarAcao(acao);
+            }
+            else
+                _view.exibir("Mana insuficiente.");
+        }
+        else if (acao == AcaoBatalha::AtaqueForte) 
+        {
+            if(batalha.verificarManaSuficiente(TipoAtaque::Forte)) {
+                batalha.realizarAcao(acao);
+            }
+            else
+                _view.exibir("Mana insuficiente.");
         }
         else
         {
-            // Ataque Simples / Rápido / Forte: player ataca; inimigo contra-ataca depois
+            // Ataque Simples
             batalha.realizarAcao(acao);
-            if (_inimigo.estaVivo())
-                batalha.processarAtaqueInimigo();
         }
 
         for (const auto& msg : batalha.getLog())

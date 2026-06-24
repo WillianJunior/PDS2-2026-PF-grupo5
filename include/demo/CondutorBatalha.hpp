@@ -63,7 +63,7 @@ private:
     Cena&            _cena;
     ConfigExploracao _cfg;
 
-    static std::string _labelAcao(AcaoBatalha acao);
+    static std::string _labelAcao(AcaoBatalha acao, Jogador& jogador);
 };
 
 #endif
