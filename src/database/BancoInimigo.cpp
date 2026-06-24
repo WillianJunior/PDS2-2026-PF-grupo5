@@ -99,7 +99,7 @@ Personagem BancoInimigo::obterInimigo(int id)
             "Pela gloria de Mantuu!",
             14.0,  // ataque
             12.0,  // defesa
-            25.0,  // vidaTotal
+            30.0,  // vidaTotal
             20.0,  // ppTotal
             2.0,  // agilidade
             TipoClasse::Guerreiro,
@@ -127,7 +127,7 @@ Personagem BancoInimigo::obterInimigo(int id)
             "Voce deveria ter recuado quando teve a chance.",
             16.0,  // ataque
             17.0,  // defesa
-            24.0,  // vidaTotal
+            50.0,  // vidaTotal
             30.0,  // ppTotal
             2.0,  // agilidade
             TipoClasse::Tanque,
@@ -141,7 +141,7 @@ Personagem BancoInimigo::obterInimigo(int id)
             "Glaron dividiu-se para criar o equilibrio. Eu sou o que restou quando a ordem e o caos se encontraram.",
             19.0,  // ataque
             15.0,  // defesa
-            30.0, // vidaTotal
+            70.0, // vidaTotal
             65.0,  // ppTotal
             2.0,  // agilidade
             TipoClasse::Guerreiro,
@@ -159,7 +159,7 @@ Personagem BancoInimigo::obterInimigo(int id)
             "Seus bolsos ou sua vida. Na verdade... os dois.",
             15.0,  // ataque
             10.0,  // defesa
-            30.0,  // vidaTotal
+            50.0,  // vidaTotal
             25.0,  // ppTotal
             1.0,  // agilidade
             TipoClasse::Guerreiro,
@@ -173,7 +173,7 @@ Personagem BancoInimigo::obterInimigo(int id)
             "Nao e pessoal. E negocio.",
             15.0,  // ataque
             9.0,   // defesa
-            26.0,  // vidaTotal
+            70.0,  // vidaTotal
             35.0,  // ppTotal
             1.0,  // agilidade — muito alto
             TipoClasse::Arqueiro,
@@ -187,7 +187,7 @@ Personagem BancoInimigo::obterInimigo(int id)
             "Paguei caro por essas garras. Voce vai pagar mais caro ainda.",
             19.0,  // ataque
             13.0,  // defesa
-            1.0,  // vidaTotal
+            75.0,  // vidaTotal
             40.0,  // ppTotal
             1.0,  // agilidade
             TipoClasse::Guerreiro,
@@ -201,7 +201,7 @@ Personagem BancoInimigo::obterInimigo(int id)
             "O caos nao e desordem. E liberdade. E voce vai entender isso enquanto se despedaca.",
             21.0,  // ataque
             15.0,  // defesa
-            50.0, // vidaTotal
+            90.0, // vidaTotal
             85.0,  // ppTotal
             1.0,  // agilidade
             TipoClasse::Mago,
@@ -219,7 +219,7 @@ Personagem BancoInimigo::obterInimigo(int id)
             "O que voce ve? Apenas o que eu quero que veja.",
             15.0,  // ataque
             9.0,   // defesa
-            32.0,  // vidaTotal
+            76.0,  // vidaTotal
             90.0,  // ppTotal
             1.0,  // agilidade
             TipoClasse::Mago,
@@ -233,7 +233,7 @@ Personagem BancoInimigo::obterInimigo(int id)
             "A magia de Azuth e ordem absoluta. Fique quieto.",
             17.0,  // ataque
             11.0,  // defesa
-            28.0,  // vidaTotal
+            87.0,  // vidaTotal
             100.0, // ppTotal
             1.0,  // agilidade
             TipoClasse::Mago,
@@ -247,7 +247,7 @@ Personagem BancoInimigo::obterInimigo(int id)
             "Ousadia nao substitui conhecimento. E voce nao tem nenhum dos dois.",
             20.0,  // ataque
             12.0,  // defesa
-            47.0,  // vidaTotal
+            94.0,  // vidaTotal
             115.0, // ppTotal
             1.0,  // agilidade
             TipoClasse::Mago,
@@ -261,7 +261,7 @@ Personagem BancoInimigo::obterInimigo(int id)
             "Zenabu sobreviveu as Guerras Arcanas porque compreendemos algo que o norte jamais compreendeu: conhecimento e arma. E eu tenho muito mais que voce.",
             21.0,  // ataque
             13.0,  // defesa
-            70.0, // vidaTotal
+            100.0, // vidaTotal
             130.0, // ppTotal
             1.0,  // agilidade
             TipoClasse::Mago,
@@ -279,7 +279,7 @@ Personagem BancoInimigo::obterInimigo(int id)
             "A escuridao e meu lar. E sera seu tumulo.",
             19.0,  // ataque
             15.0,  // defesa
-            23.0,  // vidaTotal
+            87.0,  // vidaTotal
             40.0,  // ppTotal
             1.0,  // agilidade
             TipoClasse::Guerreiro,
@@ -293,7 +293,7 @@ Personagem BancoInimigo::obterInimigo(int id)
             "GUILDA DO MARTELO NAO RECUA!",
             22.0,  // ataque
             17.0,  // defesa
-            41.0, // vidaTotal
+            89.0, // vidaTotal
             30.0,  // ppTotal
             1.0,   // agilidade — lento
             TipoClasse::Guerreiro,
@@ -307,7 +307,7 @@ Personagem BancoInimigo::obterInimigo(int id)
             "A morte nao e o fim. E apenas o inicio do meu exercito.",
             15.0,  // ataque
             11.0,  // defesa
-            40.0,  // vidaTotal
+            90.0,  // vidaTotal
             110.0, // ppTotal
             1.0,  // agilidade
             TipoClasse::Mago,
@@ -321,7 +321,7 @@ Personagem BancoInimigo::obterInimigo(int id)
             "A vida e o dom mais precioso e o mais desperdicado. Venho lembrando isso ha seculos.",
             19.0,  // ataque
             15.0,  // defesa
-            25.0, // vidaTotal — muito alta (arcano da Vida)
+            130.0, // vidaTotal — muito alta (arcano da Vida)
             110.0, // ppTotal
             1.0,  // agilidade
             TipoClasse::Arqueiro,
@@ -339,7 +339,7 @@ Personagem BancoInimigo::obterInimigo(int id)
             "Desta vez, nos nao fugimos.",
             19.0,  // ataque
             17.0,  // defesa
-            25.0, // vidaTotal
+            98.0, // vidaTotal
             30.0,  // ppTotal
             1.0,  // agilidade
             TipoClasse::Guerreiro,
@@ -353,7 +353,7 @@ Personagem BancoInimigo::obterInimigo(int id)
             "...",
             21.0,  // ataque
             19.0,  // defesa
-            21.0, // vidaTotal
+            90.0, // vidaTotal
             55.0,  // ppTotal
             1.0,  // agilidade
             TipoClasse::Tanque,
@@ -367,7 +367,7 @@ Personagem BancoInimigo::obterInimigo(int id)
             "URRHHH...",
             24.0,  // ataque
             15.0,  // defesa
-            43.0, // vidaTotal
+            100.0, // vidaTotal
             10.0,  // ppTotal
             1.0,   // agilidade — muito lento
             TipoClasse::Tanque,
@@ -381,7 +381,7 @@ Personagem BancoInimigo::obterInimigo(int id)
             "Eldath e a paz que antecede e sucede toda tempestade. Voce passou pela tempestade. Agora enfrente a paz — que pode ser mais implacavel.",
             19.0,  // ataque
             17.0,  // defesa
-            32.0, // vidaTotal
+            150.0, // vidaTotal
             125.0, // ppTotal
             1.0,  // agilidade — alta
             TipoClasse::Mago,
@@ -401,7 +401,7 @@ Personagem BancoInimigo::obterInimigo(int id)
             "Ruffen me traiu. Os deuses me abandonaram. Mas Ao... Ao me deu uma missao. E eu a cumprirei com ou sem voce no caminho.",
             26.0,  // ataque
             19.0,  // defesa
-            100.0, // vidaTotal — boss final
+            169.0, // vidaTotal — boss final
             150.0, // ppTotal
             1.0,  // agilidade
             TipoClasse::Guerreiro,
