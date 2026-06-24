@@ -2,6 +2,8 @@
 #include "demo/UI.hpp"
 #include "demo/ConfigExploracao.hpp"
 #include "entities/character/Jogador.hpp"
+#include "entities/map/Cena.hpp"
+#include "database/BancoCena.hpp"
 
 #include <fstream>
 #include <sstream>
@@ -160,4 +162,70 @@ TEST_CASE("UI - exibirDialogo exibe linhas do arquivo com recuo de dois espaços
     CHECK(saida.find("  Segunda linha")  != std::string::npos);
 
     std::remove("dialogo_test_ui.txt");
+}
+
+// ─── limparTela ──────────────────────────────────────────────────────────────
+
+TEST_CASE("UI - limparTela não lança exceção") {
+    CHECK_NOTHROW(limparTela());
+}
+
+// ─── digitarAnimado ──────────────────────────────────────────────────────────
+
+TEST_CASE("UI - digitarAnimado string vazia não lança") {
+    CHECK_NOTHROW(digitarAnimado("", 0));
+}
+
+TEST_CASE("UI - digitarAnimado com um caractere não lança") {
+    CHECK_NOTHROW(digitarAnimado("x", 0));
+}
+
+// ─── revelarAsciiHorario ─────────────────────────────────────────────────────
+
+TEST_CASE("UI - revelarAsciiHorario arquivo vazio retorna sem crash") {
+    std::ofstream f("test_rev_vazio_ui.txt");
+    f.close();
+    CHECK_NOTHROW(revelarAsciiHorario("test_rev_vazio_ui.txt", 0));
+    std::remove("test_rev_vazio_ui.txt");
+}
+
+TEST_CASE("UI - revelarAsciiHorario conteúdo só espaços cobre branch pos.empty()") {
+    std::ofstream f("test_rev_sp_ui.txt");
+    f << "   \n   \n";
+    f.close();
+    CHECK_NOTHROW(revelarAsciiHorario("test_rev_sp_ui.txt", 0));
+    std::remove("test_rev_sp_ui.txt");
+}
+
+TEST_CASE("UI - revelarAsciiHorario com conteúdo real executa animação sem delay") {
+    std::ofstream f("test_rev_real_ui.txt");
+    f << "AB\n";
+    f.close();
+    CHECK_NOTHROW(revelarAsciiHorario("test_rev_real_ui.txt", 0));
+    std::remove("test_rev_real_ui.txt");
+}
+
+// ─── exibirHeaderCena ────────────────────────────────────────────────────────
+
+TEST_CASE("UI - exibirHeaderCena exibe título e descrição da cena") {
+    ViewFake view;
+    Jogador j("Hero", "", "", 10.0, 10.0, 100.0, 30.0, 10.0,
+              TipoClasse::Guerreiro, TipoPersonagem::Jogador);
+    InfoCena info = BancoCena::obterCena(1);
+    Cena cena(info, j);
+
+    exibirHeaderCena(view, cena);
+
+    CHECK(view.buffer.str().find("Cena 1") != std::string::npos);
+}
+
+// ─── animarGeracaoAtributos ──────────────────────────────────────────────────
+
+TEST_CASE("UI - animarGeracaoAtributos retorna 4 valores em [3,18]") {
+    auto v = animarGeracaoAtributos();
+    CHECK(v.size() == 4);
+    for (int x : v) {
+        CHECK(x >= 3);
+        CHECK(x <= 18);
+    }
 }

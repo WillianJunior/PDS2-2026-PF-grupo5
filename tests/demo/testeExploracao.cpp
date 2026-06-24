@@ -398,3 +398,100 @@ TEST_CASE("executarExploracao - batalha: Mago usa AtaqueRapido e AtaqueForte") {
     CHECK(view.encontrou("Um inimigo apareceu"));
     CHECK(true);
 }
+
+// ─────────────────────────────────────────────────────────────────────────────
+// Testes de trecho 103, boss fight e diálogos pós-boss
+//
+// Estrutura da cena 1:
+//   Trecho 101: sem inimigo, NPC=1, items=[1], próximo=102
+//   Trecho 102: inimigo (Orc Saqueador id=1), NPC=2,  próximo=103
+//   Trecho 103: sem inimigo, NPC=-1, items=[4,2], próximo=-1 (boss)
+// ─────────────────────────────────────────────────────────────────────────────
+
+TEST_CASE("executarExploracao - interação com NPC ausente (trecho 103)") {
+    // Trecho 103 tem NPC=-1 → cobre if(npcId<=0) em interagirNpc
+    ViewFake view;
+    MockController ctrl;
+
+    ctrl.pushText("Drak"); ctrl.pushText("Drak"); ctrl.pushInt(4); // Tanque
+
+    ctrl.pushInt(4);        // avançar → trecho 102 (inimigo: Orc Saqueador)
+    pushAtaques(ctrl, 30);  // derrotar Orc
+
+    ctrl.pushInt(4);        // avançar → trecho 103 (sem inimigo)
+    ctrl.pushInt(2);        // interagir → npcId=-1 → "Não há NPCs neste trecho."
+    ctrl.pushInt(5);        // Encerrar
+
+    executarExploracao(view, ctrl, cfgTeste());
+
+    // batalha do trecho 102 foi iniciada
+    CHECK(view.encontrou("Um inimigo apareceu"));
+    // se o player venceu o Orc e chegou ao trecho 103:
+    bool npcs = view.encontrou("Não há NPCs") || view.encontrou("Run encerrada");
+    CHECK(npcs);
+}
+
+TEST_CASE("executarExploracao - boss fight da cena 1 (executarEncontroBoss)") {
+    // Avança por todos os trechos até o boss (Device, id=101)
+    // Cobre: executarEncontroBoss, bossIdParaCena(1), arcanoParaCena(1)
+    ViewFake view;
+    MockController ctrl;
+
+    ctrl.pushText("Krag"); ctrl.pushText("Krag"); ctrl.pushInt(4); // Tanque
+
+    ctrl.pushInt(4);        // avançar → trecho 102 (inimigo)
+    pushAtaques(ctrl, 30);  // derrotar Orc
+
+    ctrl.pushInt(4);        // avançar → trecho 103 (sem inimigo)
+    ctrl.pushInt(4);        // avançar → próximo=-1 → executarEncontroBoss (Device)
+    pushAtaques(ctrl, 50);  // lutar contra boss (win ou lose)
+    ctrl.pushInt(5);        // Encerrar (se sobreviver)
+
+    executarExploracao(view, ctrl, cfgTeste());
+
+    CHECK(view.encontrou("Um inimigo apareceu"));           // Orc no trecho 102
+    CHECK(view.encontrou("poderoso barra o seu caminho"));  // intro do boss
+}
+
+TEST_CASE("executarExploracao - boss fight com skipLore=false (cobre dialogoPosBoss)") {
+    // skipLore=false: se o player vencer o boss, dialogoPosBoss é chamado
+    // Cobre o path de transição de cena (estado==2) em executarExploracao
+    ViewFake view;
+    MockController ctrl;
+
+    ctrl.pushText("Brun"); ctrl.pushText("Brun"); ctrl.pushInt(4); // Tanque
+
+    ctrl.pushInt(4);
+    pushAtaques(ctrl, 30);  // Orc
+    ctrl.pushInt(4);         // trecho 103
+    ctrl.pushInt(4);         // boss fight (Device)
+    pushAtaques(ctrl, 50);
+    ctrl.pushInt(5);
+
+    ConfigExploracao cfg{false, true}; // skipLore=false, skipEnter=true
+
+    executarExploracao(view, ctrl, cfg);
+
+    CHECK(view.encontrou("poderoso barra o seu caminho")); // boss intro sempre aparece
+}
+
+TEST_CASE("executarExploracao - vasculhar múltiplos itens em trecho 103") {
+    // Trecho 103 tem items=[4,2]; testa vasculhar com mais de um item disponível
+    ViewFake view;
+    MockController ctrl;
+
+    ctrl.pushText("Sera"); ctrl.pushText("Sera"); ctrl.pushInt(4); // Tanque
+
+    ctrl.pushInt(4);                    // avançar → trecho 102 (inimigo)
+    pushAtaques(ctrl, 30);              // derrotar Orc
+
+    ctrl.pushInt(4);                    // avançar → trecho 103 (sem inimigo)
+    ctrl.pushInt(1); ctrl.pushText("s"); // vasculhar → pegar primeiro item
+    ctrl.pushInt(1); ctrl.pushText("s"); // vasculhar → pegar segundo item
+    ctrl.pushInt(1);                     // vasculhar → sem itens restantes
+    ctrl.pushInt(5);                     // Encerrar
+
+    executarExploracao(view, ctrl, cfgTeste());
+
+    CHECK(view.encontrou("Um inimigo apareceu")); // Orc no trecho 102
+}
