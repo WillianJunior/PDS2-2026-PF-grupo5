@@ -152,7 +152,8 @@ void Batalha::atualizarAcoesDisponiveis() {
 void Batalha::iniciarBatalha() {
     _turnoAtual       = 1;
     _progressoBatalha = 0;
-    _fatorDificuldade = _inimigo->getNivel() / 2.0;
+    double ndCalculado = _inimigo->getNivel() / 2.0;
+    _fatorDificuldade = RegrasBatalha::ajustarNDValido(ndCalculado);
     
     // Garante que o ND não seja menor que 0.125 (mínimo da tabela)
     if (_fatorDificuldade < 0.125)
@@ -293,12 +294,12 @@ void Batalha::realizarAcao(AcaoBatalha acao) {
         break;
 
     // ── Usar Item ─────────────────────────────────────────────────────────
-    case AcaoBatalha::UsarItem:
-        // Delegado ao Controller/View — Batalha apenas libera a ação.
-        // Já processa o ataque do inimigo.
-        if (_inimigo->estaVivo())
-            processarAtaqueInimigo();
+    case AcaoBatalha::UsarItem: {
+        Condicao atordoado = {TipoCondicao::Atordoado, "Atordoado", 2};
+        aplicarCondicao(atordoado, true);
+        processarCondicoesAtivas();
         break;
+    }
 
     // ── Fugir ─────────────────────────────────────────────────────────────
     case AcaoBatalha::Fugir:
@@ -324,20 +325,34 @@ void Batalha::processarDefesa() {
     double ataqueInimigo = calcularVariabilidade(_inimigo->getAtaque());
     double fator = RegrasBatalha::ProcessarDefesa(_player->getDefesa(), ataqueInimigo);
     double danoRecebido  = ataqueInimigo * fator;
-
-    if (danoRecebido > 0)
+    double ganhoPP = 0;
+    if (danoRecebido > 0) {
         _player->receberDano(danoRecebido);
+        ganhoPP = danoRecebido - _dados.rolar(2,6);
+    }
+    else {
+        ganhoPP = ataqueInimigo;
+    }
+
+    if(ganhoPP < 0) ganhoPP = 0;     
+    
+    _player->recuperarMana(ganhoPP);
 
     const std::string& nome = _inimigo->getNome();
     if (fator == 0.0) {
-        _registrar(nome + " atacou — bloqueio total! Nenhum dano recebido.");
+        _registrar(nome + " atacou — bloqueio total! Nenhum dano recebido. Você recupera "
+                   + std::to_string(static_cast<int>(ganhoPP)) + " de PP.");
     } else if (fator <= 0.75) {
         _registrar(nome + " atacou! Defesa reduziu o dano para "
-                   + std::to_string(static_cast<int>(danoRecebido)) + ".");
+                   + std::to_string(static_cast<int>(danoRecebido)) + ". Você recupera "
+                    + std::to_string(static_cast<int>(ganhoPP)) + " de PP.");
     } else {
         _registrar(nome + " atacou com força total! Você recebeu "
-                   + std::to_string(static_cast<int>(danoRecebido)) + " de dano.");
+                   + std::to_string(static_cast<int>(danoRecebido)) + " de dano. Você recupera " 
+                    + std::to_string(static_cast<int>(ganhoPP)) + " de PP.");
     }
+
+    processarCondicoesAtivas();
 }
 
 /**
@@ -353,20 +368,25 @@ void Batalha::processarEsquiva() {
     double agiComBonus   = _player->getAgilidade() + static_cast<double>(bonus);
     double fator         = RegrasBatalha::ProcessarEsquiva(agiComBonus, ataqueInimigo);
     double danoRecebido  = ataqueInimigo * fator;
+    Condicao paralisado = {TipoCondicao::Paralisado, "Paralisado", 3};
 
     if (danoRecebido > 0)
         _player->receberDano(danoRecebido);
 
     const std::string& nome = _inimigo->getNome();
     if (fator == 0.0) {
-        _registrar(nome + " atacou — esquiva perfeita! Nenhum dano recebido.");
+        _registrar(nome + " atacou! Esquiva perfeita! Nenhum dano recebido.");
+        aplicarCondicao(paralisado, false);
     } else if (fator <= 0.5) {
         _registrar(nome + " atacou! Esquiva parcial — você recebeu "
                    + std::to_string(static_cast<int>(danoRecebido)) + " de dano.");
+        _inimigo->aplicarCondicao(paralisado);
     } else {
         _registrar(nome + " atacou! Esquiva falhou — você recebeu "
                    + std::to_string(static_cast<int>(danoRecebido)) + " de dano.");
     }
+
+    processarCondicoesAtivas();
 }
 
 /**
@@ -498,12 +518,9 @@ void Batalha::processarCondicoesAtivas() {
                 default: break;
             }
 
-            // Sem duração limitada → permanente nesta cena
-            if (c.duracaoTurnos <= 0) continue;
-
             c.duracaoTurnos--;
 
-            if (c.duracaoTurnos == 0) {
+            if (c.duracaoTurnos <= 0) {
                 // Reverte ModAtributo em Personagem
                 const auto& conds = pers->getCondicoesAtivas();
                 for (int j = 0; j < static_cast<int>(conds.size()); ++j) {
@@ -555,9 +572,18 @@ bool Batalha::verificarFuga() {
  * Usado pela camada demo após ações ofensivas (o inimigo sempre contra-ataca).
  */
 void Batalha::processarAtaqueInimigo() {
+    for (const auto& c : _inimigo->getCondicoesAtivas()) {
+        if (c.tipo == TipoCondicao::Paralisado) {
+            _registrar(_inimigo->getNome() + " está paralisado e não pode reagir!");
+            processarCondicoesAtivas();
+            return;
+        }
+    }
+
     double dano = calcularVariabilidade(_inimigo->getAtaque());
     if (dano > 0)
         _player->receberDano(dano);
+
     _registrar(_inimigo->getNome() + " atacou e causou "
                + std::to_string(static_cast<int>(dano)) + " de dano em você!");
 }
