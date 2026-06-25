@@ -164,3 +164,19 @@ double RegrasBatalha::ProcessarEsquiva(double agiPlayer, double ataqueInimigo) {
 
     return 0.5;      // Empate → 50% do dano
 }
+
+double RegrasBatalha::ajustarNDValido(double nd) {
+    if (nd < 0.1875) return 0.125;
+    if (nd < 0.375)  return 0.25;
+    if (nd < 0.75)   return 0.5;
+    if (nd < 1.5)    return 1.0;
+    if (nd < 2.5)    return 2.0;
+    if (nd < 3.5)    return 3.0;
+    if (nd < 4.5)    return 4.0;
+    if (nd < 5.5)    return 5.0;
+    if (nd < 6.5)    return 6.0;
+    if (nd < 7.5)    return 7.0;
+    if (nd < 8.5)    return 8.0;
+    if (nd < 9.5)    return 9.0;
+    return 10.0;
+}

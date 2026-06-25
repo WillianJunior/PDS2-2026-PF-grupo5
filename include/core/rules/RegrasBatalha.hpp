@@ -113,6 +113,13 @@ public:
     static double getXPporND(double ndInimigo);
 
     /**
+     * @brief Ajusta o ND para garantir que esteja dentro dos limites válidos.
+     * @param nd O ND a ser ajustado.
+     * @return ND válido ajustado.
+     */
+    static double ajustarNDValido(double nd);
+
+    /**
      * @brief Retorna um limiar de dificuldade para um nível e categoria.
      * @param nivel            Nível do jogador (1 a 10).
      * @param indiceDificuldade 0=Fácil | 1=Médio | 2=Difícil | 3=Boss.
