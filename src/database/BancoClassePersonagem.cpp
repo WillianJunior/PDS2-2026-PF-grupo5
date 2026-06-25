@@ -62,7 +62,7 @@ std::array<Ataque,3> BancoClassePersonagem::defineAtaques(TipoClasse tipo) {
                     {
                         TipoCondicao::ModAtributo,
                         "Enfraquecido",
-                        0,
+                        1,
                         20,
                         Atributo::Defesa,
                     },
@@ -96,7 +96,7 @@ std::array<Ataque,3> BancoClassePersonagem::defineAtaques(TipoClasse tipo) {
                     {
                         TipoCondicao::ModAtributo,
                         "Enfraquecido",
-                        1,
+                        2,
                         1,
                         Atributo::Agilidade,
                     },
@@ -130,7 +130,7 @@ std::array<Ataque,3> BancoClassePersonagem::defineAtaques(TipoClasse tipo) {
                     {
                         TipoCondicao::CemPorcentoAcerto,
                         "Vulnerável",
-                        0,
+                        1,
                         0,
                         Atributo::Nenhum,
                     },
@@ -164,7 +164,7 @@ std::array<Ataque,3> BancoClassePersonagem::defineAtaques(TipoClasse tipo) {
                     {
                         TipoCondicao::Paralisado,
                         "Paralisado",
-                        1,
+                        2,
                         0,
                         Atributo::Nenhum,
                     },
@@ -196,7 +196,7 @@ std::array<Ataque, 4> BancoClassePersonagem::getAtaquesFortesPossiveis(TipoClass
                     {
                         TipoCondicao::ModAtributo,
                         "Enfraquecido",
-                        2,
+                        3,
                         2,
                         Atributo::Agilidade,
                     },
@@ -216,7 +216,7 @@ std::array<Ataque, 4> BancoClassePersonagem::getAtaquesFortesPossiveis(TipoClass
                     {
                         TipoCondicao::CemPorcentoAcerto,
                         "Vulnerável",
-                        0,
+                        1,
                         0,
                         Atributo::Nenhum,
                     },
@@ -245,7 +245,7 @@ std::array<Ataque, 4> BancoClassePersonagem::getAtaquesFortesPossiveis(TipoClass
                     {
                         TipoCondicao::CemPorcentoAcerto,
                         "Vulnerável",
-                        0,
+                        1,
                         0,
                         Atributo::Nenhum,
                     },
@@ -267,7 +267,7 @@ std::array<Ataque, 4> BancoClassePersonagem::getAtaquesFortesPossiveis(TipoClass
                     {
                         TipoCondicao::Berserk,
                         "Fúria Berserker",
-                        2,
+                        3,
                         1,
                         Atributo::Nenhum,
                     },
@@ -288,7 +288,7 @@ std::array<Ataque, 4> BancoClassePersonagem::getAtaquesFortesPossiveis(TipoClass
                     {
                         TipoCondicao::ModAtributo,
                         "Enfraquecido",
-                        2,
+                        3,
                         2,
                         Atributo::Agilidade,
                     },
@@ -308,7 +308,7 @@ std::array<Ataque, 4> BancoClassePersonagem::getAtaquesFortesPossiveis(TipoClass
                     {
                         TipoCondicao::ModAtributo,
                         "Exposto",
-                        0,
+                        1,
                         1000,
                         Atributo::Defesa,
                     },
@@ -348,7 +348,7 @@ std::array<Ataque, 4> BancoClassePersonagem::getAtaquesFortesPossiveis(TipoClass
                     {
                         TipoCondicao::Paralisado,
                         "Paralisado",
-                        1,
+                        2,
                         0,
                         Atributo::Nenhum,
                     },
@@ -377,7 +377,7 @@ std::array<Ataque, 4> BancoClassePersonagem::getAtaquesFortesPossiveis(TipoClass
                     {
                         TipoCondicao::ModAtributo,
                         "Exposto",
-                        0,
+                        1,
                         1000,
                         Atributo::Defesa,
                     },
@@ -399,7 +399,7 @@ std::array<Ataque, 4> BancoClassePersonagem::getAtaquesFortesPossiveis(TipoClass
                     {
                         TipoCondicao::Atordoado,
                         "Atordoado",
-                        1,
+                        2,
                         0,
                         Atributo::Nenhum,
                     },
@@ -419,7 +419,7 @@ std::array<Ataque, 4> BancoClassePersonagem::getAtaquesFortesPossiveis(TipoClass
                     {
                         TipoCondicao::ModAtributo,
                         "Enfraquecido",
-                        3,
+                        4,
                         3,
                         Atributo::Defesa,
                     },
@@ -439,7 +439,7 @@ std::array<Ataque, 4> BancoClassePersonagem::getAtaquesFortesPossiveis(TipoClass
                     {
                         TipoCondicao::ModAtributo,
                         "Postura Defensiva",
-                        1,
+                        2,
                         3,
                         Atributo::Defesa,
                     },
