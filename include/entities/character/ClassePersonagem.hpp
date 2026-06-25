@@ -111,12 +111,6 @@ public:
     const Ataque& getAtaque(TipoAtaque tipo) const;
 
     /**
-     *  @return  Devolve um Efeito de um Ataque.
-     *  @param tipo O tipo do Ataque para devolver o Efeito. 
-    */
-    const Condicao& getEfeitoAtaque(TipoAtaque tipo) const;
-
-    /**
      * @brief Altera o Ataque forte.
      * @param nivel O nivel atual do Personagem.
      */
