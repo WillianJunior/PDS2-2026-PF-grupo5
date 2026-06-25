@@ -20,12 +20,38 @@
 | `make test_coverage` | Executa `make test` e `make coverage` em sequência, exibindo a porcentagem de testes passados e gerando o relatório HTML de cobertura |
 | `make clean` | Remove os diretórios `build/` e `bin/`, o binário `exec_tests` e os arquivos de cobertura (`.gcda`, `.gcno`, `docs/coverage/`) |
 
+### Como Compilar e Testar
+
+```bash
+# Compilar o projeto
+make
+
+# Executar o jogo completo (com cutscene e lore)
+make run
+
+# Executar sem narrativa pós-boss (útil para demos rápidas)
+make run-no-lore
+
+# Executar sem lore e sem pausas de Enter
+make run ARGS="--skip-lore --skip-enter"
+
+# Executar todos os testes
+make test
+
+# Gerar relatório de cobertura (requer gcovr)
+make test_coverage
+
+# Limpar artefatos de build
+make clean
+```
+
 ---
 
 ## Sumário
 
 - [The Dark Age - The Arcanum Quest](#the-dark-age---the-arcanum-quest)
   - [Comandos do Makefile](#comandos-do-makefile)
+    - [Como Compilar e Testar](#como-compilar-e-testar)
   - [Sumário](#sumário)
   - [Integrantes do Grupo](#integrantes-do-grupo)
   - [Descrição do Projeto](#descrição-do-projeto)
@@ -38,7 +64,6 @@
     - [Arcanos (Poderes dos Deuses)](#arcanos-poderes-dos-deuses)
     - [Sistema de Batalha](#sistema-de-batalha)
     - [Inimigos](#inimigos)
-  - [Como Compilar e Testar](#como-compilar-e-testar)
   - [Estrutura de Diretórios](#estrutura-de-diretórios)
   - [Licença](#licença)
 
@@ -130,33 +155,6 @@ Batalhas são por turnos - age primeiro quem tem maior **agilidade**. Em cada tu
 | V | Skyprout | Livies | 9-10 |
 | VI | Retorno Magisk | Nyriel | 9-10 |
 | Final | - | Sonath | 10 |
-
----
-
-## Como Compilar e Testar
-
-```bash
-# Compilar o projeto
-make
-
-# Executar o jogo completo (com cutscene e lore)
-make run
-
-# Executar sem narrativa pós-boss (útil para demos rápidas)
-make run-no-lore
-
-# Executar sem lore e sem pausas de Enter
-make run ARGS="--skip-lore --skip-enter"
-
-# Executar todos os testes
-make test
-
-# Gerar relatório de cobertura (requer gcovr)
-make test_coverage
-
-# Limpar artefatos de build
-make clean
-```
 
 ---
 

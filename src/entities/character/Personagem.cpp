@@ -50,10 +50,8 @@ Personagem::Personagem(
         throw std::invalid_argument("Agilidade nao pode ser negativa.");
     if (nivel <= 0)
         throw std::invalid_argument("Nivel deve ser positivo.");
-    
-    if(_tipo == TipoPersonagem::Jogador) {
-        _vidaTotal += 80;
-        _vidaAtual = _vidaTotal;
+
+    if (_tipo == TipoPersonagem::Jogador) {
         _ppTotal += 40;
         _ppAtual = _ppTotal;
     }

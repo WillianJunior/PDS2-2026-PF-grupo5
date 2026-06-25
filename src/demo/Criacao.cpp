@@ -230,7 +230,7 @@ static Jogador construirJogador(const std::string& charName,
                                  TipoClasse classe,
                                  const std::array<double,4>& attr)
 {
-    double vida = RegrasClassePersonagem::calcularVidaInicial(classe, attr[1]);
+    double vida = RegrasClassePersonagem::calcularVidaInicial(classe, attr[1]) + 80;
     return Jogador(charName, "", "", attr[0], attr[1], vida, attr[2], attr[3],
                    classe, TipoPersonagem::Jogador);
 }
@@ -334,7 +334,7 @@ static Jogador criarNovoPersonagem(IView& view, IController& ctrl,
 static void dialogoAberturaRuffen(const std::string& charName,
                                    const ConfigExploracao& cfg = {})
 {
-    if (cfg.skipEnter) return;
+    if (cfg.skipLore) return;
     limparTela();
     std::this_thread::sleep_for(std::chrono::milliseconds(300));
 

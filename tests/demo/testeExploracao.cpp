@@ -453,9 +453,7 @@ TEST_CASE("executarExploracao - boss fight da cena 1 (executarEncontroBoss)") {
     CHECK(view.encontrou("poderoso barra o seu caminho"));  // intro do boss
 }
 
-TEST_CASE("executarExploracao - boss fight com skipLore=false (cobre dialogoPosBoss)") {
-    // skipLore=false: se o player vencer o boss, dialogoPosBoss é chamado
-    // Cobre o path de transição de cena (estado==2) em executarExploracao
+TEST_CASE("executarExploracao - boss fight cobre path de transição de cena (estado==2)") {
     ViewFake view;
     MockController ctrl;
 
@@ -468,9 +466,7 @@ TEST_CASE("executarExploracao - boss fight com skipLore=false (cobre dialogoPosB
     pushAtaques(ctrl, 50);
     ctrl.pushInt(5);
 
-    ConfigExploracao cfg{false, true}; // skipLore=false, skipEnter=true
-
-    executarExploracao(view, ctrl, cfg);
+    executarExploracao(view, ctrl, cfgTeste());
 
     CHECK(view.encontrou("poderoso barra o seu caminho")); // boss intro sempre aparece
 }
