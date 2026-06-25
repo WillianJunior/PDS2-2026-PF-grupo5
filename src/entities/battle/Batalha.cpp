@@ -338,6 +338,16 @@ void Batalha::processarDefesa() {
     
     _player->recuperarMana(ganhoPP);
 
+
+    for (const auto& c : _inimigo->getCondicoesAtivas()) {
+        if (c.tipo == TipoCondicao::Paralisado) {
+            _registrar(_inimigo->getNome() + " está paralisado e não pode reagir! Você recupera "
+                + std::to_string(static_cast<int>(ganhoPP)) + " de PP.");
+            processarCondicoesAtivas();
+            return;
+        }
+    }
+    
     const std::string& nome = _inimigo->getNome();
     if (fator == 0.0) {
         _registrar(nome + " atacou — bloqueio total! Nenhum dano recebido. Você recupera "
@@ -372,6 +382,14 @@ void Batalha::processarEsquiva() {
 
     if (danoRecebido > 0)
         _player->receberDano(danoRecebido);
+
+    for (const auto& c : _inimigo->getCondicoesAtivas()) {
+        if (c.tipo == TipoCondicao::Paralisado) {
+            _registrar(_inimigo->getNome() + " está paralisado e não pode reagir!");
+            processarCondicoesAtivas();
+            return;
+        }
+    }
 
     const std::string& nome = _inimigo->getNome();
     if (fator == 0.0) {
