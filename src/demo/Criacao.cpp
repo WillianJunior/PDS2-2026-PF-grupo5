@@ -2,6 +2,8 @@
 #include <chrono>
 #include <filesystem>
 #include <fstream>
+#include <sys/ioctl.h>
+#include <unistd.h>
 #include <iostream>
 #include <sstream>
 #include <string>
@@ -9,7 +11,11 @@
 #include <vector>
 
 #include "demo/Criacao.hpp"
+#include "entities/character/ClassePersonagem.hpp"
 #include "demo/UI.hpp"
+#include "database/BancoDadosAtaque.hpp"
+#include "database/BancoClassePersonagem.hpp"
+#include "core/rules/RegrasClassePersonagem.hpp"
 #include "demo/ConfigExploracao.hpp"
 #include "core/rules/RegrasClassePersonagem.hpp"
 #include "utils/TipoArcanoEnum.hpp"
@@ -92,6 +98,19 @@ static void gravarSave(int slot, const SaveData& s)
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
+// Helpers utilitarios
+// ─────────────────────────────────────────────────────────────────────────────
+
+static bool anySaveExists()
+{
+    for (int i = 1; i <= NUM_SLOTS; i++) {
+        SaveData s = lerSave(i);
+        if (s.existe) return true;
+    }
+    return false;
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
 // Helpers de nome
 // ─────────────────────────────────────────────────────────────────────────────
 
@@ -138,23 +157,61 @@ static std::string nomeArcano(int id)
 // Cutscene (Capitulo 1)
 // ─────────────────────────────────────────────────────────────────────────────
 
+// Conta codepoints UTF-8 como largura visual (box-drawing = 1 coluna cada)
+static int larguraVisual(const std::string& s) {
+    int w = 0;
+    for (size_t i = 0; i < s.size(); ) {
+        unsigned char c = s[i];
+        if      (c < 0x80)              { w++; i += 1; }
+        else if ((c & 0xE0) == 0xC0)    { w++; i += 2; }
+        else if ((c & 0xF0) == 0xE0)    { w++; i += 3; }
+        else                            { w++; i += 4; }
+    }
+    return w;
+}
+
+static int larguraTerminalCriacao() {
+    struct winsize ws;
+    if (ioctl(STDOUT_FILENO, TIOCGWINSZ, &ws) == 0 && ws.ws_col > 0)
+        return (int)ws.ws_col;
+    return 80;
+}
+
 static void mostrarCutscene(const ConfigExploracao& cfg = {})
 {
     if (cfg.skipLore) return;
     limparTela();
     std::ifstream f("data/descricoes/capitulo1.txt");
     if (!f.is_open()) {
-        digitarAnimado("\n  Antes do tempo, havia apenas o vazio...\n\n", 10);
+        digitarAnimado("\n  Antes do tempo, havia apenas o vazio...\n\n", 20);
         pressioneQualquerTecla();
         return;
     }
+
+    int termW = larguraTerminalCriacao();
     std::string linha;
     while (std::getline(f, linha)) {
         if (!linha.empty() && linha.back() == '\r') linha.pop_back();
-        bool isSep = (linha.find("==") != std::string::npos ||
-                      linha.find("Capitulo") != std::string::npos);
-        digitarAnimado(linha + "\n", isSep ? 5 : 12);
-        if (linha.empty())
+
+        // Remove padding baked-in e recentra dinamicamente
+        size_t primeiro = linha.find_first_not_of(' ');
+        std::string stripped = (primeiro != std::string::npos)
+                               ? linha.substr(primeiro) : "";
+
+        int vis = larguraVisual(stripped);
+        int pad = (vis > 0) ? std::max(0, (termW - vis) / 2) : 0;
+        std::string centrado = std::string(pad, ' ') + stripped;
+
+        bool isBox = (stripped.find("\xE2\x95\x94") != std::string::npos ||
+                      stripped.find("\xE2\x95\x9A") != std::string::npos ||
+                      stripped.find("\xE2\x95\x9D") != std::string::npos ||
+                      stripped.find("\xE2\x95\x91") != std::string::npos);
+        bool isSep = (stripped.find("C a p") != std::string::npos ||
+                      stripped.find("Capitulo") != std::string::npos);
+        int delay = isBox ? 3 : (isSep ? 10 : 50);
+
+        digitarAnimado(centrado + "\n", delay);
+        if (stripped.empty())
             std::this_thread::sleep_for(std::chrono::milliseconds(300));
     }
     pressioneQualquerTecla();
@@ -168,8 +225,8 @@ static void mostrarTitulo(IView& view, const ConfigExploracao& cfg = {})
 {
     if (cfg.skipEnter) return;
     limparTela();
-    revelarAsciiHorario("data/arcanos/7.txt", 10);
-    std::this_thread::sleep_for(std::chrono::milliseconds(600));
+    revelarAsciiHorario("data/arcanos/7.txt", 20);
+    std::this_thread::sleep_for(std::chrono::milliseconds(1200));
     exibirAsciiArtArquivo(view, "data/titulo.txt");
     pressioneQualquerTecla();
 }
@@ -236,6 +293,48 @@ static Jogador construirJogador(const std::string& charName,
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
+// Descrição de ataques por classe
+// ─────────────────────────────────────────────────────────────────────────────
+
+static std::string formulaAtaque(const DadosAtaque& d)
+{
+    std::string coef;
+    switch (d.atributoCoef) {
+        case AtributoCoef::Ataque:    coef = "+ATK"; break;
+        case AtributoCoef::Defesa:    coef = "+DEF"; break;
+        case AtributoCoef::Agilidade: coef = "+AGI"; break;
+    }
+    if (d.dadosPorNivel)
+        return "Nvx d" + std::to_string(d.faces) + coef;
+    if (d.numeroDeExecucoes > 1)
+        return std::to_string(d.quantidadeDados) + "d" + std::to_string(d.faces)
+             + coef + " x" + std::to_string(d.numeroDeExecucoes);
+    return std::to_string(d.quantidadeDados) + "d" + std::to_string(d.faces) + coef;
+}
+
+static void exibirAtaquesClasse(int classeIdx)
+{
+    TipoClasse tc = classesPorId[classeIdx];
+    auto ataques = BancoClassePersonagem::defineAtaques(tc);
+    static const char* tipoLabel[] = {"Simples","Rapido ","Forte  "};
+    std::cout << "  ┌─────────────────────────────────────────────────────┐\n";
+    std::cout << "  │  " << nomesClasses[classeIdx] << " — Ataques\n";
+    for (int i = 0; i < 3; i++) {
+        const Ataque& a = ataques[i];
+        const DadosAtaque& d = BancoDadosAtaque::getDadosAtaque(a.id);
+        std::cout << "  │  [" << tipoLabel[i] << "]  "
+                  << "\033[1m" << a.nome << "\033[0m"
+                  << "  " << formulaAtaque(d);
+        if (a.custoPP > 0)
+            std::cout << "  (PP:" << (int)a.custoPP << ")";
+        if (!a.descricao.empty())
+            std::cout << "\n  │          " << a.descricao;
+        std::cout << "\n";
+    }
+    std::cout << "  └─────────────────────────────────────────────────────┘\n\n";
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
 // Criacao de novo personagem
 // ─────────────────────────────────────────────────────────────────────────────
 
@@ -264,25 +363,31 @@ static Jogador criarNovoPersonagem(IView& view, IController& ctrl,
         rolados = animarGeracaoAtributos();
     }
 
-    // Tabela de distribuicao
-    std::cout << "  Como os atributos ficam por classe:\n\n";
-    std::cout << "  +-----------+--------+--------+-----------+-------+\n";
-    std::cout << "  | Classe    | Ataque | Defesa | Agilidade | Poder |\n";
-    std::cout << "  +-----------+--------+--------+-----------+-------+\n";
-    for (int i = 0; i < 4; i++) {
-        auto a = RegrasClassePersonagem::distribuirAtributos(classesPorId[i], rolados);
-        std::cout << "  | " << nomesClasses[i];
-        for (int p = (int)std::string(nomesClasses[i]).size(); p < 9; p++) std::cout << ' ';
-        auto col = [](int v, int w) {
-            std::string s = std::to_string(v);
-            return s + std::string(w - (int)s.size(), ' ');
-        };
-        std::cout << " | " << col((int)a[0], 6)
-                  << " | " << col((int)a[1], 6)
-                  << " | " << col((int)a[3], 9)
-                  << " | " << col((int)a[2], 5) << " |\n";
+    // Mostrar descrição de ataques de cada classe
+    if (!cfg.skipEnter) {
+        for (int i = 0; i < 4; i++) exibirAtaquesClasse(i);
+        std::cout << "  (Pressione Enter para escolher...)\n";
+        std::string dummy; std::getline(std::cin, dummy);
+        limparTela();
+        std::cout << "  Como os atributos ficam por classe (seus rolados):\n\n";
+        std::cout << "  +-----------+--------+--------+-----------+-------+\n";
+        std::cout << "  | Classe    | Ataque | Defesa | Agilidade | Poder |\n";
+        std::cout << "  +-----------+--------+--------+-----------+-------+\n";
+        for (int i = 0; i < 4; i++) {
+            auto a = RegrasClassePersonagem::distribuirAtributos(classesPorId[i], rolados);
+            std::cout << "  | " << nomesClasses[i];
+            for (int p = (int)std::string(nomesClasses[i]).size(); p < 9; p++) std::cout << ' ';
+            auto col = [](int v, int w) {
+                std::string s = std::to_string(v);
+                return s + std::string(w - (int)s.size(), ' ');
+            };
+            std::cout << " | " << col((int)a[0], 6)
+                      << " | " << col((int)a[1], 6)
+                      << " | " << col((int)a[3], 9)
+                      << " | " << col((int)a[2], 5) << " |\n";
+        }
+        std::cout << "  +-----------+--------+--------+-----------+-------+\n\n";
     }
-    std::cout << "  +-----------+--------+--------+-----------+-------+\n\n";
 
     int opcao = 0;
     while (true) {
@@ -380,7 +485,16 @@ Jogador criarPersonagem(IView& view, IController& ctrl, int& cenaInicial)
 Jogador criarPersonagem(IView& view, IController& ctrl, int& cenaInicial,
                         const ConfigExploracao& cfg)
 {
-    mostrarCutscene(cfg);
+    // Se houver save, perguntar se quer pular a intro
+    ConfigExploracao cfgComLore = cfg;
+    if (!cfg.skipLore && !cfg.skipEnter && anySaveExists()) {
+        limparTela();
+        std::cout << "\n  Jornada anterior detectada. Pular intro? [s/n] " << std::flush;
+        std::string resp; std::getline(std::cin, resp);
+        if (!resp.empty() && (resp[0] == 's' || resp[0] == 'S'))
+            cfgComLore.skipLore = true;
+    }
+    mostrarCutscene(cfgComLore);
     mostrarTitulo(view, cfg);
     if (!cfg.skipEnter) limparTela();
 
@@ -400,8 +514,9 @@ Jogador criarPersonagem(IView& view, IController& ctrl, int& cenaInicial,
         return j;
     }
 
-    Jogador j = criarNovoPersonagem(view, ctrl, cenaInicial, slotEscolhido, cfg);
+    // Novo personagem
+    Jogador j = criarNovoPersonagem(view, ctrl, cenaInicial, slotEscolhido);
     if (cenaInicial == 1)
-        dialogoAberturaRuffen(j.getNome(), cfg);
+        dialogoAberturaRuffen(j.getNome());
     return j;
 }

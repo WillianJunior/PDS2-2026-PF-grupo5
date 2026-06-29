@@ -7,6 +7,7 @@
 #include <thread>
 #include <vector>
 
+#include <poll.h>
 #include <sys/ioctl.h>
 #include <termios.h>
 #include <unistd.h>
@@ -16,6 +17,11 @@
 #include "entities/character/Jogador.hpp"
 #include "entities/items/Inventario.hpp"
 
+// ── Skip mode global ──────────────────────────────────────────────────────────
+bool g_skipMode = false;
+void resetarModoSkip() { g_skipMode = false; }
+
+// ── Helpers internos ──────────────────────────────────────────────────────────
 static int larguraTerminal()
 {
     struct winsize ws;
@@ -24,6 +30,21 @@ static int larguraTerminal()
     return 80;
 }
 
+static void setRaw(struct termios& oldt)
+{
+    struct termios newt;
+    tcgetattr(STDIN_FILENO, &oldt);
+    newt = oldt;
+    newt.c_lflag &= ~(ICANON | ECHO);
+    tcsetattr(STDIN_FILENO, TCSANOW, &newt);
+}
+
+static void restoreTerminal(const struct termios& oldt)
+{
+    tcsetattr(STDIN_FILENO, TCSANOW, &oldt);
+}
+
+// ── Exibição básica ───────────────────────────────────────────────────────────
 void exibirCentrado(IView& view, const std::string& texto)
 {
     int pad = std::max(0, (larguraTerminal() - (int)texto.size()) / 2);
@@ -52,27 +73,46 @@ void limparTela()
     std::cout << "\033[2J\033[H" << std::flush;
 }
 
+// ── digitarAnimado com spacebar skip ─────────────────────────────────────────
 void digitarAnimado(const std::string& texto, int delayMs)
 {
+    if (g_skipMode) {
+        std::cout << texto << std::flush;
+        return;
+    }
+
+    struct termios oldt;
+    setRaw(oldt);
+
     for (char c : texto) {
         std::cout << c << std::flush;
-        std::this_thread::sleep_for(std::chrono::milliseconds(delayMs));
+        if (g_skipMode) continue;
+
+        struct pollfd pfd{STDIN_FILENO, POLLIN, 0};
+        if (poll(&pfd, 1, delayMs) > 0 && (pfd.revents & POLLIN)) {
+            int ch = getchar();
+            if (ch == ' ') {
+                g_skipMode = true;
+            }
+        }
     }
+
+    restoreTerminal(oldt);
 }
 
+// ── pressioneQualquerTecla (reseta skip) ─────────────────────────────────────
 void pressioneQualquerTecla(const std::string& msg)
 {
+    g_skipMode = false;
     std::cout << msg << std::flush;
-    struct termios oldt, newt;
-    tcgetattr(STDIN_FILENO, &oldt);
-    newt = oldt;
-    newt.c_lflag &= ~(ICANON | ECHO);
-    tcsetattr(STDIN_FILENO, TCSANOW, &newt);
+    struct termios oldt;
+    setRaw(oldt);
     getchar();
-    tcsetattr(STDIN_FILENO, TCSANOW, &oldt);
+    restoreTerminal(oldt);
     std::cout << '\n';
 }
 
+// ── revelarAsciiHorario ───────────────────────────────────────────────────────
 void revelarAsciiHorario(const std::string& caminho, int delayMs)
 {
     std::ifstream f(caminho);
@@ -133,10 +173,7 @@ void revelarAsciiHorario(const std::string& caminho, int delayMs)
     }
 }
 
-// ─────────────────────────────────────────────────────────────────────────────
-// Helpers de exploração
-// ─────────────────────────────────────────────────────────────────────────────
-
+// ── Helpers de exploração ─────────────────────────────────────────────────────
 void aguardarEnter(IView& view, IController& ctrl,
                    const std::string& msg,
                    const ConfigExploracao& cfg)
@@ -198,10 +235,7 @@ void exibirDialogo(IView& view, const std::string& caminho)
     }
 }
 
-// ─────────────────────────────────────────────────────────────────────────────
-// Animações
-// ─────────────────────────────────────────────────────────────────────────────
-
+// ── animarGeracaoAtributos ────────────────────────────────────────────────────
 std::vector<int> animarGeracaoAtributos()
 {
     std::mt19937 rng(std::random_device{}());
@@ -242,4 +276,30 @@ std::vector<int> animarGeracaoAtributos()
     std::cout << "\n  Total = \033[1m" << soma << "\033[0m\n\n";
     std::this_thread::sleep_for(std::chrono::milliseconds(400));
     return resultado;
+}
+
+// ── animarDadoComResultado ────────────────────────────────────────────────────
+void animarDadoComResultado(const std::string& label, int faces,
+                             int resultado, int spinCount, int modifier)
+{
+    std::mt19937 rng(std::random_device{}());
+    std::uniform_int_distribution<int> dist(1, faces);
+    std::string modStr = (modifier > 0) ? "+" + std::to_string(modifier)
+                       : (modifier < 0) ? std::to_string(modifier)
+                       : "";
+    std::string dadoStr = "d" + std::to_string(faces) + modStr;
+    for (int s = 0; s < spinCount; s++) {
+        int fake = dist(rng);
+        std::cout << "\r  " << label << " [" << dadoStr << "]: "
+                  << fake + modifier << "   " << std::flush;
+        int ms = 30 + s * 8;
+        std::this_thread::sleep_for(std::chrono::milliseconds(ms));
+    }
+    int total = resultado + modifier;
+    std::string cor = (resultado == faces)  ? "\033[1;33m" :  // max = amarelo
+                      (resultado <= 1)      ? "\033[1;31m" :  // 1 = vermelho
+                                              "\033[1m";
+    std::cout << "\r  " << label << " [" << dadoStr << "]: "
+              << cor << total << "\033[0m   \n" << std::flush;
+    std::this_thread::sleep_for(std::chrono::milliseconds(300));
 }

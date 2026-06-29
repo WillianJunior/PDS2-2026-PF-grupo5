@@ -86,6 +86,7 @@ bool Batalha::verificarAcerto(Personagem* alvo, double coefAtaque, int nivel,
     int r1 = _dados.rolar(1, 20);
     int r2 = vantagem ? _dados.rolar(1, 20) : r1;
     int rolagem = std::max(r1, r2);
+    _ultimoTurno.playerRollD20 = rolagem;
 
     double total = static_cast<double>(rolagem) + coefAtaque;
     if (gastaPP)
@@ -178,7 +179,7 @@ void Batalha::iniciarBatalha() {
  *  - Caos       → 25 % do dano como cura para o player.
  *  - Mente      → −25 % no custo de PP de AtaqueRapido / AtaqueForte.
  */
-void Batalha::realizarAcao(AcaoBatalha acao) {
+void Batalha::realizarAcao(AcaoBatalha acao, bool comContraAtaque) {
     if (std::find(_acoesDisponiveis.begin(), _acoesDisponiveis.end(), acao)
             == _acoesDisponiveis.end())
         throw std::invalid_argument("Acao nao disponivel neste turno.");
@@ -208,6 +209,8 @@ void Batalha::realizarAcao(AcaoBatalha acao) {
         }
 
         const DadosAtaque& dadosAtaque = BancoDadosAtaque::getDadosAtaque(ataque.id);
+        _ultimoTurno = ResultadoTurno{};
+        _ultimoTurno.nomeAtaque = ataque.nome;
         int numeroDeHits = 0;
         double custoPP   = ataque.custoPP;
         _player->gastarMana(custoPP);
@@ -237,6 +240,7 @@ void Batalha::realizarAcao(AcaoBatalha acao) {
 
             if (acertou) {
                 dano = RegrasAtaque::calcularDano(*_player, ataque);
+                _ultimoTurno.playerAcertou = true;
                 numeroDeHits++;
                 if (_player->temArcano(TipoArcano::Elementos)) {
                     dano *= 1.20;
@@ -245,6 +249,7 @@ void Batalha::realizarAcao(AcaoBatalha acao) {
                 dano = calcularVariabilidade(dano);
                 if (dano < 0) dano = 0;
 
+                _ultimoTurno.playerDano += dano;
                 _inimigo->receberDano(dano);
 
                 if (_player->temArcano(TipoArcano::Caos)) {
@@ -278,7 +283,7 @@ void Batalha::realizarAcao(AcaoBatalha acao) {
             }
         }
         processarCondicoesAtivas();
-        if (_inimigo->estaVivo())
+        if (_inimigo->estaVivo() && comContraAtaque)
             processarAtaqueInimigo();
         break;
     }
@@ -598,7 +603,23 @@ void Batalha::processarAtaqueInimigo() {
         }
     }
 
+    // d20 hit check real para o inimigo
+    int rollInimigo = _dados.rolar(1, 20);
+    _ultimoTurno.inimigoRollD20 = rollInimigo;
+    double coefInimigo = Regras::calcularCoeficiente(_inimigo->getAtaque());
+    double cdPlayer    = Regras::calcularCD(_player->getDefesa());
+    bool acertouInimigo = (static_cast<double>(rollInimigo) + coefInimigo) > cdPlayer;
+
+    _ultimoTurno.inimigoAcertou = acertouInimigo;
+
+    if (!acertouInimigo) {
+        _ultimoTurno.inimigoDano = 0;
+        _registrar(_inimigo->getNome() + " errou o ataque contra você!");
+        return;
+    }
+
     double dano = calcularVariabilidade(_inimigo->getAtaque());
+    _ultimoTurno.inimigoDano = dano;
     if (dano > 0)
         _player->receberDano(dano);
 

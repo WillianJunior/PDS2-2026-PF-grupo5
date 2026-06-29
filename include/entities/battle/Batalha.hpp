@@ -48,6 +48,21 @@ enum class AcaoBatalha {
  * A classe gerencia a interação entre Player e Inimigo, aplicando variabilidade
  * baseada em sorte e modificadores de classe/nível.
  */
+
+/**
+ * @struct ResultadoTurno
+ * @brief Resultado detalhado de um turno para uso nas animações do CondutorBatalha.
+ */
+struct ResultadoTurno {
+    bool   playerAcertou  = false;
+    int    playerRollD20  = 0;   ///< Valor real do d20 do player
+    double playerDano     = 0.0;
+    bool   inimigoAcertou = false;
+    int    inimigoRollD20 = 0;   ///< Valor real do d20 do inimigo
+    double inimigoDano    = 0.0;
+    std::string nomeAtaque;
+};
+
 class Batalha {
 private:
     Personagem* _player;           ///< Ponteiro para o personagem do jogador.
@@ -66,6 +81,7 @@ private:
 
     /** Acrescenta uma mensagem ao log do turno. */
     void _registrar(const std::string& msg);
+    ResultadoTurno _ultimoTurno;
 
     /**
      * @brief Calcula a variabilidade de uma ação baseada em sorte.
@@ -130,7 +146,7 @@ public:
      * Delega dano para ClassePersonagem::calcularDano() via RegrasAtaque.
      * @see Regras.md — Seção 2.2, 2.3, 2.4
      */
-    void realizarAcao(AcaoBatalha acao);   
+    void realizarAcao(AcaoBatalha acao, bool comContraAtaque = true);   
 
     /**
      * @brief Processa a ação de Defesa: reduz dano pelo coef. DEF.
@@ -208,6 +224,7 @@ public:
 
     /** @return Eventos narrativos acumulados desde o último limparLog(). */
     const std::vector<std::string>& getLog() const;
+    const ResultadoTurno& getUltimoTurno() const { return _ultimoTurno; }
 
     /** Descarta todos os eventos do log (chamar antes de cada ação na demo). */
     void limparLog();

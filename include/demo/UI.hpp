@@ -1,8 +1,6 @@
 /**
  * @file UI.hpp
- * @brief Funções auxiliares para exibição e animações de terminal da demo.
  */
-
 #ifndef DEMO_UI_HPP
 #define DEMO_UI_HPP
 
@@ -12,62 +10,45 @@
 #include "utils/IController.hpp"
 #include "demo/ConfigExploracao.hpp"
 
-// Forward declarations para evitar includes pesados no header
 class Cena;
 class Jogador;
 
-// ─────────────────────────────────────────────────────────────────────────────
-// Exibição básica (via IView)
-// ─────────────────────────────────────────────────────────────────────────────
+// ── Flag global de skip (espaço durante digitarAnimado acelera o texto) ───────
+extern bool g_skipMode;
+void resetarModoSkip();
 
-/** Exibe texto centralizado na largura do terminal. */
+// ── Exibição básica ───────────────────────────────────────────────────────────
 void exibirCentrado(IView& view, const std::string& texto);
-
-/** Exibe arte ASCII de um arquivo, centralizada. */
 void exibirAsciiArtArquivo(IView& view, const std::string& caminho);
 
-// ─────────────────────────────────────────────────────────────────────────────
-// Helpers de exploração
-// ─────────────────────────────────────────────────────────────────────────────
-
-/** Aguarda Enter (pula silenciosamente se cfg.skipEnter == true). */
+// ── Helpers de exploração ─────────────────────────────────────────────────────
 void aguardarEnter(IView& view, IController& ctrl,
                    const std::string& msg,
                    const ConfigExploracao& cfg = {});
-
-/** Exibe cabeçalho de cena: arte ASCII, título e descrição. */
 void exibirHeaderCena(IView& view, const Cena& cena);
-
-/** Exibe relatório final de atributos e inventário do jogador via IView. */
 void exibirRelatorio(IView& view, Jogador& jogador);
-
-/** Carrega e exibe um arquivo de diálogo linha a linha via IView.
- *  Retorna silenciosamente se o arquivo não puder ser aberto. */
 void exibirDialogo(IView& view, const std::string& caminho);
 
-// ─────────────────────────────────────────────────────────────────────────────
-// Animações (escrevem diretamente em stdout para controle preciso)
-// ─────────────────────────────────────────────────────────────────────────────
-
-/** Efeito máquina de escrever: imprime texto caractere a caractere. */
+// ── Animações ─────────────────────────────────────────────────────────────────
+/** Typewriter: pressionar ESPAÇO acelera para o fim imediato. */
 void digitarAnimado(const std::string& texto, int delayMs = 20);
-
-/**
- * Revela arte ASCII de um arquivo em espiral no sentido horário,
- * substituindo caracteres progressivamente (técnica de loading bar 2-D).
- */
 void revelarAsciiHorario(const std::string& caminho, int delayMs = 10);
-
-/** Aguarda qualquer tecla sem exigir Enter (modo raw). */
 void pressioneQualquerTecla(const std::string& msg = "\n  [ Pressione qualquer tecla para continuar... ]\n");
-
-/** Limpa o terminal via ANSI. */
 void limparTela();
+std::vector<int> animarGeracaoAtributos();
 
 /**
- * Gera 4 atributos via 4d6kh3, exibindo animação de rolagem.
- * @return Vetor com os 4 valores finais, em ordem decrescente.
+ * Anima um dado girando e para no valor 'resultado'.
+ * @param label    Prefixo exibido (ex: "Iniciativa inimigo")
+ * @param faces    Número de faces do dado
+ * @param resultado Valor final real a exibir
+ * @param spinCount Quantos frames de spin antes de parar (default 10)
  */
-std::vector<int> animarGeracaoAtributos();
+/**
+ * @param modifier  Modificador somado ao resultado final (mostra d20+mod).
+ *                  Passe 0 para não exibir modificador.
+ */
+void animarDadoComResultado(const std::string& label, int faces,
+                             int resultado, int spinCount = 10, int modifier = 0);
 
 #endif

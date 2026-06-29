@@ -22,7 +22,7 @@ InfoCena BancoCena::obterCena(int id){
             1,  //id
             "Poder do primeiro arcano", //arcano
             "", //recompensa entregue no final da cena
-            "As Florestas de Edhen — onde o primeiro arcano desperta.", //descricao da cena
+            "As Florestas de Geada - as margens de Magisk.", //descricao da cena
             101, //id do trechoMapa inicial da cena
             {101,102,103} //vetor com os ids dos trechos de mapa que compões a cena
 
@@ -33,7 +33,7 @@ InfoCena BancoCena::obterCena(int id){
             2,  //id
             "Poder do segundo arcano", //arcano
             "", //recompensa entregue no final da cena
-            "Mantuu — onde as ruínas de guerra ainda respiram sob aço e sombra.", //descricao da cena
+            "Mantuu - onde as ruínas de guerra ainda respiram sob aço e sombra.", //descricao da cena
             201, //id do trechoMapa inicial da cena
             {201,202,203} //vetor com os ids dos trechos de mapa que compões a cena
 
@@ -44,7 +44,7 @@ InfoCena BancoCena::obterCena(int id){
             3,  //id
             "Poder do terceiro arcano", //arcano
             "", //recompensa entregue no final da cena
-            "Xantares — onde o submundo ergue seu domínio entre portos e becos.", //descricao da cena
+            "Xantares - onde o submundo ergue seu domínio entre portos e becos.", //descricao da cena
             301, //id do trechoMapa inicial da cena
             {301,302,303} //vetor com os ids dos trechos de mapa que compões a cena
 
@@ -55,7 +55,7 @@ InfoCena BancoCena::obterCena(int id){
             4,  //id
             "Poder do quarto arcano", //arcano
             "", //recompensa entregue no final da cena
-            "Kenyrock — onde o conhecimento arcano se torna armadilha e poder.", //descricao da cena
+            "Kenyrock - onde o conhecimento arcano se torna armadilha e poder.", //descricao da cena
             401, //id do trechoMapa inicial da cena
             {401,402,403} //vetor com os ids dos trechos de mapa que compões a cena
 
@@ -66,7 +66,7 @@ InfoCena BancoCena::obterCena(int id){
             5,  //id
             "Poder do quinto arcano", //arcano
             "", //recompensa entregue no final da cena
-            "Skyprout — onde as profundezas das minas consomem ambição e fé.", //descricao da cena
+            "Skyprout - onde as profundezas das minas consomem ambição e fé.", //descricao da cena
             501, //id do trechoMapa inicial da cena
             {501,502,503} //vetor com os ids dos trechos de mapa que compões a cena
 
@@ -77,7 +77,7 @@ InfoCena BancoCena::obterCena(int id){
             6,  //id
             "Poder do sexto arcano", //arcano
             "", //recompensa entregue no final da cena
-            "Magisk Corrompida — onde a floresta retorna, mas já não é a mesma.", //descricao da cena
+            "Magisk - As sobras de uma cidade magica", //descricao da cena
             601, //id do trechoMapa inicial da cena
             {601,602,603} //vetor com os ids dos trechos de mapa que compões a cena
 
@@ -88,7 +88,7 @@ InfoCena BancoCena::obterCena(int id){
             7,  //id
             "Poder de todos os arcanos", //arcano
             "", //recompensa entregue no final da cena
-            "Santuário de Sonath — onde o fim do ciclo aguarda em silêncio.", //descricao da cena
+            "Santuário de Sonath - onde o fim do ciclo aguarda em silêncio.", //descricao da cena
             701, //id do trechoMapa inicial da cena
             {701,702,703} //vetor com os ids dos trechos de mapa que compões a cena
 

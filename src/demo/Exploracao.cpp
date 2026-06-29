@@ -218,13 +218,17 @@ static int loopExploracaoCena(
     const ConfigExploracao& cfg)
 {
     cena.iniciarCena();
+    limparTela();
     exibirHeaderCena(view, cena);
+    // Pausa para o jogador ver o arcano e o título da cena
+    aguardarEnter(view, ctrl, "\n  [ Pressione qualquer tecla para explorar... ]", cfg);
 
     if (!verificarCombate(view, ctrl, jogador, cena, dados, cfg))
         return 0;
 
     while (true)
     {
+        limparTela();
         view.exibirLinha();
         view.exibir("[Localização] " + cena.pegarTrechoAtual().pegarDescricao());
 
@@ -283,8 +287,10 @@ static int loopExploracaoCena(
 
         case 4:
         {
-            if (cena.pegarTrechoAtual().pegarProximoTrecho() == -1)
+            if (cena.pegarTrechoAtual().pegarProximoTrecho() == -1) {
+                limparTela();
                 return executarEncontroBoss(view, ctrl, jogador, cena, dados, cfg);
+            }
 
             cena.andar();
 
@@ -324,6 +330,7 @@ void executarExploracao(IView& view, IController& ctrl, const ConfigExploracao& 
 
     while (idCenaAtual <= 7)
     {
+        limparTela();
         InfoCena dadosCena = BancoCena::obterCena(idCenaAtual);
         Cena cena(dadosCena, jogador);
 

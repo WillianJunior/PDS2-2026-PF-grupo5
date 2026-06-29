@@ -77,7 +77,7 @@ Item BancoItem::obterItem(int cenaId, int itemId)
     // Comidas: categoria Fruta → ±1d6 | Regras.md §5.2
     case 1:
         return criarComidaPositiva(1, "Fruta Fresca",
-            "Uma maca docinha.", 5, 6);
+            "Uma maca docinha.", 1, 6);
     case 2:
         return criarComidaNegativa(1, "Fruta Podre",
             "Uma pera amolecida e cheirando mal.", 1, 6);
